@@ -16,6 +16,7 @@ import com.example.ben.zhihudaily.data.entity.SingleDaily;
 import com.example.ben.zhihudaily.data.entity.StoryExtra;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.BaseActivity;
+import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.DetailDailyActionProvider;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class DailyDetailActivity extends BaseActivity {
     private DetailAdapter mAdapter;
     private String id;
     private String before;
+    private String type;
     List<SingleDaily> dailies;
     private DetailDailyActionProvider commentActionProvider;
     private DetailDailyActionProvider popularityActionProvider;
@@ -60,12 +62,17 @@ public class DailyDetailActivity extends BaseActivity {
         setTitle("");
         id = getIntent().getStringExtra("id");
         before = getIntent().getStringExtra("before");
+        type = getIntent().getStringExtra("type");
         initViewPager();
-        getBeforeDailies();
+        if (Constant.TOP_STORIES.equals(type)) {
+            getTopStories();
+        } else {
+            getBeforeDailies();
+        }
     }
 
     private void initViewPager() {
-        mAdapter = new DetailAdapter(this, commentActionProvider, popularityActionProvider);
+        mAdapter = new DetailAdapter(this);
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -86,7 +93,8 @@ public class DailyDetailActivity extends BaseActivity {
     }
 
     private void getStoryExtra(String id) {
-        BenFactory.getDailyNewsApi()
+        unsubscribe();
+        subscription = BenFactory.getDailyNewsApi()
                 .getStoryExtra(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -107,8 +115,49 @@ public class DailyDetailActivity extends BaseActivity {
                 });
     }
 
+    private void getTopStories() {
+        unsubscribe();
+        subscription = BenFactory.getDailyNewsApi()
+                .getDailyNews("latest")
+                .map(new Func1<DailyNews, List<SingleDaily>>() {
+                    @Override
+                    public List<SingleDaily> call(DailyNews dailyNews) {
+                        if (dailyNews != null) {
+                            return dailyNews.top_stories;
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<SingleDaily>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<SingleDaily> singleDailies) {
+                        dailies = singleDailies;
+                        mAdapter.setDailyNews(singleDailies);
+                        for (int i = 0; i < singleDailies.size(); i++) {
+                            if (id.equals(singleDailies.get(i).id)) {
+                                mViewPager.setCurrentItem(i);
+                                getStoryExtra(id);
+                            }
+                        }
+                    }
+                });
+    }
+
     private void getBeforeDailies() {
-        BenFactory.getDailyNewsApi()
+        unsubscribe();
+        subscription = BenFactory.getDailyNewsApi()
                 .getBeforeDailyNews(before)
                 .map(new Func1<DailyNews, List<SingleDaily>>() {
                     @Override
