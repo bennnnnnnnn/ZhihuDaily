@@ -31,6 +31,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -57,6 +58,7 @@ public class MainActivity extends StableToolBarActivity {
     private List<SingleDaily> topStories = new ArrayList<>();
     private List<SingleDaily> dailies = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
+    private Subscription mSideSub;
     private long time;
     private String today;
     private static long A_DAY_MS = 24L * 60 * 60 * 1000;
@@ -186,7 +188,7 @@ public class MainActivity extends StableToolBarActivity {
                 if (position == 0) {
                     setTitle(R.string.home_page);
                 } else {
-                    String date = dailies.get(position-1).date;
+                    String date = dailies.get(position - 1).date;
                     if (today.equals(date)) {
                         setTitle(R.string.today_news);
                     } else {
@@ -200,12 +202,13 @@ public class MainActivity extends StableToolBarActivity {
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
         mListView.addHeaderView(headView);
-        mSideAdapter = new SideAdapter(this,mDrawerLayout);
+        mSideAdapter = new SideAdapter(this, mDrawerLayout);
         mListView.setAdapter(mSideAdapter);
     }
 
     private void getHomeList() {
-        BenFactory.getDailyNewsApi()
+        unsubscribe();
+        subscription = BenFactory.getDailyNewsApi()
                 .getDailyNews("latest")
                 .map(new Func1<DailyNews, List<SingleDaily>>() {
                     @Override
@@ -250,7 +253,8 @@ public class MainActivity extends StableToolBarActivity {
     }
 
     private void addHomeList(String beforeTime) {
-        BenFactory.getDailyNewsApi()
+        unsubscribe();
+        subscription = BenFactory.getDailyNewsApi()
                 .getBeforeDailyNews(beforeTime)
                 .map(new Func1<DailyNews, List<SingleDaily>>() {
                     @Override
@@ -288,7 +292,7 @@ public class MainActivity extends StableToolBarActivity {
     }
 
     private void getSideList() {
-        BenFactory.getDailyThemeApi()
+        mSideSub = BenFactory.getDailyThemeApi()
                 .getDailyThemes()
                 .map(new Func1<DailyThemeResult, List<DailyTheme>>() {
                     @Override
@@ -319,4 +323,9 @@ public class MainActivity extends StableToolBarActivity {
                 });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != mSideSub && mSideSub.isUnsubscribed()) mSideSub.unsubscribe();
+    }
 }

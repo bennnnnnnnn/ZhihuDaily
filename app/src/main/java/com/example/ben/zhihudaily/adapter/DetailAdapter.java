@@ -21,6 +21,7 @@ import com.example.ben.zhihudaily.utils.GlideUtils;
 import java.util.List;
 
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -33,13 +34,10 @@ public class DetailAdapter extends PagerAdapter {
 
     private List<SingleDaily> dailies;
     private Context context;
-    DetailDailyActionProvider comment;
-    DetailDailyActionProvider popularity;
+    private Subscription itemSub;
 
-    public DetailAdapter(Context context, DetailDailyActionProvider comment, DetailDailyActionProvider popularity) {
+    public DetailAdapter(Context context) {
         this.context = context;
-        this.comment = comment;
-        this.popularity = popularity;
     }
 
     public void setDailyNews(List<SingleDaily> mDailyNews) {
@@ -62,7 +60,7 @@ public class DetailAdapter extends PagerAdapter {
 
         SingleDaily singleDaily = dailies.get(position);
 
-        BenFactory.getDailyNewsApi()
+        itemSub = BenFactory.getDailyNewsApi()
                 .getDailyNewsDetail(singleDaily.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -93,6 +91,7 @@ public class DetailAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+        if (null != itemSub && itemSub.isUnsubscribed()) itemSub.unsubscribe();
     }
 
     @Override

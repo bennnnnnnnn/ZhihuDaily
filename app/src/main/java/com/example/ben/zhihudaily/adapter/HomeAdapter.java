@@ -19,6 +19,7 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.SingleDaily;
 import com.example.ben.zhihudaily.ui.DailyDetailActivity;
+import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 
 import java.util.List;
@@ -96,7 +97,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 public void onItemClick(int position) {
                     SingleDaily daily = mBannerThemes.get(position);
                     context.startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
-                            .putExtra("before", daily.before));
+                            .putExtra("before", daily.before).putExtra("type", Constant.TOP_STORIES));
                 }
             });
         } else if (type == TYPE_CONTENT) {
@@ -140,7 +141,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         void onDetail(View v) {
             SingleDaily daily = mDailyNews.get(getLayoutPosition() - 1);
             v.getContext().startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
-                    .putExtra("before", daily.before));
+                    .putExtra("before", daily.before).putExtra("type", Constant.STORY));
         }
     }
 
