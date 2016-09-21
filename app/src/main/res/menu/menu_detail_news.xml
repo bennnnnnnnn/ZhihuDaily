@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/share_item"
+        android:icon="@drawable/share_icon"
+        android:orderInCategory="97"
+        android:title="@string/collection"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/collecion_item"
+        android:icon="@drawable/favourate_icon"
+        android:orderInCategory="98"
+        android:title="@string/collection"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/commend_item"
+        android:orderInCategory="99"
+        android:title="@string/commend"
+        app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailDailyActionProvider"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/praise_item"
+        android:orderInCategory="100"
+        android:title="@string/praise"
+        app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailDailyActionProvider"
+        app:showAsAction="always" />
+
+</menu>

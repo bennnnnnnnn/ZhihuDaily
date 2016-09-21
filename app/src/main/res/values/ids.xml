@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tag_zero" type="id">00</item>
+    <item name="tag_first" type="id">01</item>
+</resources>

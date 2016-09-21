@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/ActivityJumpAnimTheme</item>
+    </style>
+
+    <style name="ActivityJumpAnimTheme" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/push_left_in</item>
+        <!-- 打开第二个Activity，第二个Activity的进入动画 -->
+        <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
+        <!-- 打开第二个Activity，第一个Activity的退出动画 -->
+        <item name="android:activityCloseEnterAnimation">@anim/push_right_in</item>
+        <!-- 结束第二个Activity，第一个Activity的进入动画 -->
+        <item name="android:activityCloseExitAnimation">@anim/push_right_out</item>
+        <!-- 结束第二个Activity，第二个Activity的退出动画 -->
+    </style>
+</resources>
