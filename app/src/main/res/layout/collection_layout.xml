@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="?actionBarItemBackground">
+
+    <ImageView
+        android:id="@+id/commend_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/share_icon" />
+
+    <TextView
+        android:id="@+id/commend_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/commend_image"
+        android:layout_toRightOf="@+id/commend_image"
+        android:textColor="@color/md_white_1000" />
+
+</RelativeLayout>

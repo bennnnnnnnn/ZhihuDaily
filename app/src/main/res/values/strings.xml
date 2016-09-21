@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ZhihuDaily</string>
+    <string name="home_page">首页</string>
+    <string name="add">添加</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+    <string name="login_in">请登录</string>
+    <string name="my_favorite">我的收藏</string>
+    <string name="offline_download">离线下载</string>
+    <string name="night_mode">夜间模式</string>
+    <string name="setting">设置选项</string>
+    <string name="collection">收藏</string>
+    <string name="today_news">今日新闻</string>
+    <string name="commend">评论</string>
+    <string name="praise">赞</string>
+</resources>
