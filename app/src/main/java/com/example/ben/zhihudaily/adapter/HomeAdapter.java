@@ -17,7 +17,7 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
-import com.example.ben.zhihudaily.data.entity.SingleDaily;
+import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.ui.DailyDetailActivity;
 import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
@@ -33,8 +33,8 @@ import butterknife.OnClick;
  */
 
 public class HomeAdapter extends RecyclerView.Adapter {
-    List<SingleDaily> mDailyNews;
-    List<SingleDaily> mBannerThemes;
+    List<Story> mDailyNews;
+    List<Story> mBannerThemes;
     Context context;
     static final int TYPE_HEAD = 0;
     static final int TYPE_CONTENT = 1;
@@ -58,15 +58,20 @@ public class HomeAdapter extends RecyclerView.Adapter {
         return null;
     }
 
-    public void setDailyNews(List<SingleDaily> mDailyNews, List<SingleDaily> mBannerThemes) {
+    public void setDailyNews(List<Story> mDailyNews, List<Story> mBannerThemes) {
         this.mDailyNews = mDailyNews;
         this.mBannerThemes = mBannerThemes;
         notifyDataSetChanged();
     }
 
-    public void addDailyNews(List<SingleDaily> mDailyNews) {
+    public void addDailyNews(List<Story> mDailyNews) {
         this.mDailyNews.addAll(mDailyNews);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemCount() {
+        return mDailyNews == null ? 1 : mDailyNews.size() + 1;
     }
 
     @Override
@@ -78,48 +83,48 @@ public class HomeAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type = getItemViewType(position);
-        if (type == TYPE_HEAD) {
-            HeadViewHolder headViewHolder = (HeadViewHolder) holder;
-            if (!initialized) {
-                initialized = true;
-                initConvenientBanner(headViewHolder, mBannerThemes);
-                headViewHolder.mBannerViewPager.startTurning(5000);
-            } else {
-                initConvenientBanner(headViewHolder, mBannerThemes);
-            }
-            if (null == mBannerThemes || mBannerThemes.size() <= 0) {
-                headViewHolder.mBannerViewPager.setVisibility(View.GONE);
-            } else {
-                headViewHolder.mBannerViewPager.setVisibility(View.VISIBLE);
-            }
-            headViewHolder.mBannerViewPager.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    SingleDaily daily = mBannerThemes.get(position);
-                    context.startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
-                            .putExtra("before", daily.before).putExtra("type", Constant.TOP_STORIES));
+        switch (type) {
+            case TYPE_HEAD:
+                HeadViewHolder headViewHolder = (HeadViewHolder) holder;
+                if (!initialized) {
+                    initialized = true;
+                    initConvenientBanner(headViewHolder, mBannerThemes);
+                    headViewHolder.mBannerViewPager.startTurning(5000);
+                } else {
+                    initConvenientBanner(headViewHolder, mBannerThemes);
                 }
-            });
-        } else if (type == TYPE_CONTENT) {
-            HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
-            final SingleDaily daily = mDailyNews.get(position - 1);
-            if (position == 1) {
-                homeViewHolder.dateTextView.setText(R.string.today_news);
-                homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
-            } else if (!(daily.date).equals(mDailyNews.get(position - 2).date)) {
-                homeViewHolder.dateTextView.setText(daily.date);
-                homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
-            } else {
-                homeViewHolder.dateTextView.setVisibility(View.GONE);
-            }
-            homeViewHolder.titleTextView.setText(daily.title);
-            GlideUtils.loadingImage(context, homeViewHolder.newsImageView, daily.images[0]);
+                if (null == mBannerThemes || mBannerThemes.size() <= 0) {
+                    headViewHolder.mBannerViewPager.setVisibility(View.GONE);
+                } else {
+                    headViewHolder.mBannerViewPager.setVisibility(View.VISIBLE);
+                }
+                headViewHolder.mBannerViewPager.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        Story daily = mBannerThemes.get(position);
+                        context.startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
+                                .putExtra("before", daily.before).putExtra("type", Constant.TOP_STORIES));
+                    }
+                });
+                break;
+            case TYPE_CONTENT:
+                HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
+                final Story daily = mDailyNews.get(position - 1);
+                if (position == 1) {
+                    homeViewHolder.dateTextView.setText(R.string.today_news);
+                    homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
+                } else if (!(daily.date).equals(mDailyNews.get(position - 2).date)) {
+                    homeViewHolder.dateTextView.setText(daily.date);
+                    homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
+                } else {
+                    homeViewHolder.dateTextView.setVisibility(View.GONE);
+                }
+                homeViewHolder.titleTextView.setText(daily.title);
+                GlideUtils.loadingImage(context, homeViewHolder.newsImageView, daily.images[0]);
+                break;
+            default:
+                break;
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDailyNews == null ? 1 : mDailyNews.size() + 1;
     }
 
     class HomeViewHolder extends RecyclerView.ViewHolder {
@@ -139,7 +144,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         @OnClick(R.id.item_cardview)
         void onDetail(View v) {
-            SingleDaily daily = mDailyNews.get(getLayoutPosition() - 1);
+            Story daily = mDailyNews.get(getLayoutPosition() - 1);
             v.getContext().startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
                     .putExtra("before", daily.before).putExtra("type", Constant.STORY));
         }
@@ -155,7 +160,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void initConvenientBanner(HeadViewHolder headViewHolder, List<SingleDaily> singleDailies) {
+    private void initConvenientBanner(HeadViewHolder headViewHolder, List<Story> singleDailies) {
         headViewHolder.mBannerViewPager.setPages(
                 new CBViewHolderCreator<LocalImageHolderView>() {
                     @Override
@@ -170,7 +175,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     }
 
-    private class LocalImageHolderView implements Holder<SingleDaily> {
+    private class LocalImageHolderView implements Holder<Story> {
         private ImageView imageView;
         private TextView textView;
 
@@ -183,7 +188,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
 
         @Override
-        public void UpdateUI(Context context, final int position, SingleDaily data) {
+        public void UpdateUI(Context context, final int position, Story data) {
             GlideUtils.loadingImage(context, imageView, data.image);
             textView.setText(data.title);
         }

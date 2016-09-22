@@ -1,7 +1,6 @@
 package com.example.ben.zhihudaily.adapter;
 
 import android.content.Context;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ben.zhihudaily.R;
-import com.example.ben.zhihudaily.data.entity.DailyDetail;
-import com.example.ben.zhihudaily.data.entity.SingleDaily;
-import com.example.ben.zhihudaily.data.entity.StoryExtra;
+import com.example.ben.zhihudaily.data.entity.StoryDetail;
+import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.network.BenFactory;
-import com.example.ben.zhihudaily.ui.DailyDetailActivity;
-import com.example.ben.zhihudaily.utils.DetailDailyActionProvider;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 
 import java.util.List;
@@ -32,7 +28,7 @@ import rx.schedulers.Schedulers;
 
 public class DetailAdapter extends PagerAdapter {
 
-    private List<SingleDaily> dailies;
+    private List<Story> dailies;
     private Context context;
     private Subscription itemSub;
 
@@ -40,7 +36,7 @@ public class DetailAdapter extends PagerAdapter {
         this.context = context;
     }
 
-    public void setDailyNews(List<SingleDaily> mDailyNews) {
+    public void setDailyNews(List<Story> mDailyNews) {
         this.dailies = mDailyNews;
         notifyDataSetChanged();
     }
@@ -58,13 +54,13 @@ public class DetailAdapter extends PagerAdapter {
         final TextView mImageSource = (TextView) view.findViewById(R.id.image_source);
         final WebView mContentWebView = (WebView) view.findViewById(R.id.content_webview);
 
-        SingleDaily singleDaily = dailies.get(position);
+        Story singleDaily = dailies.get(position);
 
         itemSub = BenFactory.getDailyNewsApi()
                 .getDailyNewsDetail(singleDaily.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<DailyDetail>() {
+                .subscribe(new Observer<StoryDetail>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -75,7 +71,7 @@ public class DetailAdapter extends PagerAdapter {
                     }
 
                     @Override
-                    public void onNext(DailyDetail dailyDetail) {
+                    public void onNext(StoryDetail dailyDetail) {
                         mTitleTextView.setText(dailyDetail.title);
                         mImageSource.setText(dailyDetail.image_source);
                         GlideUtils.loadingImage(context, mTopImage, dailyDetail.image);

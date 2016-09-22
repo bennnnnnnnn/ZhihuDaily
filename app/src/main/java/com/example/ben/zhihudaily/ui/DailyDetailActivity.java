@@ -11,8 +11,8 @@ import android.view.MenuItem;
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.DetailAdapter;
-import com.example.ben.zhihudaily.data.entity.DailyNews;
-import com.example.ben.zhihudaily.data.entity.SingleDaily;
+import com.example.ben.zhihudaily.data.entity.StoriesResult;
+import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.data.entity.StoryExtra;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.BaseActivity;
@@ -45,7 +45,7 @@ public class DailyDetailActivity extends BaseActivity {
     private String id;
     private String before;
     private String type;
-    List<SingleDaily> dailies;
+    private List<Story> dailies;
     private DetailDailyActionProvider commentActionProvider;
     private DetailDailyActionProvider popularityActionProvider;
 
@@ -119,9 +119,9 @@ public class DailyDetailActivity extends BaseActivity {
         unsubscribe();
         subscription = BenFactory.getDailyNewsApi()
                 .getDailyNews("latest")
-                .map(new Func1<DailyNews, List<SingleDaily>>() {
+                .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
-                    public List<SingleDaily> call(DailyNews dailyNews) {
+                    public List<Story> call(StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.top_stories;
                         }
@@ -130,7 +130,7 @@ public class DailyDetailActivity extends BaseActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<SingleDaily>>() {
+                .subscribe(new Observer<List<Story>>() {
                     @Override
                     public void onCompleted() {
 
@@ -142,7 +142,7 @@ public class DailyDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(List<SingleDaily> singleDailies) {
+                    public void onNext(List<Story> singleDailies) {
                         dailies = singleDailies;
                         mAdapter.setDailyNews(singleDailies);
                         for (int i = 0; i < singleDailies.size(); i++) {
@@ -159,9 +159,9 @@ public class DailyDetailActivity extends BaseActivity {
         unsubscribe();
         subscription = BenFactory.getDailyNewsApi()
                 .getBeforeDailyNews(before)
-                .map(new Func1<DailyNews, List<SingleDaily>>() {
+                .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
-                    public List<SingleDaily> call(DailyNews dailyNews) {
+                    public List<Story> call(StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.stories;
                         }
@@ -170,7 +170,7 @@ public class DailyDetailActivity extends BaseActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<SingleDaily>>() {
+                .subscribe(new Observer<List<Story>>() {
                     @Override
                     public void onCompleted() {
 
@@ -182,7 +182,7 @@ public class DailyDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(List<SingleDaily> singleDailies) {
+                    public void onNext(List<Story> singleDailies) {
                         dailies = singleDailies;
                         mAdapter.setDailyNews(singleDailies);
                         for (int i = 0; i < singleDailies.size(); i++) {
@@ -221,13 +221,11 @@ public class DailyDetailActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.share_item) {
-
+        if (id == R.id.share_item) {
+            return true;
         } else if (id == R.id.collecion_item) {
-
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }
