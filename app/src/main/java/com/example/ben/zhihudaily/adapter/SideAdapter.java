@@ -1,8 +1,6 @@
 package com.example.ben.zhihudaily.adapter;
 
 import android.content.Context;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,7 @@ import android.widget.TextView;
 
 
 import com.example.ben.zhihudaily.R;
-import com.example.ben.zhihudaily.data.entity.DailyTheme;
-import com.example.ben.zhihudaily.ui.MainActivity;
+import com.example.ben.zhihudaily.data.entity.StoryTheme;
 
 import java.util.List;
 
@@ -26,32 +23,24 @@ import java.util.List;
 public class SideAdapter extends BaseAdapter {
 
     private Context mContext;
-    private DrawerLayout mDrawerLayout;
     private LayoutInflater inflater;
 
-    private List<DailyTheme> dailyThemes;
+    private List<StoryTheme> dailyThemes;
 
     private final int VIEW_TYPE = 2;
     private final int TYPE_0 = 0;
     private final int TYPE_1 = 1;
 
-    public SideAdapter(Context context, DrawerLayout drawerLayout) {
+    public boolean isHomePage;
+
+    public SideAdapter(Context context) {
         this.mContext = context;
-        this.mDrawerLayout = drawerLayout;
         inflater = LayoutInflater.from(mContext);
     }
 
-    public void setDailyThemes(List<DailyTheme> dailyThemes) {
+    public void setDailyThemes(List<StoryTheme> dailyThemes) {
         this.dailyThemes = dailyThemes;
         notifyDataSetChanged();
-    }
-
-    private void showOrCloseSideView() {
-        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            this.mDrawerLayout.openDrawer(GravityCompat.START);
-        }
     }
 
     @Override
@@ -85,15 +74,16 @@ public class SideAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View cv, ViewGroup parent) {
-        ViewHolder v = null;
+        ViewHolder homeItem = null;
         ViewHolder1 item = null;
         int type = getItemViewType(position);
         if (null == cv) {
             switch (type) {
                 case TYPE_0:
                     cv = inflater.inflate(R.layout.home_item, parent, false);
-                    v = new ViewHolder();
-                    cv.setTag(R.id.tag_zero, v);
+                    homeItem = new ViewHolder();
+                    homeItem.itemLayout = (LinearLayout) cv.findViewById(R.id.home_item);
+                    cv.setTag(R.id.tag_zero, homeItem);
                     break;
                 case TYPE_1:
                     cv = inflater.inflate(R.layout.slide_item, parent, false);
@@ -107,7 +97,7 @@ public class SideAdapter extends BaseAdapter {
         } else {
             switch (type) {
                 case TYPE_0:
-                    v = (ViewHolder) cv.getTag(R.id.tag_zero);
+                    homeItem = (ViewHolder) cv.getTag(R.id.tag_zero);
                     break;
                 case TYPE_1:
                     item = (ViewHolder1) cv.getTag(R.id.tag_first);
@@ -116,21 +106,25 @@ public class SideAdapter extends BaseAdapter {
         }
 
         switch (type) {
+            case TYPE_0:
+                if (isHomePage) {
+                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_400));
+                } else {
+                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_100));
+                }
+                break;
             case TYPE_1:
-                DailyTheme dailyTheme = dailyThemes.get(position);
+                StoryTheme dailyTheme = dailyThemes.get(position - 1);
                 item.themeTitle.setText(dailyTheme.name);
-                item.itemLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showOrCloseSideView();
-                    }
-                });
+                break;
+            default:
+                break;
         }
         return cv;
     }
 
     private class ViewHolder {
-
+        LinearLayout itemLayout;
     }
 
     private class ViewHolder1 {

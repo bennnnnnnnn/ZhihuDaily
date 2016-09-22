@@ -7,7 +7,7 @@ import com.example.ben.zhihudaily.data.BaseBean;
  * Created by Zhou bangquan on 16/9/11.
  */
 
-public class SingleDaily extends BaseBean {
+public class Story extends BaseBean {
     public String[] images;
     public String image;
     public String type;

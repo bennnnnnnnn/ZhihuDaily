@@ -1,10 +1,12 @@
 package com.example.ben.zhihudaily.data.entity;
 
+import com.example.ben.zhihudaily.data.BaseBean;
+
 /**
  * Created by Zhou bangquan on 16/9/11.
  */
 
-public class DailyDetail {
+public class StoryDetail extends BaseBean {
     public String body;
     public String image_source;
     public String title;

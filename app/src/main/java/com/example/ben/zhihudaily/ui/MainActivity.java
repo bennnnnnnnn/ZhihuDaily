@@ -8,22 +8,30 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.HomeAdapter;
 import com.example.ben.zhihudaily.adapter.SideAdapter;
-import com.example.ben.zhihudaily.data.entity.DailyNews;
-import com.example.ben.zhihudaily.data.entity.DailyTheme;
-import com.example.ben.zhihudaily.data.entity.DailyThemeResult;
-import com.example.ben.zhihudaily.data.entity.SingleDaily;
+import com.example.ben.zhihudaily.adapter.ThemeAdapter;
+import com.example.ben.zhihudaily.data.entity.StoriesResult;
+import com.example.ben.zhihudaily.data.entity.StoryTheme;
+import com.example.ben.zhihudaily.data.entity.StoryThemeResult;
+import com.example.ben.zhihudaily.data.entity.Story;
+import com.example.ben.zhihudaily.data.entity.ThemeStories;
 import com.example.ben.zhihudaily.network.BenFactory;
-import com.example.ben.zhihudaily.ui.base.BaseActivity;
 import com.example.ben.zhihudaily.ui.base.StableToolBarActivity;
 import com.example.ben.zhihudaily.utils.DateUtils;
+import com.example.ben.zhihudaily.utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +56,29 @@ public class MainActivity extends StableToolBarActivity {
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.news_view)
-    RecyclerView mRecyclerView;
+    RecyclerView mHomeRecyclerView;
     @Bind(R.id.side_listview)
     ListView mListView;
+    @Bind(R.id.theme_layout)
+    RelativeLayout mThemeLayout;
+    @Bind(R.id.theme_imageView)
+    ImageView mThemeImageView;
+    @Bind(R.id.description_textView)
+    TextView mDescriptionTextView;
+    @Bind(R.id.theme_stories_recyclerView)
+    RecyclerView mThemeRecyclerView;
+    @Bind(R.id.theme_image_layout)
+    RelativeLayout mThemeImageLayout;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private SideAdapter mSideAdapter;
     private HomeAdapter mHomeAdapter;
-    private List<SingleDaily> topStories = new ArrayList<>();
-    private List<SingleDaily> dailies = new ArrayList<>();
-    private LinearLayoutManager linearLayoutManager;
+    private ThemeAdapter mThemeAdapter;
+    private List<Story> topStories = new ArrayList<>();
+    private List<Story> dailies = new ArrayList<>();
+    private List<StoryTheme> storyThemes = new ArrayList<>();
+    private LinearLayoutManager mHomelinearLayoutManager;
+    private LinearLayoutManager mThemelinearLayoutManager;
     private Subscription mSideSub;
     private long time;
     private String today;
@@ -72,6 +93,7 @@ public class MainActivity extends StableToolBarActivity {
         initDrawerLayout();
         initSideList();
         initHomeList();
+        initThemeList();
 
         getSideList();
         getHomeList();
@@ -84,6 +106,7 @@ public class MainActivity extends StableToolBarActivity {
     }
 
     private void initDrawerLayout() {
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -153,18 +176,19 @@ public class MainActivity extends StableToolBarActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             showOrCloseSideView();
+            return true;
         } else if (id == R.id.action_settings) {
-
+            return true;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void initHomeList() {
-        linearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mHomelinearLayoutManager = new LinearLayoutManager(this);
+        mHomeRecyclerView.setLayoutManager(mHomelinearLayoutManager);
         mHomeAdapter = new HomeAdapter(this);
-        mRecyclerView.setAdapter(mHomeAdapter);
+        mHomeRecyclerView.setAdapter(mHomeAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -172,10 +196,10 @@ public class MainActivity extends StableToolBarActivity {
             }
         });
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mHomeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                boolean is = linearLayoutManager.findLastCompletelyVisibleItemPosition() >= mHomeAdapter.getItemCount() - 1;
+                boolean is = mHomelinearLayoutManager.findLastCompletelyVisibleItemPosition() >= mHomeAdapter.getItemCount() - 1;
                 if (!mSwipeRefreshLayout.isRefreshing() && is) {
                     if (mHomeAdapter.getItemCount() - 1 > 0) {
                         mSwipeRefreshLayout.setRefreshing(true);
@@ -184,7 +208,7 @@ public class MainActivity extends StableToolBarActivity {
                     }
                 }
 
-                int position = linearLayoutManager.findFirstVisibleItemPosition();
+                int position = mHomelinearLayoutManager.findFirstVisibleItemPosition();
                 if (position == 0) {
                     setTitle(R.string.home_page);
                 } else {
@@ -202,33 +226,56 @@ public class MainActivity extends StableToolBarActivity {
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
         mListView.addHeaderView(headView);
-        mSideAdapter = new SideAdapter(this, mDrawerLayout);
+        mSideAdapter = new SideAdapter(this);
         mListView.setAdapter(mSideAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showOrCloseSideView();
+                if (position > 1) {
+                    mSideAdapter.isHomePage = false;
+//                    mListView.getChildAt(1).findViewById(R.id.home_item).setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                    getThemeStoryList(storyThemes.get(position - 2).id);
+                    mThemeLayout.setVisibility(View.VISIBLE);
+                    mHomeRecyclerView.setVisibility(View.GONE);
+                } else if (position == 1) {
+                    mSideAdapter.isHomePage = true;
+                    getHomeList();
+//                    mListView.getChildAt(1).findViewById(R.id.home_item).setBackgroundColor(getResources().getColor(R.color.md_grey_400));
+                    mThemeLayout.setVisibility(View.GONE);
+                    mHomeRecyclerView.setVisibility(View.VISIBLE);
+                }
+                mSideAdapter.notifyDataSetChanged();
+            }
+        });
+
+        DisplayMetrics display = mContext.getResources().getDisplayMetrics();
+        mListView.getLayoutParams().width = (int) (display.widthPixels * 0.8);
     }
 
-    private void getHomeList() {
+    private void initThemeList() {
+        mThemelinearLayoutManager = new LinearLayoutManager(this);
+        mThemeRecyclerView.setLayoutManager(mThemelinearLayoutManager);
+        mThemeAdapter = new ThemeAdapter(this);
+        mThemeRecyclerView.setAdapter(mThemeAdapter);
+
+        mThemeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mThemeImageLayout.scrollBy(0, dy);
+            }
+        });
+    }
+
+    private void getThemeStoryList(String id) {
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
-                .getDailyNews("latest")
-                .map(new Func1<DailyNews, List<SingleDaily>>() {
-                    @Override
-                    public List<SingleDaily> call(DailyNews dailyNews) {
-                        if (dailyNews != null) {
-                            topStories = dailyNews.top_stories;
-                            today = DateUtils.dateWithWeekday(System.currentTimeMillis());
-                            time = System.currentTimeMillis() + A_DAY_MS;
-                            for (SingleDaily daily : topStories) {
-                                daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
-                                daily.before = DateUtils.msToDate(time);
-                            }
-                            return dailyNews.stories;
-                        }
-                        return null;
-                    }
-                })
+        subscription = BenFactory.getDailyThemeApi()
+                .getThemeStories(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<SingleDaily>>() {
+                .subscribe(new Observer<ThemeStories>() {
                     @Override
                     public void onCompleted() {
 
@@ -240,8 +287,50 @@ public class MainActivity extends StableToolBarActivity {
                     }
 
                     @Override
-                    public void onNext(List<SingleDaily> singleDailies) {
-                        for (SingleDaily daily : singleDailies) {
+                    public void onNext(ThemeStories themeStories) {
+                        GlideUtils.loadingImage(mContext, mThemeImageView, themeStories.image);
+                        mDescriptionTextView.setText(themeStories.description);
+                        mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
+                    }
+                });
+    }
+
+    private void getHomeList() {
+        unsubscribe();
+        subscription = BenFactory.getDailyNewsApi()
+                .getDailyNews("latest")
+                .map(new Func1<StoriesResult, List<Story>>() {
+                    @Override
+                    public List<Story> call(StoriesResult dailyNews) {
+                        if (dailyNews != null) {
+                            topStories = dailyNews.top_stories;
+                            today = DateUtils.dateWithWeekday(System.currentTimeMillis());
+                            time = System.currentTimeMillis() + A_DAY_MS;
+                            for (Story daily : topStories) {
+                                daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
+                                daily.before = DateUtils.msToDate(time);
+                            }
+                            return dailyNews.stories;
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Story>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Story> singleDailies) {
+                        for (Story daily : singleDailies) {
                             daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
                             daily.before = DateUtils.msToDate(time);
                         }
@@ -256,9 +345,9 @@ public class MainActivity extends StableToolBarActivity {
         unsubscribe();
         subscription = BenFactory.getDailyNewsApi()
                 .getBeforeDailyNews(beforeTime)
-                .map(new Func1<DailyNews, List<SingleDaily>>() {
+                .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
-                    public List<SingleDaily> call(DailyNews dailyNews) {
+                    public List<Story> call(StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.stories;
                         }
@@ -267,7 +356,7 @@ public class MainActivity extends StableToolBarActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<SingleDaily>>() {
+                .subscribe(new Observer<List<Story>>() {
                     @Override
                     public void onCompleted() {
 
@@ -279,8 +368,8 @@ public class MainActivity extends StableToolBarActivity {
                     }
 
                     @Override
-                    public void onNext(List<SingleDaily> singleDailies) {
-                        for (SingleDaily daily : singleDailies) {
+                    public void onNext(List<Story> singleDailies) {
+                        for (Story daily : singleDailies) {
                             daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
                             daily.before = DateUtils.msToDate(time);
                         }
@@ -294,9 +383,9 @@ public class MainActivity extends StableToolBarActivity {
     private void getSideList() {
         mSideSub = BenFactory.getDailyThemeApi()
                 .getDailyThemes()
-                .map(new Func1<DailyThemeResult, List<DailyTheme>>() {
+                .map(new Func1<StoryThemeResult, List<StoryTheme>>() {
                     @Override
-                    public List<DailyTheme> call(DailyThemeResult dailyThemeResult) {
+                    public List<StoryTheme> call(StoryThemeResult dailyThemeResult) {
                         if (null != dailyThemeResult) {
                             return dailyThemeResult.others;
                         }
@@ -305,7 +394,7 @@ public class MainActivity extends StableToolBarActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<DailyTheme>>() {
+                .subscribe(new Observer<List<StoryTheme>>() {
                     @Override
                     public void onCompleted() {
 
@@ -317,7 +406,9 @@ public class MainActivity extends StableToolBarActivity {
                     }
 
                     @Override
-                    public void onNext(List<DailyTheme> dailyThemes) {
+                    public void onNext(List<StoryTheme> dailyThemes) {
+                        storyThemes = dailyThemes;
+                        mSideAdapter.isHomePage = true;
                         mSideAdapter.setDailyThemes(dailyThemes);
                     }
                 });
