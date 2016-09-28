@@ -22,7 +22,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/news_view"
+                    android:id="@+id/home_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/md_grey_200"
@@ -85,7 +85,7 @@
         android:background="@color/md_grey_100"
         android:choiceMode="singleChoice"
         android:divider="@null"
-        android:listSelector="@color/md_grey_400"
+        android:listSelector="@color/md_grey_300"
         android:scrollbars="none" />
 
 </android.support.v4.widget.DrawerLayout>

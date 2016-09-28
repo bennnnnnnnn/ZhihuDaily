@@ -14,15 +14,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.HomeAdapter;
 import com.example.ben.zhihudaily.adapter.SideAdapter;
 import com.example.ben.zhihudaily.adapter.ThemeAdapter;
+import com.example.ben.zhihudaily.data.ResponseError;
 import com.example.ben.zhihudaily.data.entity.StoriesResult;
 import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.data.entity.StoryThemeResult;
@@ -32,6 +33,7 @@ import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.StableToolBarActivity;
 import com.example.ben.zhihudaily.utils.DateUtils;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +57,7 @@ public class MainActivity extends StableToolBarActivity {
     DrawerLayout mDrawerLayout;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.news_view)
+    @Bind(R.id.home_view)
     RecyclerView mHomeRecyclerView;
     @Bind(R.id.side_listview)
     ListView mListView;
@@ -82,6 +84,8 @@ public class MainActivity extends StableToolBarActivity {
     private Subscription mSideSub;
     private long time;
     private String today;
+    private String storyThemeId;
+    private String storyThemeName;
     private static long A_DAY_MS = 24L * 60 * 60 * 1000;
 
     @Override
@@ -91,6 +95,7 @@ public class MainActivity extends StableToolBarActivity {
         setTitle(R.string.home_page);
 
         initDrawerLayout();
+        initSwipeRefreshLayout();
         initSideList();
         initHomeList();
         initThemeList();
@@ -184,17 +189,12 @@ public class MainActivity extends StableToolBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //init Homepage
     private void initHomeList() {
         mHomelinearLayoutManager = new LinearLayoutManager(this);
         mHomeRecyclerView.setLayoutManager(mHomelinearLayoutManager);
         mHomeAdapter = new HomeAdapter(this);
         mHomeRecyclerView.setAdapter(mHomeAdapter);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getHomeList();
-            }
-        });
 
         mHomeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -207,7 +207,6 @@ public class MainActivity extends StableToolBarActivity {
                         addHomeList(DateUtils.msToDate(time));
                     }
                 }
-
                 int position = mHomelinearLayoutManager.findFirstVisibleItemPosition();
                 if (position == 0) {
                     setTitle(R.string.home_page);
@@ -223,6 +222,19 @@ public class MainActivity extends StableToolBarActivity {
         });
     }
 
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isHomePageVisible()) {
+                    getHomeList();
+                } else {
+                    getThemeStoryList(storyThemeId);
+                }
+            }
+        });
+    }
+
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
         mListView.addHeaderView(headView);
@@ -233,24 +245,40 @@ public class MainActivity extends StableToolBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showOrCloseSideView();
                 if (position > 1) {
-                    mSideAdapter.isHomePage = false;
-//                    mListView.getChildAt(1).findViewById(R.id.home_item).setBackgroundColor(getResources().getColor(R.color.md_grey_100));
-                    getThemeStoryList(storyThemes.get(position - 2).id);
-                    mThemeLayout.setVisibility(View.VISIBLE);
-                    mHomeRecyclerView.setVisibility(View.GONE);
+                    StoryTheme s = storyThemes.get(position - 2);
+                    storyThemeId = s.id;
+                    storyThemeName = s.name;
+                    showHomePage(false);
                 } else if (position == 1) {
-                    mSideAdapter.isHomePage = true;
-                    getHomeList();
-//                    mListView.getChildAt(1).findViewById(R.id.home_item).setBackgroundColor(getResources().getColor(R.color.md_grey_400));
-                    mThemeLayout.setVisibility(View.GONE);
-                    mHomeRecyclerView.setVisibility(View.VISIBLE);
+                    storyThemeName = "首页";
+                    showHomePage(true);
                 }
+                setTitle(storyThemeName);
                 mSideAdapter.notifyDataSetChanged();
             }
         });
 
-        DisplayMetrics display = mContext.getResources().getDisplayMetrics();
-        mListView.getLayoutParams().width = (int) (display.widthPixels * 0.8);
+        mListView.getLayoutParams().width = (int) (App.screenWidth * 0.8);
+    }
+
+
+    private void showHomePage(boolean showHomePage) {
+        if (showHomePage) {
+            mSideAdapter.isHomePage = true;
+            getHomeList();
+            mThemeLayout.setVisibility(View.GONE);
+            mHomeRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            mSideAdapter.isHomePage = false;
+            getThemeStoryList(storyThemeId);
+            mThemeLayout.setVisibility(View.VISIBLE);
+            mHomeRecyclerView.setVisibility(View.GONE);
+        }
+
+    }
+
+    private boolean isHomePageVisible() {
+        return mHomeRecyclerView.getVisibility() == View.VISIBLE;
     }
 
     private void initThemeList() {
@@ -259,16 +287,17 @@ public class MainActivity extends StableToolBarActivity {
         mThemeAdapter = new ThemeAdapter(this);
         mThemeRecyclerView.setAdapter(mThemeAdapter);
 
+        //title image scrolls
         mThemeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 mThemeImageLayout.scrollBy(0, dy);
             }
         });
     }
 
+    //theme type content
     private void getThemeStoryList(String id) {
         unsubscribe();
         subscription = BenFactory.getDailyThemeApi()
@@ -283,7 +312,13 @@ public class MainActivity extends StableToolBarActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        new ResponseError(e).handle(new ResponseError.OnResult() {
+                            @Override
+                            public void onResult(ResponseError error) {
+                                Toast.makeText(mContext, error.error_msg, Toast.LENGTH_SHORT).show();
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
                     }
 
                     @Override
@@ -291,6 +326,7 @@ public class MainActivity extends StableToolBarActivity {
                         GlideUtils.loadingImage(mContext, mThemeImageView, themeStories.image);
                         mDescriptionTextView.setText(themeStories.description);
                         mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
@@ -408,10 +444,27 @@ public class MainActivity extends StableToolBarActivity {
                     @Override
                     public void onNext(List<StoryTheme> dailyThemes) {
                         storyThemes = dailyThemes;
+                        for (StoryTheme s : dailyThemes) {
+                            QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
+                                    .whereEquals(StoryTheme.COL_NAME, s.name);
+                            List<StoryTheme> a = App.mDb.query(qb);
+                            wheatherSelected(s, App.mDb.query(qb));
+                        }
                         mSideAdapter.isHomePage = true;
                         mSideAdapter.setDailyThemes(dailyThemes);
                     }
                 });
+    }
+
+    private void wheatherSelected(StoryTheme s, List<StoryTheme> stortThemes) {
+            for (StoryTheme st : stortThemes) {
+                if (st.selected) {
+                    s.selected = true;
+                    return;
+                }
+            }
+            s.selected = false;
+        App.mDb.save(s);
     }
 
     @Override

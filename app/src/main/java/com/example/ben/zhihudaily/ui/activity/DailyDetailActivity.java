@@ -1,4 +1,4 @@
-package com.example.ben.zhihudaily.ui;
+package com.example.ben.zhihudaily.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

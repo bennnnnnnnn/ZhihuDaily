@@ -20,7 +20,7 @@ public class DetailDailyActionProvider extends ActionProvider {
     ImageView imageView;
     TextView textView;
     Context context;
-    DetailDailyActionProvider.OnClickListener listener;
+    OnClickListener listener;
 
     public DetailDailyActionProvider(Context context) {
         super(context);
@@ -58,7 +58,7 @@ public class DetailDailyActionProvider extends ActionProvider {
         imageView.setImageResource(ResInt);
     }
 
-    public void setOnClickListener(DetailDailyActionProvider.OnClickListener listener) {
+    public void setOnClickListener(OnClickListener listener) {
         this.listener = listener;
     }
 

@@ -11,13 +11,21 @@
         android:padding="15dp"
         android:textColor="@color/md_blue_grey_800" />
 
-    <ImageView
-        android:id="@+id/theme_state_image"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="40dp"
-        android:src="@drawable/plus_icon" />
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/theme_state_image"
+            android:layout_width="12dp"
+            android:layout_height="12dp" />
+    </FrameLayout>
+
 
 </RelativeLayout>
