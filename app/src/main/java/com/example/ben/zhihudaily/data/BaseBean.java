@@ -5,4 +5,6 @@ package com.example.ben.zhihudaily.data;
  */
 
 public class BaseBean {
+    public String status;
+    public String error_msg;
 }

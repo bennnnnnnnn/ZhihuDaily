@@ -18,7 +18,8 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Story;
-import com.example.ben.zhihudaily.ui.DailyDetailActivity;
+
+import com.example.ben.zhihudaily.ui.activity.DailyDetailActivity;
 import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 

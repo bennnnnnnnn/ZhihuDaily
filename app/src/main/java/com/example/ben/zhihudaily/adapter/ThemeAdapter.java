@@ -14,8 +14,12 @@ import android.widget.TextView;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Editor;
 import com.example.ben.zhihudaily.data.entity.Story;
-import com.example.ben.zhihudaily.ui.DailyDetailActivity;
+import com.example.ben.zhihudaily.ui.activity.DailyDetailActivity;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -82,16 +86,24 @@ public class ThemeAdapter extends RecyclerView.Adapter {
         switch (type) {
             case TYPE_HEAD:
                 EditorViewHolder editorViewHolder = (EditorViewHolder) holder;
+                if (getItemCount() == 1) {
+                    editorViewHolder.editosLayout.setVisibility(View.GONE);
+                } else {
+                    editorViewHolder.editosLayout.setVisibility(View.VISIBLE);
+                }
                 if (null != editors && editors.size() > 0) {
-                    editorViewHolder.editosLayout.removeAllViews();
+                    editorViewHolder.editosImage.removeAllViews();
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(90, 90);
                     for (Editor editor : editors) {
-                        ImageView editorImage = new ImageView(context);
+                        SimpleDraweeView editorImage = new SimpleDraweeView(context);
                         editorImage.setLayoutParams(params);
                         editorImage.setPadding(10, 10, 10, 10);
                         editorImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                        GlideUtils.loadingImage(context, editorImage, editor.avatar);
-                        editorViewHolder.editosLayout.addView(editorImage);
+                        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(context.getResources())
+                                .setRoundingParams(RoundingParams.asCircle()).build();
+                        editorImage.setHierarchy(hierarchy);
+                        editorImage.setImageURI(editor.avatar);
+                        editorViewHolder.editosImage.addView(editorImage);
                     }
                 }
                 break;
@@ -114,8 +126,10 @@ public class ThemeAdapter extends RecyclerView.Adapter {
     }
 
     class EditorViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.editor_images)
+        @Bind(R.id.editor_layout)
         LinearLayout editosLayout;
+        @Bind(R.id.editor_images)
+        LinearLayout editosImage;
 
         public EditorViewHolder(View itemView) {
             super(itemView);

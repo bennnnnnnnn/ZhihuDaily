@@ -9,10 +9,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.StoryTheme;
+import com.example.ben.zhihudaily.ui.App;
 
 import java.util.List;
 
@@ -108,19 +110,37 @@ public class SideAdapter extends BaseAdapter {
         switch (type) {
             case TYPE_0:
                 if (isHomePage) {
-                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_400));
+                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_300));
                 } else {
                     homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_100));
                 }
                 break;
             case TYPE_1:
-                StoryTheme dailyTheme = dailyThemes.get(position - 1);
+                final StoryTheme dailyTheme = dailyThemes.get(position - 1);
                 item.themeTitle.setText(dailyTheme.name);
+                item.tipView.setImageResource(dailyTheme.selected ? R.drawable.go_icon : R.drawable.plus_icon);
+                item.tipView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        updateThemeState(dailyTheme);
+                    }
+                });
                 break;
             default:
                 break;
         }
         return cv;
+    }
+
+    private void updateThemeState(StoryTheme s) {
+        if (!s.selected) {
+            Toast.makeText(mContext, "关注成功,关注内容会在首页呈现哦~", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(mContext, "卧槽,居然取关窝,其他事件宝宝懒得做了!", Toast.LENGTH_LONG).show();
+        }
+        s.selected = !s.selected;
+        App.mDb.update(s);
+        notifyDataSetChanged();
     }
 
     private class ViewHolder {
