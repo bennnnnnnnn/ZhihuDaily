@@ -1,6 +1,7 @@
 package com.example.ben.zhihudaily.api;
 
 
+import com.example.ben.zhihudaily.data.entity.StartImage;
 import com.example.ben.zhihudaily.data.entity.StoryDetail;
 import com.example.ben.zhihudaily.data.entity.StoriesResult;
 import com.example.ben.zhihudaily.data.entity.StoryExtra;
@@ -10,7 +11,7 @@ import retrofit2.http.Path;
 import rx.Observable;
 
 /**
- *Created by Zhou bangquan on 16/9/11.
+ * Created by Zhou bangquan on 16/9/11.
  */
 
 public interface DailyNewsApi {
@@ -25,4 +26,7 @@ public interface DailyNewsApi {
 
     @GET("api/4/story-extra/{id}")
     Observable<StoryExtra> getStoryExtra(@Path("id") String id);
+
+    @GET("api/4/start-image/{size}")
+    Observable<StartImage> getStartImage(@Path("size") String size);
 }

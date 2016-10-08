@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Editor;
 import com.example.ben.zhihudaily.data.entity.Story;
+import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.ui.activity.DailyDetailActivity;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -93,7 +94,8 @@ public class ThemeAdapter extends RecyclerView.Adapter {
                 }
                 if (null != editors && editors.size() > 0) {
                     editorViewHolder.editosImage.removeAllViews();
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(90, 90);
+                    int length = (int) (30 * App.scaledDensity);
+                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(length, length);
                     for (Editor editor : editors) {
                         SimpleDraweeView editorImage = new SimpleDraweeView(context);
                         editorImage.setLayoutParams(params);
@@ -117,7 +119,6 @@ public class ThemeAdapter extends RecyclerView.Adapter {
                 } else {
                     themeViewHolder.mImageView.setVisibility(View.GONE);
                 }
-
                 break;
             default:
                 break;

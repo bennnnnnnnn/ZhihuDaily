@@ -1,5 +1,6 @@
 package com.example.ben.zhihudaily.ui;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -8,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -183,6 +183,7 @@ public class MainActivity extends StableToolBarActivity {
             showOrCloseSideView();
             return true;
         } else if (id == R.id.action_settings) {
+            startActivity(new Intent(mContext, StartActivity.class));
             return true;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -444,11 +445,10 @@ public class MainActivity extends StableToolBarActivity {
                     @Override
                     public void onNext(List<StoryTheme> dailyThemes) {
                         storyThemes = dailyThemes;
-                        for (StoryTheme s : dailyThemes) {
+                        for (StoryTheme theme : dailyThemes) {
                             QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
-                                    .whereEquals(StoryTheme.COL_NAME, s.name);
-                            List<StoryTheme> a = App.mDb.query(qb);
-                            wheatherSelected(s, App.mDb.query(qb));
+                                    .whereEquals(StoryTheme.COL_NAME, theme.name);
+                            wheatherSelected(theme, App.mDb.query(qb));
                         }
                         mSideAdapter.isHomePage = true;
                         mSideAdapter.setDailyThemes(dailyThemes);
@@ -456,15 +456,15 @@ public class MainActivity extends StableToolBarActivity {
                 });
     }
 
-    private void wheatherSelected(StoryTheme s, List<StoryTheme> stortThemes) {
-            for (StoryTheme st : stortThemes) {
-                if (st.selected) {
-                    s.selected = true;
-                    return;
-                }
+    private void wheatherSelected(StoryTheme theme, List<StoryTheme> stortThemes) {
+        for (StoryTheme stortTheme : stortThemes) {
+            if (stortTheme.selected) {
+                theme.selected = true;
+                return;
             }
-            s.selected = false;
-        App.mDb.save(s);
+        }
+        theme.selected = false;
+        App.mDb.save(theme);
     }
 
     @Override
