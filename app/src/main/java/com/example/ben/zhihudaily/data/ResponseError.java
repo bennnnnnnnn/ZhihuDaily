@@ -19,13 +19,10 @@ public class ResponseError {
 
     public int status;
     public String error_msg;
+
     private Throwable throwable;
     private OnResult onResult;
     private ResponseError error = null;
-
-    public ResponseError() {
-
-    }
 
     public ResponseError(int status, String error_msg) {
         this.status = status;

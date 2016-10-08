@@ -9,22 +9,25 @@ import com.example.ben.zhihudaily.api.DailyThemeApi;
  */
 
 public class BenFactory {
-
-    static DailyThemeApi mDailyThemeApi = null;
-    static DailyNewsApi mDailyNewsApi = null;
+    private static final Object object = new Object();
+    private static DailyThemeApi mDailyThemeApi = null;
+    private static DailyNewsApi mDailyNewsApi = null;
 
     public static DailyThemeApi getDailyThemeApi() {
-        if (null == mDailyThemeApi) {
-            mDailyThemeApi = new BenRetrofit().getDailyThemeApi();
+        synchronized (object) {
+            if (null == mDailyThemeApi) {
+                mDailyThemeApi = new BenRetrofit().getDailyThemeApi();
+            }
+            return mDailyThemeApi;
         }
-        return mDailyThemeApi;
     }
 
     public static DailyNewsApi getDailyNewsApi() {
-        if (null == mDailyNewsApi) {
-            mDailyNewsApi = new BenRetrofit().getDailyNewsApi();
+        synchronized (object) {
+            if (null == mDailyNewsApi) {
+                mDailyNewsApi = new BenRetrofit().getDailyNewsApi();
+            }
+            return mDailyNewsApi;
         }
-        return mDailyNewsApi;
     }
-
 }

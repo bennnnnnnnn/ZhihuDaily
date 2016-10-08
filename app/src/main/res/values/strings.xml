@@ -14,4 +14,6 @@
     <string name="commend">评论</string>
     <string name="praise">赞</string>
     <string name="editors">主编</string>
+    <string name="app_name_cn">知乎日报</string>
+    <string name="welcome_text">不止3次 不止7分钟</string>
 </resources>
