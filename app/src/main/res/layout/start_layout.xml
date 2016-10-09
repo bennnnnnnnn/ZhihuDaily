@@ -29,7 +29,7 @@
     <RelativeLayout
         android:id="@+id/bottom_animation_layout"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="70dp"
         android:paddingBottom="12dp">
 
         <ImageView

@@ -1,9 +1,12 @@
 package com.example.ben.zhihudaily.adapter;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,8 +17,15 @@ import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 
+import java.io.IOException;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,6 +63,7 @@ public class DetailAdapter extends PagerAdapter {
         final TextView mTitleTextView = (TextView) view.findViewById(R.id.title_textview);
         final TextView mImageSource = (TextView) view.findViewById(R.id.image_source);
         final WebView mContentWebView = (WebView) view.findViewById(R.id.content_webview);
+        setWebViewSettings(mContentWebView);
 
         Story singleDaily = dailies.get(position);
 
@@ -71,17 +82,50 @@ public class DetailAdapter extends PagerAdapter {
                     }
 
                     @Override
-                    public void onNext(StoryDetail dailyDetail) {
-                        mTitleTextView.setText(dailyDetail.title);
-                        mImageSource.setText(dailyDetail.image_source);
-                        GlideUtils.loadingImage(context, mTopImage, dailyDetail.image);
-                        mContentWebView.loadDataWithBaseURL(dailyDetail.css[0], dailyDetail.body, "text/html", "utf-8", null);
+                    public void onNext(final StoryDetail storyDetail) {
+                        mTitleTextView.setText(storyDetail.title);
+                        mImageSource.setText(storyDetail.image_source);
+                        GlideUtils.loadingImage(context, mTopImage, storyDetail.image);
+                        String cssUrl = storyDetail.css[0];
+                        System.out.println("-------"+cssUrl);
+                        OkHttpClient mOkHttpClient = new OkHttpClient();
+                        final Request request = new Request.Builder()
+                                .url(cssUrl)
+                                .build();
+                        Call call = mOkHttpClient.newCall(request);
+                        call.enqueue(new Callback()
+                        {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                String css = response.body().string();
+                                String htmlWithCss = "<head><style type=\"text/css\">" + css + "</style>\n" +
+                                        "</head>" + storyDetail.body + "</body></html>";
+                                final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mContentWebView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
 
         container.addView(view);
 
         return view;
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void setWebViewSettings(WebView mContentWebView) {
+        WebSettings mWebSetting = mContentWebView.getSettings();
+        mWebSetting.setJavaScriptEnabled(true);
     }
 
     @Override
