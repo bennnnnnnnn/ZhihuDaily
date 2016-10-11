@@ -178,11 +178,25 @@ public class MainActivity extends StableToolBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem item = menu.findItem(R.id.action_settings);
+        MenuItem item0 = menu.findItem(R.id.collecion_item);
+        MenuItem item1 = menu.findItem(R.id.favourate_item);
+        MenuItem item2 = menu.findItem(R.id.mode_item);
+        MenuItem item3 = menu.findItem(R.id.setting_item);
         if (isNightMode()) {
-            item.setTitle("日间模式");
+            item2.setTitle("日间模式");
         } else {
-            item.setTitle("夜间模式");
+            item2.setTitle("夜间模式");
+        }
+        if (isHomePageVisible()) {
+            item0.setVisible(true);
+            item1.setVisible(false);
+            item2.setVisible(true);
+            item3.setVisible(true);
+        } else {
+            item0.setVisible(false);
+            item1.setVisible(true);
+            item2.setVisible(false);
+            item3.setVisible(false);
         }
         return true;
     }
@@ -193,14 +207,16 @@ public class MainActivity extends StableToolBarActivity {
         if (id == android.R.id.home) {
             showOrCloseSideView();
             return true;
-        } else if (id == R.id.action_settings) {
+        } else if (id == R.id.mode_item) {
             if (isNightMode()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
-            SharePreUtils.put(mContext,App.ZHIHU_MODE, !isNightMode());
+            SharePreUtils.put(mContext, App.ZHIHU_MODE, !isNightMode());
             recreate();
+            return true;
+        } else if (id == R.id.setting_item) {
             return true;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -292,7 +308,6 @@ public class MainActivity extends StableToolBarActivity {
             mThemeLayout.setVisibility(View.VISIBLE);
             mHomeRecyclerView.setVisibility(View.GONE);
         }
-
     }
 
     private boolean isHomePageVisible() {

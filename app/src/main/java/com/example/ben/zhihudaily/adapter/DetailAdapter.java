@@ -15,7 +15,10 @@ import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.StoryDetail;
 import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.network.BenFactory;
+import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.example.ben.zhihudaily.utils.HtmlUtils;
+import com.example.ben.zhihudaily.utils.SharePreUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -91,8 +94,7 @@ public class DetailAdapter extends PagerAdapter {
                                 .url(cssUrl)
                                 .build();
                         Call call = mOkHttpClient.newCall(request);
-                        call.enqueue(new Callback()
-                        {
+                        call.enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
 
@@ -101,8 +103,7 @@ public class DetailAdapter extends PagerAdapter {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 String css = response.body().string();
-                                String htmlWithCss = "<head><style type=\"text/css\">" + css + "</style>\n" +
-                                        "</head><body class=\"night\">" + storyDetail.body + "</body></html>";
+                                String htmlWithCss = HtmlUtils.get(css, storyDetail.body, (boolean) SharePreUtils.get(context, App.ZHIHU_MODE, false));
                                 final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
                                 ((Activity) context).runOnUiThread(new Runnable() {
                                     @Override
