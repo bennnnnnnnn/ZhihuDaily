@@ -10,12 +10,20 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/favourate_item"
+        android:icon="@drawable/plus_icon"
+        android:orderInCategory="100"
+        android:title="@string/collection"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/mode_item"
         android:orderInCategory="99"
         android:title="@string/night_mode"
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/setting_item"
         android:orderInCategory="100"
         android:title="@string/setting"
         app:showAsAction="never" />
