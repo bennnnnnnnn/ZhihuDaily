@@ -1,6 +1,7 @@
 package com.example.ben.zhihudaily.ui.base;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
@@ -21,10 +22,24 @@ import rx.Subscription;
 public abstract class BaseActivity extends AppCompatActivity {
     protected Subscription subscription;
     protected Context mContext;
+    int currentNightMode = -1;
 
     protected void unsubscribe() {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
+        }
+    }
+
+    protected boolean isNightMode() {
+        currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                return false;
+            case Configuration.UI_MODE_NIGHT_YES:
+                return true;
+            default:
+                return false;
         }
     }
 

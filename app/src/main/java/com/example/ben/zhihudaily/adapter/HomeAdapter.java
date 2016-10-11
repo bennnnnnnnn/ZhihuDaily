@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -110,18 +111,23 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 break;
             case TYPE_CONTENT:
                 HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
-                final Story daily = mDailyNews.get(position - 1);
+                final Story story = mDailyNews.get(position - 1);
                 if (position == 1) {
                     homeViewHolder.dateTextView.setText(R.string.today_news);
                     homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
-                } else if (!(daily.date).equals(mDailyNews.get(position - 2).date)) {
-                    homeViewHolder.dateTextView.setText(daily.date);
+                } else if (!(story.date).equals(mDailyNews.get(position - 2).date)) {
+                    homeViewHolder.dateTextView.setText(story.date);
                     homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
                 } else {
                     homeViewHolder.dateTextView.setVisibility(View.GONE);
                 }
-                homeViewHolder.titleTextView.setText(daily.title);
-                GlideUtils.loadingImage(context, homeViewHolder.newsImageView, daily.images[0]);
+                homeViewHolder.titleTextView.setText(story.title);
+                GlideUtils.loadingImage(context, homeViewHolder.newsImageView, story.images[0]);
+                if (story.multipic) {
+                    homeViewHolder.multipLayout.setVisibility(View.VISIBLE);
+                } else {
+                    homeViewHolder.multipLayout.setVisibility(View.GONE);
+                }
                 break;
             default:
                 break;
@@ -137,6 +143,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
         TextView titleTextView;
         @Bind(R.id.date_textView)
         TextView dateTextView;
+        @Bind(R.id.multip_layout)
+        RelativeLayout multipLayout;
 
         HomeViewHolder(View itemView) {
             super(itemView);

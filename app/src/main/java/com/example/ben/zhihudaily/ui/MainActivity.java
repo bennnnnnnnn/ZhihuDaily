@@ -1,12 +1,16 @@
 package com.example.ben.zhihudaily.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -33,6 +37,7 @@ import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.StableToolBarActivity;
 import com.example.ben.zhihudaily.utils.DateUtils;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.example.ben.zhihudaily.utils.SharePreUtils;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.ArrayList;
@@ -173,6 +178,12 @@ public class MainActivity extends StableToolBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.action_settings);
+        if (isNightMode()) {
+            item.setTitle("日间模式");
+        } else {
+            item.setTitle("夜间模式");
+        }
         return true;
     }
 
@@ -183,7 +194,13 @@ public class MainActivity extends StableToolBarActivity {
             showOrCloseSideView();
             return true;
         } else if (id == R.id.action_settings) {
-            startActivity(new Intent(mContext, StartActivity.class));
+            if (isNightMode()) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+            SharePreUtils.put(mContext,App.ZHIHU_MODE, !isNightMode());
+            recreate();
             return true;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);

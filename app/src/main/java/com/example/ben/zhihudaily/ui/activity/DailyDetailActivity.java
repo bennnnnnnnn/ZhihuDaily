@@ -52,7 +52,7 @@ public class DailyDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.daily_detail_layout);
+        setContentView(R.layout.story_detail_layout);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         mActionbar = getSupportActionBar();

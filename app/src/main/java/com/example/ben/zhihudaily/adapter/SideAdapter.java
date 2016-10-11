@@ -110,9 +110,9 @@ public class SideAdapter extends BaseAdapter {
         switch (type) {
             case TYPE_0:
                 if (isHomePage) {
-                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_300));
+                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.side_item_selected));
                 } else {
-                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.md_grey_100));
+                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.side_bg));
                 }
                 break;
             case TYPE_1:
