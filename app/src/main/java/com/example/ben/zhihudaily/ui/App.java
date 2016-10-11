@@ -1,9 +1,14 @@
 package com.example.ben.zhihudaily.ui;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.DisplayMetrics;
 
 import com.example.ben.zhihudaily.BuildConfig;
+import com.example.ben.zhihudaily.utils.SharePreUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.litesuits.orm.LiteOrm;
 
@@ -27,6 +32,8 @@ public class App extends Application {
 
     private static final String ZHIHU_DB_NAME = "zhihu.db";
 
+    public static String ZHIHU_MODE = "zhihu_mode";
+
     public static LiteOrm mDb;
 
     @Override
@@ -36,6 +43,13 @@ public class App extends Application {
         mDb = LiteOrm.newCascadeInstance(this, ZHIHU_DB_NAME);
         if (BuildConfig.DEBUG) {
             mDb.setDebugged(true);
+        }
+
+        boolean isNightMode = (boolean) SharePreUtils.get(this, App.ZHIHU_MODE, false);
+        if (isNightMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
         initConfigues();
     }

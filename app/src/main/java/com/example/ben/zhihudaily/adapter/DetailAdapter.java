@@ -24,7 +24,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import rx.Observer;
 import rx.Subscription;
@@ -58,7 +57,7 @@ public class DetailAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = View.inflate(context, R.layout.daily_detail_item, null);
+        View view = View.inflate(context, R.layout.story_detail_item, null);
         final ImageView mTopImage = (ImageView) view.findViewById(R.id.top_image);
         final TextView mTitleTextView = (TextView) view.findViewById(R.id.title_textview);
         final TextView mImageSource = (TextView) view.findViewById(R.id.image_source);
@@ -87,7 +86,6 @@ public class DetailAdapter extends PagerAdapter {
                         mImageSource.setText(storyDetail.image_source);
                         GlideUtils.loadingImage(context, mTopImage, storyDetail.image);
                         String cssUrl = storyDetail.css[0];
-                        System.out.println("-------"+cssUrl);
                         OkHttpClient mOkHttpClient = new OkHttpClient();
                         final Request request = new Request.Builder()
                                 .url(cssUrl)
@@ -104,7 +102,7 @@ public class DetailAdapter extends PagerAdapter {
                             public void onResponse(Call call, Response response) throws IOException {
                                 String css = response.body().string();
                                 String htmlWithCss = "<head><style type=\"text/css\">" + css + "</style>\n" +
-                                        "</head>" + storyDetail.body + "</body></html>";
+                                        "</head><body class=\"night\">" + storyDetail.body + "</body></html>";
                                 final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
                                 ((Activity) context).runOnUiThread(new Runnable() {
                                     @Override
