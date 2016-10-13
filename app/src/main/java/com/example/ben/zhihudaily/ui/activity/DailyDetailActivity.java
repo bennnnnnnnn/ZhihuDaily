@@ -16,7 +16,7 @@ import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.data.entity.StoryExtra;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.BaseActivity;
-import com.example.ben.zhihudaily.utils.Constant;
+import com.example.ben.zhihudaily.utils.Config;
 import com.example.ben.zhihudaily.utils.DetailDailyActionProvider;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class DailyDetailActivity extends BaseActivity {
         before = getIntent().getStringExtra("before");
         type = getIntent().getStringExtra("type");
         initViewPager();
-        if (Constant.TOP_STORIES.equals(type)) {
+        if (Config.TOP_STORIES.equals(type)) {
             getTopStories();
         } else {
             getBeforeDailies();

@@ -21,7 +21,7 @@ import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Story;
 
 import com.example.ben.zhihudaily.ui.activity.DailyDetailActivity;
-import com.example.ben.zhihudaily.utils.Constant;
+import com.example.ben.zhihudaily.utils.Config;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 
 import java.util.List;
@@ -105,7 +105,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
                     public void onItemClick(int position) {
                         Story daily = mBannerThemes.get(position);
                         context.startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
-                                .putExtra("before", daily.before).putExtra("type", Constant.TOP_STORIES));
+                                .putExtra("before", daily.before).putExtra("type", Config.TOP_STORIES));
                     }
                 });
                 break;
@@ -155,7 +155,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         void onDetail(View v) {
             Story daily = mDailyNews.get(getLayoutPosition() - 1);
             v.getContext().startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
-                    .putExtra("before", daily.before).putExtra("type", Constant.STORY));
+                    .putExtra("before", daily.before).putExtra("type", Config.STORY));
         }
     }
 

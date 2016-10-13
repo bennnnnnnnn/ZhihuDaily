@@ -1,10 +1,8 @@
 package com.example.ben.zhihudaily.ui;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -82,7 +80,7 @@ public class MainActivity extends StableToolBarActivity {
     private HomeAdapter mHomeAdapter;
     private ThemeAdapter mThemeAdapter;
     private List<Story> topStories = new ArrayList<>();
-    private List<Story> dailies = new ArrayList<>();
+    private List<Story> homeStories = new ArrayList<>();
     private List<StoryTheme> storyThemes = new ArrayList<>();
     private LinearLayoutManager mHomelinearLayoutManager;
     private LinearLayoutManager mThemelinearLayoutManager;
@@ -245,7 +243,7 @@ public class MainActivity extends StableToolBarActivity {
                 if (position == 0) {
                     setTitle(R.string.home_page);
                 } else {
-                    String date = dailies.get(position - 1).date;
+                    String date = homeStories.get(position - 1).date;
                     if (today.equals(date)) {
                         setTitle(R.string.today_news);
                     } else {
@@ -257,6 +255,7 @@ public class MainActivity extends StableToolBarActivity {
     }
 
     private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.appbar_bg);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -269,8 +268,14 @@ public class MainActivity extends StableToolBarActivity {
         });
     }
 
+    @SuppressWarnings("ResourceAsColor")
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
+
+        //test
+        ImageView v = (ImageView) headView.findViewById(R.id.favourate_image);
+        DrawableCompat.setTint(v.getDrawable(), ContextCompat.getColor(mContext,R.color.md_red_500));
+
         mListView.addHeaderView(headView);
         mSideAdapter = new SideAdapter(this);
         mListView.setAdapter(mSideAdapter);
@@ -370,16 +375,16 @@ public class MainActivity extends StableToolBarActivity {
                 .getDailyNews("latest")
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> call(StoriesResult dailyNews) {
-                        if (dailyNews != null) {
-                            topStories = dailyNews.top_stories;
+                    public List<Story> call(StoriesResult storiesResult) {
+                        if (storiesResult != null) {
+                            topStories = storiesResult.top_stories;
                             today = DateUtils.dateWithWeekday(System.currentTimeMillis());
                             time = System.currentTimeMillis() + A_DAY_MS;
                             for (Story daily : topStories) {
                                 daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
                                 daily.before = DateUtils.msToDate(time);
                             }
-                            return dailyNews.stories;
+                            return storiesResult.stories;
                         }
                         return null;
                     }
@@ -398,13 +403,13 @@ public class MainActivity extends StableToolBarActivity {
                     }
 
                     @Override
-                    public void onNext(List<Story> singleDailies) {
-                        for (Story daily : singleDailies) {
-                            daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
-                            daily.before = DateUtils.msToDate(time);
+                    public void onNext(List<Story> stories) {
+                        for (Story story : stories) {
+                            story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
+                            story.before = DateUtils.msToDate(time);
                         }
-                        dailies = singleDailies;
-                        mHomeAdapter.setDailyNews(singleDailies, topStories);
+                        homeStories = stories;
+                        mHomeAdapter.setDailyNews(stories, topStories);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -416,9 +421,9 @@ public class MainActivity extends StableToolBarActivity {
                 .getBeforeDailyNews(beforeTime)
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> call(StoriesResult dailyNews) {
-                        if (dailyNews != null) {
-                            return dailyNews.stories;
+                    public List<Story> call(StoriesResult storiesResult) {
+                        if (storiesResult != null) {
+                            return storiesResult.stories;
                         }
                         return null;
                     }
@@ -437,13 +442,13 @@ public class MainActivity extends StableToolBarActivity {
                     }
 
                     @Override
-                    public void onNext(List<Story> singleDailies) {
-                        for (Story daily : singleDailies) {
-                            daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
-                            daily.before = DateUtils.msToDate(time);
+                    public void onNext(List<Story> stories) {
+                        for (Story story : stories) {
+                            story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
+                            story.before = DateUtils.msToDate(time);
                         }
-                        dailies.addAll(singleDailies);
-                        mHomeAdapter.addDailyNews(singleDailies);
+                        homeStories.addAll(stories);
+                        mHomeAdapter.addDailyNews(stories);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -475,21 +480,23 @@ public class MainActivity extends StableToolBarActivity {
                     }
 
                     @Override
-                    public void onNext(List<StoryTheme> dailyThemes) {
-                        storyThemes = dailyThemes;
-                        for (StoryTheme theme : dailyThemes) {
+                    public void onNext(List<StoryTheme> themes) {
+                        storyThemes = themes;
+                        for (StoryTheme theme : themes) {
                             QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
-                                    .whereEquals(StoryTheme.COL_NAME, theme.name);
+                                    .whereEquals(StoryTheme.COL_NAME, theme.name)
+                                    .whereAppendAnd()
+                                    .whereEquals(StoryTheme.COL_ID, theme.id);
                             wheatherSelected(theme, App.mDb.query(qb));
                         }
                         mSideAdapter.isHomePage = true;
-                        mSideAdapter.setDailyThemes(dailyThemes);
+                        mSideAdapter.setDailyThemes(themes);
                     }
                 });
     }
 
-    private void wheatherSelected(StoryTheme theme, List<StoryTheme> stortThemes) {
-        for (StoryTheme stortTheme : stortThemes) {
+    private void wheatherSelected(StoryTheme theme, List<StoryTheme> themes) {
+        for (StoryTheme stortTheme : themes) {
             if (stortTheme.selected) {
                 theme.selected = true;
                 return;

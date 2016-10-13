@@ -41,6 +41,7 @@
             android:paddingLeft="20dp">
 
             <ImageView
+                android:id="@+id/favourate_image"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/favourate_icon" />

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.utils.ToastUtils;
 
 import java.util.List;
 
@@ -134,9 +135,9 @@ public class SideAdapter extends BaseAdapter {
 
     private void updateThemeState(StoryTheme s) {
         if (!s.selected) {
-            Toast.makeText(mContext, "关注成功,关注内容会在首页呈现哦~", Toast.LENGTH_LONG).show();
+            ToastUtils.shortToast(mContext, "关注成功,关注内容会在首页呈现哦~");
         } else {
-            Toast.makeText(mContext, "卧槽,居然取关窝,其他事件宝宝懒得做了!", Toast.LENGTH_LONG).show();
+            ToastUtils.shortToast(mContext, "卧槽,居然取关窝,其他事件宝宝懒得做了!");
         }
         s.selected = !s.selected;
         App.mDb.update(s);
