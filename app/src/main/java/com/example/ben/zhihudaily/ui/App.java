@@ -1,9 +1,6 @@
 package com.example.ben.zhihudaily.ui;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.DisplayMetrics;
 
