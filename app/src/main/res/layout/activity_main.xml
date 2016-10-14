@@ -11,66 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <FrameLayout
+            android:id="@+id/container_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/layout_bg">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/home_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="vertical">
-
-                </android.support.v7.widget.RecyclerView>
-
-                <RelativeLayout
-                    android:id="@+id/theme_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/theme_stories_recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scrollbars="vertical" />
-
-                    <RelativeLayout
-                        android:id="@+id/theme_image_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="225dp">
-
-                        <ImageView
-                            android:id="@+id/theme_imageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
-
-                        <TextView
-                            android:id="@+id/description_textView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="25dp"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:textColor="@color/md_white_1000"
-                            android:textSize="18sp" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </FrameLayout>
 
         <include layout="@layout/view_toolbar" />
 
