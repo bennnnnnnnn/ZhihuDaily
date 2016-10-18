@@ -4,6 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <WebView
+            android:id="@+id/content_webview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.NestedScrollView>
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
@@ -24,6 +35,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_shadow_background" />
 
                 <TextView
                     android:id="@+id/title_textview"
@@ -51,17 +67,6 @@
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <WebView
-            android:id="@+id/content_webview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.support.v4.widget.NestedScrollView>
 
 
 </android.support.design.widget.CoordinatorLayout>
