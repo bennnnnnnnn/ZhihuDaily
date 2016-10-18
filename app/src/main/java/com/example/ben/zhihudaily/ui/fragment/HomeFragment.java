@@ -131,7 +131,7 @@ public class HomeFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -170,7 +170,7 @@ public class HomeFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
