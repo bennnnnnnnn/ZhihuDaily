@@ -39,22 +39,18 @@ public class BenRetrofit {
     private DailyNewsApi dailyNewsApi;
 
     BenRetrofit() {
-
         initOkHttpClient();
-
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
-
     }
 
     private void initOkHttpClient() {
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         if (okHttpClient == null) {
             synchronized (BenRetrofit.class) {
@@ -65,9 +61,9 @@ public class BenRetrofit {
 
                     okHttpClient = new OkHttpClient.Builder()
                             .cache(cache)
-                            .addInterceptor(mInterceptor)
-                            .addNetworkInterceptor(mInterceptor)
-                            .addInterceptor(interceptor)
+                            .addInterceptor(networkInterceptor)
+                            .addNetworkInterceptor(networkInterceptor)
+                            .addInterceptor(loggingInterceptor)
                             .retryOnConnectionFailure(true)
                             .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                             .build();
@@ -76,7 +72,7 @@ public class BenRetrofit {
         }
     }
 
-    private Interceptor mInterceptor = new Interceptor() {
+    private Interceptor networkInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
 
