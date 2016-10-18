@@ -5,7 +5,7 @@ package com.example.ben.zhihudaily.utils;
  */
 
 
-public class Config {
+public class Constant {
     public static final String TOP_STORIES = "top_stories";
     public static final String STORY = "story";
 }

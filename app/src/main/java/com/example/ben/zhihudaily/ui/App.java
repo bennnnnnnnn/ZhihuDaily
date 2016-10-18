@@ -1,6 +1,7 @@
 package com.example.ben.zhihudaily.ui;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.DisplayMetrics;
 
@@ -16,6 +17,7 @@ import com.litesuits.orm.LiteOrm;
 
 public class App extends Application {
 
+    public static Context mContext;
     // 屏幕宽度
     public static int screenWidth = 480;
     // 屏幕高度
@@ -36,6 +38,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         Fresco.initialize(this);
         mDb = LiteOrm.newCascadeInstance(this, ZHIHU_DB_NAME);
         if (BuildConfig.DEBUG) {
@@ -49,6 +52,10 @@ public class App extends Application {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
         initConfigues();
+    }
+
+    public static Context getInstance() {
+        return mContext;
     }
 
     private void initConfigues() {
