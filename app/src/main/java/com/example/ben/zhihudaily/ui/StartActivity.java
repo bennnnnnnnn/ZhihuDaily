@@ -55,7 +55,7 @@ public class StartActivity extends BaseActivity {
     private void loadStartImage() {
         String size = App.screenWidth + "*" + imageLayoutHeight;
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
+        subscription = BenFactory.getStoryApi()
                 .getStartImage(size)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

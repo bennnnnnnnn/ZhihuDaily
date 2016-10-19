@@ -12,7 +12,7 @@ import rx.Observable;
  * Created by Zhou bangquan on 16/9/10.
  */
 
-public interface DailyThemeApi {
+public interface StoryThemeApi {
     @GET("api/4/themes")
     Observable<StoryThemeResult> getDailyThemes();
 

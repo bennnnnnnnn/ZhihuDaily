@@ -1,7 +1,7 @@
 package com.example.ben.zhihudaily.network;
 
-import com.example.ben.zhihudaily.api.DailyNewsApi;
-import com.example.ben.zhihudaily.api.DailyThemeApi;
+import com.example.ben.zhihudaily.api.StoryApi;
+import com.example.ben.zhihudaily.api.StoryThemeApi;
 
 
 /**
@@ -10,22 +10,22 @@ import com.example.ben.zhihudaily.api.DailyThemeApi;
 
 public class BenFactory {
     private static final Object object = new Object();
-    private static DailyThemeApi mDailyThemeApi = null;
-    private static DailyNewsApi mDailyNewsApi = null;
+    private static StoryThemeApi mDailyThemeApi = null;
+    private static StoryApi mDailyNewsApi = null;
 
-    public static DailyThemeApi getDailyThemeApi() {
+    public static StoryThemeApi getStoryThemeApi() {
         synchronized (object) {
             if (null == mDailyThemeApi) {
-                mDailyThemeApi = new BenRetrofit().getDailyThemeApi();
+                mDailyThemeApi = new BenRetrofit().getStoryThemeApi();
             }
             return mDailyThemeApi;
         }
     }
 
-    public static DailyNewsApi getDailyNewsApi() {
+    public static StoryApi getStoryApi() {
         synchronized (object) {
             if (null == mDailyNewsApi) {
-                mDailyNewsApi = new BenRetrofit().getDailyNewsApi();
+                mDailyNewsApi = new BenRetrofit().getStoryApi();
             }
             return mDailyNewsApi;
         }

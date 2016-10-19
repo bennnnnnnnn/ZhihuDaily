@@ -18,6 +18,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/commend_image"
         android:layout_toRightOf="@+id/commend_image"
+        android:text="..."
         android:textColor="@color/md_white_1000" />
 
 </RelativeLayout>

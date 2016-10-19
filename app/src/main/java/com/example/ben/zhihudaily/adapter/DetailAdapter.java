@@ -69,7 +69,7 @@ public class DetailAdapter extends PagerAdapter {
 
         Story singleDaily = dailies.get(position);
 
-        itemSub = BenFactory.getDailyNewsApi()
+        itemSub = BenFactory.getStoryApi()
                 .getDailyNewsDetail(singleDaily.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -3,8 +3,8 @@ package com.example.ben.zhihudaily.network;
 
 import android.text.TextUtils;
 
-import com.example.ben.zhihudaily.api.DailyNewsApi;
-import com.example.ben.zhihudaily.api.DailyThemeApi;
+import com.example.ben.zhihudaily.api.StoryApi;
+import com.example.ben.zhihudaily.api.StoryThemeApi;
 import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.utils.NetUtils;
 
@@ -35,8 +35,8 @@ public class BenRetrofit {
     private static final int DEFAULT_TIMEOUT = 5;
     private OkHttpClient okHttpClient;
     private static Retrofit retrofit;
-    private DailyThemeApi dailyThemeApi;
-    private DailyNewsApi dailyNewsApi;
+    private StoryThemeApi dailyThemeApi;
+    private StoryApi dailyNewsApi;
 
     BenRetrofit() {
         initOkHttpClient();
@@ -106,16 +106,16 @@ public class BenRetrofit {
         }
     };
 
-    public DailyThemeApi getDailyThemeApi() {
+    public StoryThemeApi getStoryThemeApi() {
         if (null == dailyThemeApi) {
-            dailyThemeApi = retrofit.create(DailyThemeApi.class);
+            dailyThemeApi = retrofit.create(StoryThemeApi.class);
         }
         return dailyThemeApi;
     }
 
-    public DailyNewsApi getDailyNewsApi() {
+    public StoryApi getStoryApi() {
         if (null == dailyNewsApi) {
-            dailyNewsApi = retrofit.create(DailyNewsApi.class);
+            dailyNewsApi = retrofit.create(StoryApi.class);
         }
         return dailyNewsApi;
     }

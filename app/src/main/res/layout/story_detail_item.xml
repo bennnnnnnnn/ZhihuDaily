@@ -28,7 +28,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_collapseMode="parallax">
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.6">
 
                 <ImageView
                     android:id="@+id/top_image"

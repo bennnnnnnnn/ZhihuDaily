@@ -17,7 +17,7 @@ import com.example.ben.zhihudaily.data.entity.StoryExtra;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.BaseActivity;
 import com.example.ben.zhihudaily.utils.Constant;
-import com.example.ben.zhihudaily.utils.DetailDailyActionProvider;
+import com.example.ben.zhihudaily.utils.DetailStoryActionProvider;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import rx.schedulers.Schedulers;
  * Created by Zhou bangquan on 16/9/11.
  */
 
-public class DailyDetailActivity extends BaseActivity {
+public class StoryDetailActivity extends BaseActivity {
 
     @Bind(R.id.daily_viewPager)
     ViewPager mViewPager;
@@ -46,8 +46,8 @@ public class DailyDetailActivity extends BaseActivity {
     private String before;
     private String type;
     private List<Story> dailies;
-    private DetailDailyActionProvider commentActionProvider;
-    private DetailDailyActionProvider popularityActionProvider;
+    private DetailStoryActionProvider commentActionProvider;
+    private DetailStoryActionProvider popularityActionProvider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class DailyDetailActivity extends BaseActivity {
 
     private void getStoryExtra(String id) {
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
+        subscription = BenFactory.getStoryApi()
                 .getStoryExtra(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -117,7 +117,7 @@ public class DailyDetailActivity extends BaseActivity {
 
     private void getTopStories() {
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
+        subscription = BenFactory.getStoryApi()
                 .getDailyNews("latest")
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
@@ -157,7 +157,7 @@ public class DailyDetailActivity extends BaseActivity {
 
     private void getBeforeDailies() {
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
+        subscription = BenFactory.getStoryApi()
                 .getBeforeDailyNews(before)
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
@@ -201,15 +201,15 @@ public class DailyDetailActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_detail_news, menu);
         MenuItem commentItem = menu.findItem(R.id.commend_item);
         MenuItem praiseItem = menu.findItem(R.id.praise_item);
-        commentActionProvider = (DetailDailyActionProvider) MenuItemCompat.getActionProvider(commentItem);
-        popularityActionProvider = (DetailDailyActionProvider) MenuItemCompat.getActionProvider(praiseItem);
-        commentActionProvider.setOnClickListener(new DetailDailyActionProvider.OnClickListener() {
+        commentActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(commentItem);
+        popularityActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(praiseItem);
+        commentActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
             @Override
             public void onClick() {
 
             }
         });
-        popularityActionProvider.setOnClickListener(new DetailDailyActionProvider.OnClickListener() {
+        popularityActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
             @Override
             public void onClick() {
 

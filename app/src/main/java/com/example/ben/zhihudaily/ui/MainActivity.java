@@ -247,7 +247,7 @@ public class MainActivity extends StableToolBarActivity {
     }
 
     private void getSideList() {
-        mSideSub = BenFactory.getDailyThemeApi()
+        mSideSub = BenFactory.getStoryThemeApi()
                 .getDailyThemes()
                 .map(new Func1<StoryThemeResult, List<StoryTheme>>() {
                     @Override

@@ -10,7 +10,6 @@ import com.litesuits.orm.db.annotation.Table;
  */
 @Table("zhihuthemes")
 public class StoryTheme extends BaseBean {
-
     public static final String COL_COLOR = "color";
     public static final String COL_THUMBNAIL = "thumbnail";
     public static final String COL_DESCRIPTION = "description";

@@ -16,7 +16,7 @@ import rx.Observable;
  * Created by Zhou bangquan on 16/9/11.
  */
 
-public interface DailyNewsApi {
+public interface StoryApi {
     @Headers(BenRetrofit.CACHE_CONTROL + BenRetrofit.CHCHE_MAX_STALE_SHORT)
     @GET("api/4/news/{latest}")
     Observable<StoriesResult> getDailyNews(@Path("latest") String latest);

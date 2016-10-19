@@ -15,14 +15,14 @@ import com.example.ben.zhihudaily.R;
  */
 
 
-public class DetailDailyActionProvider extends ActionProvider {
+public class DetailStoryActionProvider extends ActionProvider {
 
     ImageView imageView;
     TextView textView;
     Context context;
     OnClickListener listener;
 
-    public DetailDailyActionProvider(Context context) {
+    public DetailStoryActionProvider(Context context) {
         super(context);
         this.context = context;
     }
