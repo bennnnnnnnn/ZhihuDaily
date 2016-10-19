@@ -20,9 +20,11 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Story;
 
-import com.example.ben.zhihudaily.ui.activity.DailyDetailActivity;
+import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
@@ -104,7 +106,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onItemClick(int position) {
                         Story daily = mBannerThemes.get(position);
-                        context.startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
+                        context.startActivity(new Intent(context, StoryDetailActivity.class).putExtra("id", daily.id)
                                 .putExtra("before", daily.before).putExtra("type", Constant.TOP_STORIES));
                     }
                 });
@@ -122,6 +124,11 @@ public class HomeAdapter extends RecyclerView.Adapter {
                     homeViewHolder.dateTextView.setVisibility(View.GONE);
                 }
                 homeViewHolder.titleTextView.setText(story.title);
+                if (story.isRead) {
+                    homeViewHolder.titleTextView.setTextColor(context.getResources().getColor(R.color.textReadColor));
+                } else {
+                    homeViewHolder.titleTextView.setTextColor(context.getResources().getColor(R.color.textColor));
+                }
                 GlideUtils.loadingImage(context, homeViewHolder.newsImageView, story.images[0]);
                 if (story.multipic) {
                     homeViewHolder.multipLayout.setVisibility(View.VISIBLE);
@@ -153,9 +160,14 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         @OnClick(R.id.item_cardview)
         void onDetail(View v) {
-            Story daily = mDailyNews.get(getLayoutPosition() - 1);
-            v.getContext().startActivity(new Intent(context, DailyDetailActivity.class).putExtra("id", daily.id)
-                    .putExtra("before", daily.before).putExtra("type", Constant.STORY));
+            Story story = mDailyNews.get(getLayoutPosition() - 1);
+            if (!story.isRead) {
+                story.isRead = true;
+                App.mDb.update(story, ConflictAlgorithm.Replace);
+//                titleTextView.setTextColor(context.getResources().getColor(R.color.textReadColor));
+            }
+            v.getContext().startActivity(new Intent(context, StoryDetailActivity.class).putExtra("id", story.id)
+                    .putExtra("before", story.before).putExtra("type", Constant.STORY));
         }
     }
 

@@ -20,14 +20,14 @@
         android:id="@+id/commend_item"
         android:orderInCategory="99"
         android:title="@string/commend"
-        app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailDailyActionProvider"
+        app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailStoryActionProvider"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/praise_item"
         android:orderInCategory="100"
         android:title="@string/praise"
-        app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailDailyActionProvider"
+        app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailStoryActionProvider"
         app:showAsAction="always" />
 
 </menu>

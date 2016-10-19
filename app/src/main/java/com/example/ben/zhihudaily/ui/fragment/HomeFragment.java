@@ -103,7 +103,7 @@ public class HomeFragment extends BaseFragment {
 
     private void getHomeList() {
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
+        subscription = BenFactory.getStoryApi()
                 .getDailyNews("latest")
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
@@ -141,6 +141,7 @@ public class HomeFragment extends BaseFragment {
                             story.before = DateUtils.msToDate(time);
                         }
                         homeStories = stories;
+                        changeReadState(homeStories);
                         mHomeAdapter.setDailyNews(stories, topStories);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -149,7 +150,7 @@ public class HomeFragment extends BaseFragment {
 
     private void addHomeList(String beforeTime) {
         unsubscribe();
-        subscription = BenFactory.getDailyNewsApi()
+        subscription = BenFactory.getStoryApi()
                 .getBeforeDailyNews(beforeTime)
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
@@ -186,4 +187,9 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
+    }
 }

@@ -16,10 +16,13 @@ import android.widget.Toast;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.ThemeAdapter;
 import com.example.ben.zhihudaily.data.ResponseError;
+import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.data.entity.ThemeStories;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.base.BaseFragment;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +51,7 @@ public class ThemeFragment extends BaseFragment {
     private ThemeAdapter mThemeAdapter;
     private LinearLayoutManager mThemelinearLayoutManager;
     private String storyThemeId;
+    private List<Story> mThemeStories;
 
     public static final String THEME_ID = "THEME_ID";
 
@@ -105,7 +109,7 @@ public class ThemeFragment extends BaseFragment {
 
     private void getThemeStoryList(String id) {
         unsubscribe();
-        subscription = BenFactory.getDailyThemeApi()
+        subscription = BenFactory.getStoryThemeApi()
                 .getThemeStories(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -130,11 +134,17 @@ public class ThemeFragment extends BaseFragment {
                     public void onNext(ThemeStories themeStories) {
                         GlideUtils.loadingImage(getActivity(), mThemeImageView, themeStories.image);
                         mDescriptionTextView.setText(themeStories.description);
+                        mThemeStories = themeStories.stories;
+                        changeReadState(mThemeStories);
                         mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mThemeAdapter != null) mThemeAdapter.notifyDataSetChanged();
+    }
 
 }
