@@ -2,6 +2,7 @@ package com.example.ben.zhihudaily.network;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.ben.zhihudaily.api.StoryApi;
 import com.example.ben.zhihudaily.api.StoryThemeApi;
@@ -10,15 +11,22 @@ import com.example.ben.zhihudaily.utils.NetUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
+import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -37,6 +45,7 @@ public class BenRetrofit {
     private static Retrofit retrofit;
     private StoryThemeApi dailyThemeApi;
     private StoryApi dailyNewsApi;
+    private static final String TAG = "LogInterceptor.java";
 
     BenRetrofit() {
         initOkHttpClient();
@@ -61,9 +70,9 @@ public class BenRetrofit {
 
                     okHttpClient = new OkHttpClient.Builder()
                             .cache(cache)
+                            .addInterceptor(loggingInterceptor)  // 和下面的 logInterceptor 等价 logInterceptor 可以自定义; loggingInterceptor 默认
                             .addInterceptor(networkInterceptor)
                             .addNetworkInterceptor(networkInterceptor)
-                            .addInterceptor(loggingInterceptor)
                             .retryOnConnectionFailure(true)
                             .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                             .build();
@@ -102,6 +111,50 @@ public class BenRetrofit {
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_MAX_STALE_LONG)//设置缓存策略，及超时策略
                         .build();
             }
+            return response;
+        }
+    };
+
+    //log interceptor
+    private Interceptor logInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            //the request url
+            String url = request.url().toString();
+            //the request method
+            String method = request.method();
+            //the request headers
+            String headers = request.headers().toString();
+
+            long t1 = System.nanoTime();
+            Response response = chain.proceed(request);
+            long t2 = System.nanoTime();
+            //the response state
+            Log.d(TAG, String.format(Locale.CHINA, "Received response is %s ,message[%s],code[%d]", response.isSuccessful() ? "success" : "fail", response.message(), response.code()));
+
+            //the response data
+            ResponseBody body = response.body();
+
+            BufferedSource source = body.source();
+            source.request(Long.MAX_VALUE); // Buffer the entire body.
+            Buffer buffer = source.buffer();
+            Charset charset = Charset.defaultCharset();
+            MediaType contentType = body.contentType();
+
+            Log.d(TAG, method);
+            Log.d(TAG, url);
+            Log.d(TAG, headers);
+            Log.d(TAG, response.code() + "");
+            Log.d(TAG, response.headers() + "");
+            Log.d(TAG, (t2 - t1) / 1e6d + "ms");
+
+            if (contentType != null) {
+                charset = contentType.charset(charset);
+            }
+            String bodyString = buffer.clone().readString(charset);
+            Log.d(TAG, String.format("Received response json string [%s]", bodyString)); //requst result
+
             return response;
         }
     };
