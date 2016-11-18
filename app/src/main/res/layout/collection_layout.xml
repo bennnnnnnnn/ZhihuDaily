@@ -5,19 +5,19 @@
     android:background="?actionBarItemBackground">
 
     <ImageView
-        android:id="@+id/commend_image"
+        android:id="@+id/comment_image"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:src="@drawable/share_icon" />
 
     <TextView
-        android:id="@+id/commend_number"
+        android:id="@+id/comment_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/commend_image"
-        android:layout_toRightOf="@+id/commend_image"
+        android:layout_toEndOf="@+id/comment_image"
+        android:layout_toRightOf="@+id/comment_image"
         android:text="..."
         android:textColor="@color/md_white_1000" />
 

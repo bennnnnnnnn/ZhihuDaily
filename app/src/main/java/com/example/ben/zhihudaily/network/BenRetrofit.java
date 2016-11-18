@@ -105,7 +105,7 @@ public class BenRetrofit {
                         .header("Cache-Control", cacheControl)
                         .build();
             } else {
-                //查询缓存的Cache-Control设置，为if-only-cache时只查询缓存而不会请求服务器，max-stale可以配合设置缓存失效时间
+                //查询缓存的Cache-Control设置，为only-if-cached时只查询缓存而不会请求服务器，max-stale可以配合设置缓存失效时间
                 response.newBuilder()
                         .removeHeader("Pragma")
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_MAX_STALE_LONG)//设置缓存策略，及超时策略

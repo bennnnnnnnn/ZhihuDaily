@@ -1,9 +1,10 @@
 package com.example.ben.zhihudaily.ui;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,9 +13,10 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.SideAdapter;
@@ -25,6 +27,9 @@ import com.example.ben.zhihudaily.ui.base.StableToolBarActivity;
 import com.example.ben.zhihudaily.ui.fragment.HomeFragment;
 import com.example.ben.zhihudaily.ui.fragment.ThemeFragment;
 import com.example.ben.zhihudaily.utils.SharePreUtils;
+import com.example.ben.zhihudaily.utils.ToastUtils;
+import com.example.ben.zhihudaily.views.TipDialog;
+import com.example.ben.zhihudaily.views.TipDialogInterface;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.ArrayList;
@@ -176,17 +181,12 @@ public class MainActivity extends StableToolBarActivity {
         } else if (id == R.id.setting_item) {
             return true;
         }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("ResourceAsColor")
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
-
-//        //test
-//        ImageView v = (ImageView) headView.findViewById(R.id.favourate_image);
-//        DrawableCompat.setTint(v.getDrawable(), ContextCompat.getColor(mContext, R.color.md_red_500));
 
         mListView.addHeaderView(headView);
         mSideAdapter = new SideAdapter(this);
@@ -302,5 +302,14 @@ public class MainActivity extends StableToolBarActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (null != mSideSub && mSideSub.isUnsubscribed()) mSideSub.unsubscribe();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isHomePage) {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        } else {
+            showHomePage(true);
+        }
     }
 }

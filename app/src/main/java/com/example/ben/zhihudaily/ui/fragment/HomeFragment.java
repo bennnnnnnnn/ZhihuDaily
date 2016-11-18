@@ -1,5 +1,6 @@
 package com.example.ben.zhihudaily.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,9 +14,15 @@ import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.HomeAdapter;
 import com.example.ben.zhihudaily.data.entity.StoriesResult;
 import com.example.ben.zhihudaily.data.entity.Story;
+import com.example.ben.zhihudaily.functions.OnBannerItemClickListener;
+import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.example.ben.zhihudaily.network.BenFactory;
+import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.example.ben.zhihudaily.ui.base.BaseFragment;
+import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.DateUtils;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +104,27 @@ public class HomeFragment extends BaseFragment {
                         getActivity().setTitle(date);
                     }
                 }
+            }
+        });
+
+        mHomeAdapter.setOnStoryItemClickListener(new OnStoryItemClickListener() {
+            @Override
+            public void onClick(Story story) {
+                if (!story.isRead) {
+                    story.isRead = true;
+                    App.mDb.update(story, ConflictAlgorithm.Replace);
+//                titleTextView.setTextColor(context.getResources().getColor(R.color.textReadColor));
+                }
+                startActivity(new Intent(getActivity(), StoryDetailActivity.class).putExtra("id", story.id)
+                        .putExtra("before", story.before).putExtra("type", Constant.STORY));
+            }
+        });
+
+        mHomeAdapter.setOnBannerItemClickListener(new OnBannerItemClickListener() {
+            @Override
+            public void onClick(Story story) {
+                startActivity(new Intent(getActivity(), StoryDetailActivity.class).putExtra("id", story.id)
+                        .putExtra("before", story.before).putExtra("type", Constant.TOP_STORIES));
             }
         });
     }
@@ -181,6 +209,7 @@ public class HomeFragment extends BaseFragment {
                             story.before = DateUtils.msToDate(time);
                         }
                         homeStories.addAll(stories);
+                        changeReadState(stories);
                         mHomeAdapter.addDailyNews(stories);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

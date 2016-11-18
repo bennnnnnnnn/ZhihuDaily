@@ -1,5 +1,6 @@
 package com.example.ben.zhihudaily.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
@@ -48,6 +49,9 @@ public class StoryDetailActivity extends BaseActivity {
     private List<Story> dailies;
     private DetailStoryActionProvider commentActionProvider;
     private DetailStoryActionProvider popularityActionProvider;
+    private int comments;
+    private int long_comments;
+    private int short_comments;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +113,10 @@ public class StoryDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(StoryExtra storyExtra) {
-                        commentActionProvider.setNum(storyExtra.comments);
+                        comments = storyExtra.comments;
+                        long_comments = storyExtra.long_comments;
+                        short_comments = storyExtra.short_comments;
+                        commentActionProvider.setNum(comments + "");
                         popularityActionProvider.setNum(storyExtra.popularity);
                     }
                 });
@@ -199,14 +206,17 @@ public class StoryDetailActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail_news, menu);
-        MenuItem commentItem = menu.findItem(R.id.commend_item);
+        MenuItem commentItem = menu.findItem(R.id.comment_item);
         MenuItem praiseItem = menu.findItem(R.id.praise_item);
         commentActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(commentItem);
         popularityActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(praiseItem);
         commentActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
             @Override
             public void onClick() {
-
+                startActivity(new Intent(mContext, CommentActivity.class)
+                        .putExtra(Constant.COMMENTS, comments)
+                        .putExtra(Constant.LONG_COMMENTS, long_comments)
+                        .putExtra(Constant.SHORT_COMMENTS, short_comments).putExtra("id",id));
             }
         });
         popularityActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {

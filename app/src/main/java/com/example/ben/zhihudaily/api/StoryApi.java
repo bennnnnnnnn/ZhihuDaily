@@ -1,6 +1,8 @@
 package com.example.ben.zhihudaily.api;
 
 
+import com.example.ben.zhihudaily.data.entity.Comment;
+import com.example.ben.zhihudaily.data.entity.CommentsResult;
 import com.example.ben.zhihudaily.data.entity.StartImage;
 import com.example.ben.zhihudaily.data.entity.StoryDetail;
 import com.example.ben.zhihudaily.data.entity.StoriesResult;
@@ -33,4 +35,10 @@ public interface StoryApi {
     @Headers(BenRetrofit.CACHE_CONTROL + BenRetrofit.CHCHE_MAX_STALE_SHORT)
     @GET("api/4/start-image/{size}")
     Observable<StartImage> getStartImage(@Path("size") String size);
+
+    @GET("api/4/story/{id}/long-comments")
+    Observable<CommentsResult> getLongComments(@Path("id") String id);
+
+    @GET("api/4/story/{id}/short-comments")
+    Observable<CommentsResult> getShortComments(@Path("id") String id);
 }

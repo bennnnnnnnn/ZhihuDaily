@@ -8,8 +8,8 @@ import com.example.ben.zhihudaily.data.BaseBean;
 
 
 public class StoryExtra extends BaseBean {
-    public String long_comments;
+    public int long_comments;
     public String popularity;
-    public String short_comments;
-    public String comments;
+    public int short_comments;
+    public int comments;
 }

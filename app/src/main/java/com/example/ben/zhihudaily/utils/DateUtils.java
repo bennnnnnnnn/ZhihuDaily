@@ -3,6 +3,7 @@ package com.example.ben.zhihudaily.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by Zhou bangquan on 16/9/13.
@@ -10,7 +11,19 @@ import java.util.Calendar;
 
 public class DateUtils {
     public static String msToDate(long ms) {
-        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        DateFormat formatter = new SimpleDateFormat("yyyyMMdd", Locale.CHINA);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(ms);
+            return formatter.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String msToSecond(long ms) {
+        DateFormat formatter = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA);
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(ms);
@@ -28,7 +41,7 @@ public class DateUtils {
     }
 
     public static String dateWithWeekday(long ms) {
-        DateFormat formatter = new SimpleDateFormat("MM月dd日");
+        DateFormat formatter = new SimpleDateFormat("MM月dd日", Locale.CHINA);
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(ms);

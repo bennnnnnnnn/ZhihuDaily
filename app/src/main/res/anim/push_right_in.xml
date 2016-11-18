@@ -8,5 +8,4 @@
         android:fromXDelta="-20.0%p"
         android:toXDelta="0.0%p" />
 
-
 </set>

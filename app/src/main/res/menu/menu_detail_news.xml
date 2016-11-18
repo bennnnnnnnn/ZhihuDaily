@@ -17,7 +17,7 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/commend_item"
+        android:id="@+id/comment_item"
         android:orderInCategory="99"
         android:title="@string/commend"
         app:actionProviderClass="com.example.ben.zhihudaily.utils.DetailStoryActionProvider"

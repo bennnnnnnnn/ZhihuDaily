@@ -2,17 +2,30 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimaryDark">@color/md_light_blue_800</item>
         <item name="android:windowAnimationStyle">@style/ActivityJumpAnimTheme</item>
     </style>
 
     <style name="ActivityJumpAnimTheme" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/push_left_in</item>
         <!-- 打开第二个Activity，第二个Activity的进入动画 -->
-        <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/push_left_in</item>
         <!-- 打开第二个Activity，第一个Activity的退出动画 -->
-        <item name="android:activityCloseEnterAnimation">@anim/push_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
         <!-- 结束第二个Activity，第一个Activity的进入动画 -->
-        <item name="android:activityCloseExitAnimation">@anim/push_right_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/push_right_in</item>
         <!-- 结束第二个Activity，第二个Activity的退出动画 -->
+        <item name="android:activityCloseExitAnimation">@anim/push_right_out</item>
     </style>
+
+    <style name="StartTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimaryDark">@color/md_black_1000</item>
+        <item name="android:windowBackground">@color/md_white_1000</item>
+        <item name="android:windowAnimationStyle">@style/StartJumpAnimTheme</item>
+    </style>
+
+    <style name="StartJumpAnimTheme" parent="@android:style/Animation.Activity">
+        <!-- 打开第二个Activity，第一个Activity的退出动画 -->
+        <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
+    </style>
+
 </resources>

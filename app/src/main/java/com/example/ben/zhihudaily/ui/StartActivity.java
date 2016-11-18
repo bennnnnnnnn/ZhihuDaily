@@ -39,7 +39,6 @@ public class StartActivity extends BaseActivity {
     RelativeLayout mStartLayout;
     @Bind(R.id.bottom_animation_layout)
     RelativeLayout mBottomLayout;
-    private int statusBarHeight = 0;
     private int imageLayoutHeight = 0;
 
     @Override
@@ -90,7 +89,7 @@ public class StartActivity extends BaseActivity {
 
     private void translateBottonLayout() {
         float fromY = App.screenHeight;
-        float toY = App.screenHeight - (mBottomLayout.getLayoutParams().height) - statusBarHeight;
+        float toY = App.screenHeight - (mBottomLayout.getLayoutParams().height) - App.statusBarHeight;
         TranslateAnimation animation = new TranslateAnimation(0, 0, fromY, toY);
         animation.setDuration(1000);
         animation.setFillAfter(true);
@@ -106,11 +105,10 @@ public class StartActivity extends BaseActivity {
     }
 
     private void getHeights() {
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
-        }
-        imageLayoutHeight = (int) (App.screenHeight - (mBottomLayout.getLayoutParams().height) - statusBarHeight - 5 * App.screenDensityDpiRadio);
+        imageLayoutHeight = (int) (App.screenHeight - (mBottomLayout.getLayoutParams().height) - App.statusBarHeight - 5 * App.screenDensity);
     }
 
+    @Override
+    public void onBackPressed() {
+    }
 }

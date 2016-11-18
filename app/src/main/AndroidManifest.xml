@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.StartActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/StartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,6 +31,11 @@
 
         <activity
             android:name=".ui.activity.StoryDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.CommentActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
     </application>

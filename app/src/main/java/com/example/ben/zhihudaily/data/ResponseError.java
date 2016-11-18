@@ -41,10 +41,13 @@ public class ResponseError {
                 error = new Gson().fromJson(exception.response().errorBody().string(), ResponseError.class);
             } catch (Exception e) {
                 if (e instanceof JsonParseException) {
+
                 } else {
+
                 }
             }
         } else {
+
         }
         if (BuildConfig.DEBUG) {
             throwable.printStackTrace();

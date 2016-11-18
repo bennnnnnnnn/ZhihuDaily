@@ -17,4 +17,10 @@
     <string name="app_name_cn">知乎日报</string>
     <string name="welcome_text">不止3次 不止7分钟</string>
     <string name="multipic">多图</string>
+    <string name="comment">评论</string>
+    <string name="reply">回复</string>
+    <string name="copy">复制</string>
+    <string name="report">举报</string>
+    <string name="agree">赞同</string>
+    <string name="empty_view">空视图</string>
 </resources>

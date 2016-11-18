@@ -36,8 +36,8 @@ public class DetailStoryActionProvider extends ActionProvider {
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.collection_layout, null, false);
         view.setLayoutParams(layoutParams);
-        imageView = (ImageView) view.findViewById(R.id.commend_image);
-        textView = (TextView) view.findViewById(R.id.commend_number);
+        imageView = (ImageView) view.findViewById(R.id.comment_image);
+        textView = (TextView) view.findViewById(R.id.comment_number);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

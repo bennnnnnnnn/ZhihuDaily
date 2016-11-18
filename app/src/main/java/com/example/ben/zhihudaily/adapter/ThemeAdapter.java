@@ -21,6 +21,7 @@ import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -45,7 +46,11 @@ public class ThemeAdapter extends RecyclerView.Adapter {
     }
 
     public void setStoriesAndEditors(List<Story> stories, List<Editor> editors) {
-        this.stories = stories;
+        if (this.stories == null) {
+            this.stories = new ArrayList<>();
+        }
+        this.stories.clear();
+        this.stories.addAll(stories);
         this.editors = editors;
         notifyDataSetChanged();
     }
@@ -93,7 +98,7 @@ public class ThemeAdapter extends RecyclerView.Adapter {
                 }
                 if (null != editors && editors.size() > 0) {
                     editorViewHolder.editosImage.removeAllViews();
-                    int length = (int) (30 * App.scaledDensity);
+                    int length = (int) (30 * App.screenDensity);
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(length, length);
                     for (Editor editor : editors) {
                         SimpleDraweeView editorImage = new SimpleDraweeView(context);

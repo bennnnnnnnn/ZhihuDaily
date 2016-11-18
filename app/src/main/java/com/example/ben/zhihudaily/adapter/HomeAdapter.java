@@ -20,12 +20,15 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Story;
 
+import com.example.ben.zhihudaily.functions.OnBannerItemClickListener;
+import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -43,6 +46,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
     static final int TYPE_HEAD = 0;
     static final int TYPE_CONTENT = 1;
     boolean initialized = false;
+    private OnStoryItemClickListener onStoryItemClickListener;
+    private OnBannerItemClickListener onBannerItemClickListener;
 
     public HomeAdapter(Context context) {
         this.context = context;
@@ -63,7 +68,11 @@ public class HomeAdapter extends RecyclerView.Adapter {
     }
 
     public void setDailyNews(List<Story> mDailyNews, List<Story> mBannerThemes) {
-        this.mDailyNews = mDailyNews;
+        if (this.mDailyNews == null) {
+            this.mDailyNews = new ArrayList<>();
+        }
+        this.mDailyNews.clear();
+        this.mDailyNews.addAll(mDailyNews);
         this.mBannerThemes = mBannerThemes;
         notifyDataSetChanged();
     }
@@ -71,6 +80,14 @@ public class HomeAdapter extends RecyclerView.Adapter {
     public void addDailyNews(List<Story> mDailyNews) {
         this.mDailyNews.addAll(mDailyNews);
         notifyDataSetChanged();
+    }
+
+    public void setOnStoryItemClickListener(OnStoryItemClickListener onStoryItemClickListener) {
+        this.onStoryItemClickListener = onStoryItemClickListener;
+    }
+
+    public void setOnBannerItemClickListener(OnBannerItemClickListener onBannerItemClickListener) {
+        this.onBannerItemClickListener = onBannerItemClickListener;
     }
 
     @Override
@@ -105,15 +122,17 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 headViewHolder.mBannerViewPager.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        Story daily = mBannerThemes.get(position);
-                        context.startActivity(new Intent(context, StoryDetailActivity.class).putExtra("id", daily.id)
-                                .putExtra("before", daily.before).putExtra("type", Constant.TOP_STORIES));
+                        Story story = mBannerThemes.get(position);
+                        if (onBannerItemClickListener != null) {
+                            onBannerItemClickListener.onClick(story);
+                        }
                     }
                 });
                 break;
             case TYPE_CONTENT:
                 HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
                 final Story story = mDailyNews.get(position - 1);
+                homeViewHolder.story = story;
                 if (position == 1) {
                     homeViewHolder.dateTextView.setText(R.string.today_news);
                     homeViewHolder.dateTextView.setVisibility(View.VISIBLE);
@@ -153,6 +172,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
         @Bind(R.id.multip_layout)
         RelativeLayout multipLayout;
 
+        Story story;
+
         HomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -160,14 +181,9 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         @OnClick(R.id.item_cardview)
         void onDetail(View v) {
-            Story story = mDailyNews.get(getLayoutPosition() - 1);
-            if (!story.isRead) {
-                story.isRead = true;
-                App.mDb.update(story, ConflictAlgorithm.Replace);
-//                titleTextView.setTextColor(context.getResources().getColor(R.color.textReadColor));
+            if (onStoryItemClickListener != null) {
+                onStoryItemClickListener.onClick(story);
             }
-            v.getContext().startActivity(new Intent(context, StoryDetailActivity.class).putExtra("id", story.id)
-                    .putExtra("before", story.before).putExtra("type", Constant.STORY));
         }
     }
 

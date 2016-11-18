@@ -25,9 +25,11 @@ public class App extends Application {
     // 屏幕密度dpi
     public static int screenDensityDpi = 160;
     // 屏幕密度dpi比例
-    public static float screenDensityDpiRadio = 1;
+    public static float screenDensity = 1;
     // 字体缩放比例
-    public static float scaledDensity = 1;
+    public static float scaledScaledDensity = 1;
+
+    public static int statusBarHeight = 0;
 
     private static final String ZHIHU_DB_NAME = "zhihu.db";
 
@@ -51,6 +53,7 @@ public class App extends Application {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+        initStatusBarHeight();
         initConfigues();
     }
 
@@ -58,13 +61,20 @@ public class App extends Application {
         return mContext;
     }
 
+    private void initStatusBarHeight() {
+        int resourceId = mContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = mContext.getResources().getDimensionPixelSize(resourceId);
+        }
+    }
+
     private void initConfigues() {
         DisplayMetrics display = this.getResources().getDisplayMetrics();
         screenWidth = display.widthPixels;
         screenHeight = display.heightPixels;
         screenDensityDpi = display.densityDpi;
-        screenDensityDpiRadio = display.density;
-        scaledDensity = display.scaledDensity;
+        screenDensity = display.density;
+        scaledScaledDensity = display.scaledDensity;
     }
 
 }
