@@ -150,7 +150,7 @@ public class MainActivity extends StableToolBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         item0 = menu.findItem(R.id.collecion_item);
-        item1 = menu.findItem(R.id.favourate_item);
+        item1 = menu.findItem(R.id.favorite_icon);
         item2 = menu.findItem(R.id.mode_item);
         item3 = menu.findItem(R.id.setting_item);
         if (isNightMode()) {

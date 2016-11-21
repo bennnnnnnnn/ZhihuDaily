@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/plus_icon" />
+                android:background="@drawable/short_comment_state" />
 
         </LinearLayout>
 

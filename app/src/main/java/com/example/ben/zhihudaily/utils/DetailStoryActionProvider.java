@@ -21,6 +21,7 @@ public class DetailStoryActionProvider extends ActionProvider {
     TextView textView;
     Context context;
     OnClickListener listener;
+    int imageResInt;
 
     public DetailStoryActionProvider(Context context) {
         super(context);
@@ -39,6 +40,10 @@ public class DetailStoryActionProvider extends ActionProvider {
         imageView = (ImageView) view.findViewById(R.id.comment_image);
         textView = (TextView) view.findViewById(R.id.comment_number);
 
+        if (imageResInt > 0) {
+            imageView.setImageResource(imageResInt);
+        }
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +60,7 @@ public class DetailStoryActionProvider extends ActionProvider {
     }
 
     public void setImageResource(int ResInt) {
-        imageView.setImageResource(ResInt);
+        imageResInt = ResInt;
     }
 
     public void setOnClickListener(OnClickListener listener) {

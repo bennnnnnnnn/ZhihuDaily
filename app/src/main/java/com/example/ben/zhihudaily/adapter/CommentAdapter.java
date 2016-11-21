@@ -143,9 +143,9 @@ public class CommentAdapter extends RecyclerView.Adapter {
                 longCommentViewHolder.mCommentTime.setText(DateUtils.msToSecond(longComment.time * 1000));
 
                 if (longComment.isPraised) {
-                    DrawableCompat.setTint(longCommentViewHolder.mPraiseIcon.getDrawable(), ContextCompat.getColor(context, R.color.md_red_500));
+                    longCommentViewHolder.mPraiseIcon.setImageResource(R.drawable.praise_yes_icon);
                 } else {
-                    DrawableCompat.setTint(longCommentViewHolder.mPraiseIcon.getDrawable(), ContextCompat.getColor(context, R.color.md_grey_500));
+                    longCommentViewHolder.mPraiseIcon.setImageResource(R.drawable.praise_no_icon);
                 }
                 break;
             case TYPE_SHORT_COUNT:
@@ -153,8 +153,10 @@ public class CommentAdapter extends RecyclerView.Adapter {
                 shortCountViewHolder.mCommentCountTextView.setText(short_comments + "条短评论");
                 if (shortComments.size() > 0) {
                     shortCountViewHolder.mBottimLine.setVisibility(View.GONE);
+                    shortCountViewHolder.mShowButton.setSelected(true);
                 } else {
                     shortCountViewHolder.mBottimLine.setVisibility(View.VISIBLE);
+                    shortCountViewHolder.mShowButton.setSelected(false);
                 }
                 break;
             case TYPE_SHORT_COMMENT:
@@ -168,6 +170,12 @@ public class CommentAdapter extends RecyclerView.Adapter {
                 shortCommentViewHolder.mPraiseNumber.setText(shortComment.likes);
                 shortCommentViewHolder.mCommentContent.setText(shortComment.content);
                 shortCommentViewHolder.mCommentTime.setText(DateUtils.msToSecond(shortComment.time * 1000));
+
+                if (shortComment.isPraised) {
+                    shortCommentViewHolder.mPraiseIcon.setImageResource(R.drawable.praise_yes_icon);
+                } else {
+                    shortCommentViewHolder.mPraiseIcon.setImageResource(R.drawable.praise_no_icon);
+                }
                 break;
             default:
                 break;

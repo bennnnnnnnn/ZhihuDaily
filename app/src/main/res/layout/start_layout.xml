@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/favourate_icon" />
+            android:src="@drawable/favorite_icon" />
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -210,13 +210,15 @@ public class StoryDetailActivity extends BaseActivity {
         MenuItem praiseItem = menu.findItem(R.id.praise_item);
         commentActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(commentItem);
         popularityActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(praiseItem);
+        commentActionProvider.setImageResource(R.drawable.comment_icon);
+        popularityActionProvider.setImageResource(R.drawable.praise_icon);
         commentActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
             @Override
             public void onClick() {
                 startActivity(new Intent(mContext, CommentActivity.class)
                         .putExtra(Constant.COMMENTS, comments)
                         .putExtra(Constant.LONG_COMMENTS, long_comments)
-                        .putExtra(Constant.SHORT_COMMENTS, short_comments).putExtra("id",id));
+                        .putExtra(Constant.SHORT_COMMENTS, short_comments).putExtra("id", id));
             }
         });
         popularityActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
