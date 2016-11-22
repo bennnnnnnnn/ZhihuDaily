@@ -29,8 +29,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -113,7 +113,6 @@ public class HomeFragment extends BaseFragment {
                 if (!story.isRead) {
                     story.isRead = true;
                     App.mDb.update(story, ConflictAlgorithm.Replace);
-//                titleTextView.setTextColor(context.getResources().getColor(R.color.textReadColor));
                 }
                 startActivity(new Intent(getActivity(), StoryDetailActivity.class).putExtra("id", story.id)
                         .putExtra("before", story.before).putExtra("type", Constant.STORY));
@@ -151,19 +150,9 @@ public class HomeFragment extends BaseFragment {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Story>>() {
+                .subscribe(new Action1<List<Story>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onNext(List<Story> stories) {
+                    public void call(List<Story> stories) {
                         for (Story story : stories) {
                             story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
@@ -172,6 +161,11 @@ public class HomeFragment extends BaseFragment {
                         changeReadState(homeStories);
                         mHomeAdapter.setDailyNews(stories, topStories);
                         mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }
@@ -191,19 +185,9 @@ public class HomeFragment extends BaseFragment {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Story>>() {
+                .subscribe(new Action1<List<Story>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onNext(List<Story> stories) {
+                    public void call(List<Story> stories) {
                         for (Story story : stories) {
                             story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
@@ -211,6 +195,11 @@ public class HomeFragment extends BaseFragment {
                         homeStories.addAll(stories);
                         changeReadState(stories);
                         mHomeAdapter.addDailyNews(stories);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });

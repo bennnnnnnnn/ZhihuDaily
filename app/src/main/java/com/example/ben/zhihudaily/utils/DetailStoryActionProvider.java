@@ -1,5 +1,6 @@
 package com.example.ben.zhihudaily.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ActionProvider;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class DetailStoryActionProvider extends ActionProvider {
 
     @Override
     public View onCreateActionView() {
+        @SuppressLint("PrivateResource")
         int size = getContext().getResources().getDimensionPixelSize(
                 android.support.design.R.dimen.abc_action_bar_default_height_material);
 

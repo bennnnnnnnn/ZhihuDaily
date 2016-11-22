@@ -28,9 +28,9 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -73,18 +73,9 @@ public class DetailAdapter extends PagerAdapter {
                 .getDailyNewsDetail(singleDaily.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<StoryDetail>() {
+                .subscribe(new Action1<StoryDetail>() {
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(final StoryDetail storyDetail) {
+                    public void call(final StoryDetail storyDetail) {
                         mTitleTextView.setText(storyDetail.title);
                         mImageSource.setText(storyDetail.image_source);
                         GlideUtils.loadingImage(context, mTopImage, storyDetail.image);
@@ -113,6 +104,11 @@ public class DetailAdapter extends PagerAdapter {
                                 });
                             }
                         });
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
 

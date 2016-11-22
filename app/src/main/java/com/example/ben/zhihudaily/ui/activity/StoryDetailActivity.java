@@ -24,8 +24,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -102,22 +102,19 @@ public class StoryDetailActivity extends BaseActivity {
                 .getStoryExtra(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<StoryExtra>() {
+                .subscribe(new Action1<StoryExtra>() {
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(StoryExtra storyExtra) {
+                    public void call(StoryExtra storyExtra) {
                         comments = storyExtra.comments;
                         long_comments = storyExtra.long_comments;
                         short_comments = storyExtra.short_comments;
                         commentActionProvider.setNum(comments + "");
                         popularityActionProvider.setNum(storyExtra.popularity);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }
@@ -137,19 +134,9 @@ public class StoryDetailActivity extends BaseActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Story>>() {
+                .subscribe(new Action1<List<Story>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Story> singleDailies) {
+                    public void call(List<Story> singleDailies) {
                         dailies = singleDailies;
                         mAdapter.setDailyNews(singleDailies);
                         for (int i = 0; i < singleDailies.size(); i++) {
@@ -158,6 +145,11 @@ public class StoryDetailActivity extends BaseActivity {
                                 getStoryExtra(id);
                             }
                         }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }
@@ -177,19 +169,9 @@ public class StoryDetailActivity extends BaseActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Story>>() {
+                .subscribe(new Action1<List<Story>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Story> singleDailies) {
+                    public void call(List<Story> singleDailies) {
                         dailies = singleDailies;
                         mAdapter.setDailyNews(singleDailies);
                         for (int i = 0; i < singleDailies.size(); i++) {
@@ -199,9 +181,13 @@ public class StoryDetailActivity extends BaseActivity {
                             }
                         }
                     }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
                 });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -167,7 +167,6 @@ public class ThemeAdapter extends RecyclerView.Adapter {
             if (!story.isRead) {
                 story.isRead = true;
                 App.mDb.update(story, ConflictAlgorithm.Replace);
-//                mTitleTxtView.setTextColor(context.getResources().getColor(R.color.textReadColor));
             }
         }
     }

@@ -26,8 +26,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -113,25 +113,9 @@ public class ThemeFragment extends BaseFragment {
                 .getThemeStories(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ThemeStories>() {
+                .subscribe(new Action1<ThemeStories>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        new ResponseError(e).handle(new ResponseError.OnResult() {
-                            @Override
-                            public void onResult(ResponseError error) {
-                                Toast.makeText(mContext, error.error_msg, Toast.LENGTH_SHORT).show();
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onNext(ThemeStories themeStories) {
+                    public void call(ThemeStories themeStories) {
                         GlideUtils.loadingImage(getActivity(), mThemeImageView, themeStories.image);
                         mDescriptionTextView.setText(themeStories.description);
                         mThemeStories = themeStories.stories;
@@ -139,12 +123,23 @@ public class ThemeFragment extends BaseFragment {
                         mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        new ResponseError(throwable).handle(new ResponseError.OnResult() {
+                            @Override
+                            public void onResult(ResponseError error) {
+                                Toast.makeText(mContext, error.error_msg, Toast.LENGTH_SHORT).show();
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+                    }
                 });
     }
+
     @Override
     public void onResume() {
         super.onResume();
         if (mThemeAdapter != null) mThemeAdapter.notifyDataSetChanged();
     }
-
 }

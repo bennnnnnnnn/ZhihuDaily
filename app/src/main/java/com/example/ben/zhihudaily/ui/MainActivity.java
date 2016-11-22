@@ -1,8 +1,5 @@
 package com.example.ben.zhihudaily.ui;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +10,8 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.SideAdapter;
@@ -27,9 +22,6 @@ import com.example.ben.zhihudaily.ui.base.StableToolBarActivity;
 import com.example.ben.zhihudaily.ui.fragment.HomeFragment;
 import com.example.ben.zhihudaily.ui.fragment.ThemeFragment;
 import com.example.ben.zhihudaily.utils.SharePreUtils;
-import com.example.ben.zhihudaily.utils.ToastUtils;
-import com.example.ben.zhihudaily.views.TipDialog;
-import com.example.ben.zhihudaily.views.TipDialogInterface;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.ArrayList;
@@ -37,9 +29,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -184,7 +176,6 @@ public class MainActivity extends StableToolBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("ResourceAsColor")
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
 
@@ -260,19 +251,9 @@ public class MainActivity extends StableToolBarActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<StoryTheme>>() {
+                .subscribe(new Action1<List<StoryTheme>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<StoryTheme> themes) {
+                    public void call(List<StoryTheme> themes) {
                         storyThemes = themes;
                         for (StoryTheme theme : themes) {
                             QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
@@ -283,6 +264,11 @@ public class MainActivity extends StableToolBarActivity {
                         }
                         mSideAdapter.isHomePage = true;
                         mSideAdapter.setDailyThemes(themes);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }

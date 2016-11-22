@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,13 +27,12 @@ import com.example.ben.zhihudaily.utils.ToastUtils;
 import com.example.ben.zhihudaily.views.TipDialog;
 import com.example.ben.zhihudaily.views.TipDialogInterface;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -85,7 +83,7 @@ public class CommentActivity extends StableToolBarActivity {
     }
 
     private void initAdapter(List<Comment> comments) {
-        if (mCommentAdapter == null ) {
+        if (mCommentAdapter == null) {
             mCommentAdapter = new CommentAdapter(mContext);
             mCommentAdapter.setLongComments(comments, long_comments, short_comments);
             mCommentAdapter.setOnCommentClickListener(getOnCommentClickListener());
@@ -134,22 +132,19 @@ public class CommentActivity extends StableToolBarActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Comment>>() {
+                .subscribe(new Action1<List<Comment>>() {
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(List<Comment> comments) {
+                    public void call(List<Comment> comments) {
                         if (mCommentAdapter == null) {
                             initAdapter(comments);
                         } else {
                             mCommentAdapter.setLongComments(comments, long_comments, short_comments);
                         }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }
@@ -170,21 +165,16 @@ public class CommentActivity extends StableToolBarActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Comment>>() {
+                .subscribe(new Action1<List<Comment>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Comment> comments) {
+                    public void call(List<Comment> comments) {
                         mCommentAdapter.setShortComments(comments);
                         smoothShortCommentTitleToTop();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }

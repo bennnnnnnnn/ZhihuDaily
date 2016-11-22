@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -58,18 +57,9 @@ public class StartActivity extends BaseActivity {
                 .getStartImage(size)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<StartImage>() {
+                .subscribe(new Action1<StartImage>() {
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(StartImage startImage) {
+                    public void call(StartImage startImage) {
                         GlideUtils.loadingImage(mContext, mStartImageView, startImage.img);
                         mAuthorTextView.setText(startImage.text);
                         Observable.timer(2, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
@@ -79,6 +69,11 @@ public class StartActivity extends BaseActivity {
                                 finish();
                             }
                         });
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
                     }
                 });
     }
