@@ -37,11 +37,6 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/image_shadow_background" />
-
                 <TextView
                     android:id="@+id/title_textview"
                     android:layout_width="wrap_content"
@@ -65,6 +60,15 @@
                     android:layout_marginRight="15dp"
                     android:textColor="@color/md_white_1000"
                     android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_shadow_background"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/view" />
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

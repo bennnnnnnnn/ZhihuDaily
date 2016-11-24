@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
  * Created by Zhou bangquan on 16/10/13.
  */
 
-
+//该页面没有 MVP (比较用)
 public class ThemeFragment extends BaseFragment {
 
     @Bind(R.id.swipe_refresh_layout)

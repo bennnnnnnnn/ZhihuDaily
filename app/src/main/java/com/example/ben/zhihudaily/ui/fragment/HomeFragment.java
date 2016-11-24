@@ -12,34 +12,27 @@ import android.view.ViewGroup;
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.adapter.HomeAdapter;
-import com.example.ben.zhihudaily.data.entity.StoriesResult;
 import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.functions.OnBannerItemClickListener;
 import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
-import com.example.ben.zhihudaily.network.BenFactory;
+import com.example.ben.zhihudaily.presenter.HomeContract;
 import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.example.ben.zhihudaily.ui.base.BaseFragment;
 import com.example.ben.zhihudaily.utils.Constant;
-import com.example.ben.zhihudaily.utils.DateUtils;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Zhou bangquan on 16/10/13.
  */
 
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -47,12 +40,13 @@ public class HomeFragment extends BaseFragment {
     RecyclerView mHomeRecyclerView;
 
     private HomeAdapter mHomeAdapter;
-    private List<Story> topStories = new ArrayList<>();
-    private List<Story> homeStories = new ArrayList<>();
     private LinearLayoutManager mHomelinearLayoutManager;
-    private long time;
-    private String today;
-    private static long A_DAY_MS = 24L * 60 * 60 * 1000;
+    private HomeContract.Presenter mPresenter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -61,9 +55,14 @@ public class HomeFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initSwipeRefreshLayout();
         initHomeList();
-        getActivity().setTitle(R.string.home_page);
-        getHomeList();
+        setTitle(R.string.home_page);
+        mPresenter.start();
         return rootView;
+    }
+
+    public static HomeFragment newInstance() {
+        HomeFragment fragment = new HomeFragment();
+        return fragment;
     }
 
     private void initSwipeRefreshLayout() {
@@ -71,9 +70,34 @@ public class HomeFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getHomeList();
+                mPresenter.refreshList();
             }
         });
+    }
+
+    @Override
+    public void lataestStoriesLoaded(List<Story> stories, List<Story> topStories) {
+        mHomeAdapter.setDailyNews(stories, topStories);
+    }
+
+    @Override
+    public void beforeStoriesLoaded(List<Story> stories) {
+        mHomeAdapter.addDailyNews(stories);
+    }
+
+    @Override
+    public void isSwipeRefreshing(boolean state) {
+        mSwipeRefreshLayout.setRefreshing(state);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        getActivity().setTitle(title);
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        getActivity().setTitle(titleId);
     }
 
     private void initHomeList() {
@@ -88,22 +112,12 @@ public class HomeFragment extends BaseFragment {
                 boolean is = mHomelinearLayoutManager.findLastCompletelyVisibleItemPosition() >= mHomeAdapter.getItemCount() - 1;
                 if (!mSwipeRefreshLayout.isRefreshing() && is) {
                     if (mHomeAdapter.getItemCount() - 1 > 0) {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        time = time - A_DAY_MS;
-                        addHomeList(DateUtils.msToDate(time));
+                        isSwipeRefreshing(true);
+                        mPresenter.loadBeforeStories();
                     }
                 }
                 int position = mHomelinearLayoutManager.findFirstVisibleItemPosition();
-                if (position == 0) {
-                    getActivity().setTitle(R.string.home_page);
-                } else {
-                    String date = homeStories.get(position - 1).date;
-                    if (today.equals(date)) {
-                        getActivity().setTitle(R.string.today_news);
-                    } else {
-                        getActivity().setTitle(date);
-                    }
-                }
+                mPresenter.setCurrentTile(position);
             }
         });
 
@@ -128,86 +142,14 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-    private void getHomeList() {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
-                .getDailyNews("latest")
-                .map(new Func1<StoriesResult, List<Story>>() {
-                    @Override
-                    public List<Story> call(StoriesResult storiesResult) {
-                        if (storiesResult != null) {
-                            topStories = storiesResult.top_stories;
-                            today = DateUtils.dateWithWeekday(System.currentTimeMillis());
-                            time = System.currentTimeMillis() + A_DAY_MS;
-                            for (Story daily : topStories) {
-                                daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
-                                daily.before = DateUtils.msToDate(time);
-                            }
-                            return storiesResult.stories;
-                        }
-                        return null;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
-                    @Override
-                    public void call(List<Story> stories) {
-                        for (Story story : stories) {
-                            story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
-                            story.before = DateUtils.msToDate(time);
-                        }
-                        homeStories = stories;
-                        changeReadState(homeStories);
-                        mHomeAdapter.setDailyNews(stories, topStories);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
-    }
-
-    private void addHomeList(String beforeTime) {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
-                .getBeforeDailyNews(beforeTime)
-                .map(new Func1<StoriesResult, List<Story>>() {
-                    @Override
-                    public List<Story> call(StoriesResult storiesResult) {
-                        if (storiesResult != null) {
-                            return storiesResult.stories;
-                        }
-                        return null;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
-                    @Override
-                    public void call(List<Story> stories) {
-                        for (Story story : stories) {
-                            story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
-                            story.before = DateUtils.msToDate(time);
-                        }
-                        homeStories.addAll(stories);
-                        changeReadState(stories);
-                        mHomeAdapter.addDailyNews(stories);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                });
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setPresenter(HomeContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

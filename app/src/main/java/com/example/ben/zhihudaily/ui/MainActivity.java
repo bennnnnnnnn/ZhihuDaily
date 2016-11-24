@@ -18,7 +18,8 @@ import com.example.ben.zhihudaily.adapter.SideAdapter;
 import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.data.entity.StoryThemeResult;
 import com.example.ben.zhihudaily.network.BenFactory;
-import com.example.ben.zhihudaily.ui.base.StableToolBarActivity;
+import com.example.ben.zhihudaily.presenter.HomePresenter;
+import com.example.ben.zhihudaily.ui.base.BaseActivity;
 import com.example.ben.zhihudaily.ui.fragment.HomeFragment;
 import com.example.ben.zhihudaily.ui.fragment.ThemeFragment;
 import com.example.ben.zhihudaily.utils.SharePreUtils;
@@ -35,7 +36,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends StableToolBarActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected int provideContentViewId() {
@@ -61,6 +62,8 @@ public class MainActivity extends StableToolBarActivity {
     private MenuItem item1;
     private MenuItem item2;
     private MenuItem item3;
+
+    private HomePresenter mHomePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,8 +210,9 @@ public class MainActivity extends StableToolBarActivity {
         isHomePage = showHomePage;
         changeMenuItems(showHomePage);
         if (showHomePage) {
-            homeFragment = new HomeFragment();
+            homeFragment = HomeFragment.newInstance();
             currentFragment = homeFragment;
+            mHomePresenter = new HomePresenter(homeFragment);
         } else {
             themeFragment = ThemeFragment.newInstance(storyThemeId);
             currentFragment = themeFragment;

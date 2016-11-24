@@ -41,9 +41,13 @@ public class StartActivity extends BaseActivity {
     private int imageLayoutHeight = 0;
 
     @Override
+    protected int provideContentViewId() {
+        return R.layout.start_layout;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_layout);
         ButterKnife.bind(this);
         getHeights();
         setImageLayout();
