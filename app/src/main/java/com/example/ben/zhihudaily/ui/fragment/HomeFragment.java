@@ -41,7 +41,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private HomeAdapter mHomeAdapter;
     private LinearLayoutManager mHomelinearLayoutManager;
-    private HomeContract.Presenter mPresenter;
+    public HomeContract.Presenter mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +56,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         initSwipeRefreshLayout();
         initHomeList();
         setTitle(R.string.home_page);
-        mPresenter.start();
+        if (mPresenter!= null) {
+            mPresenter.start();
+        }
         return rootView;
     }
 
