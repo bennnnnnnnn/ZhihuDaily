@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -52,6 +53,7 @@ public class StartActivity extends BaseActivity {
         getHeights();
         setImageLayout();
         translateBottonLayout();
+        loadStartImage();
     }
 
     private void loadStartImage() {
@@ -60,26 +62,33 @@ public class StartActivity extends BaseActivity {
         subscription = BenFactory.getStoryApi()
                 .getStartImage(size)
                 .subscribeOn(Schedulers.io())
+                .delay(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<StartImage>() {
+                .doOnNext(new Action1<StartImage>() {
                     @Override
                     public void call(StartImage startImage) {
                         GlideUtils.loadingImage(mContext, mStartImageView, startImage.img);
                         mAuthorTextView.setText(startImage.text);
-                        Observable.timer(2, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
-                            @Override
-                            public void call(Long aLong) {
-                                startActivity(new Intent(mContext, MainActivity.class));
-                                finish();
-                            }
-                        });
+                    }
+                })
+                .delay(3, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<StartImage>() {
+                    @Override
+                    public void call(StartImage startImage) {
+                        startActivity();
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-
+                        startActivity();
                     }
                 });
+    }
+
+    private void startActivity() {
+        startActivity(new Intent(mContext, MainActivity.class));
+        finish();
     }
 
     private void setImageLayout() {
@@ -93,14 +102,6 @@ public class StartActivity extends BaseActivity {
         animation.setDuration(1000);
         animation.setFillAfter(true);
         mBottomLayout.startAnimation(animation);
-
-        Observable.timer(1, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
-            @Override
-            public void call(Long aLong) {
-                loadStartImage();
-            }
-        });
-
     }
 
     private void getHeights() {
