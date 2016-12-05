@@ -18,9 +18,11 @@ import com.example.ben.zhihudaily.data.entity.StoryExtra;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.presenter.StoryDetailContract;
 import com.example.ben.zhihudaily.presenter.StoryDetailPresenter;
+import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.ui.base.BaseActivity;
 import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.DetailStoryActionProvider;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
     private String currentId;
     private String before;
     private String type;
-    private List<Story> dailies;
+    private String themeId;
     private DetailStoryActionProvider commentActionProvider;
     private DetailStoryActionProvider praiseActionProvider;
     private int comments;
@@ -67,6 +69,7 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
         currentId = getIntent().getStringExtra("id");
         before = getIntent().getStringExtra("before");
         type = getIntent().getStringExtra("type");
+        themeId = getIntent().getStringExtra("themeId");
         initViewPager();
         if (mStoryDetailPresenter == null) mStoryDetailPresenter = new StoryDetailPresenter(this);
     }
@@ -76,8 +79,10 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
         super.onResume();
         if (Constant.TOP_STORIES.equals(type)) {
             mPresenter.getTopStories();
-        } else {
+        } else if (Constant.STORY.equals(type)) {
             mPresenter.getBeforeStories(before);
+        } else if (Constant.THEME_STORY.equals(type)) {
+            mPresenter.getThemeStories(themeId);
         }
     }
 
@@ -92,8 +97,8 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
 
             @Override
             public void onPageSelected(int position) {
-                currentId = dailies.get(position).id;
-                mPresenter.getStoryExtra(currentId);
+                mPresenter.getStoryExtra(position);
+                mPresenter.updateStoryState(position);
             }
 
             @Override
@@ -102,6 +107,8 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
             }
         });
     }
+
+
 
     @Override
     public void setStoryExtra(StoryExtra storyExtra) {
@@ -114,7 +121,6 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
 
     @Override
     public void setStoryList(List<Story> singleDailies) {
-        dailies = singleDailies;
         mAdapter.setDailyNews(singleDailies);
         for (int i = 0; i < singleDailies.size(); i++) {
             if (currentId.equals(singleDailies.get(i).id)) {

@@ -17,14 +17,21 @@ public interface StoryDetailContract {
         void setStoryExtra(StoryExtra storyExtra);
 
         void setStoryList(List<Story> singleDailies);
+
     }
 
     interface Presenter extends BasePresenter {
 
+        void getStoryExtra(int position);
+
         void getStoryExtra(String id);
+
+        void updateStoryState(int position);
 
         void getTopStories();
 
         void getBeforeStories(String before);
+
+        void getThemeStories(String themeId);
     }
 }

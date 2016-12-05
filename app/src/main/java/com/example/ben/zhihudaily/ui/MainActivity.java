@@ -278,8 +278,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void wheatherSelected(StoryTheme theme, List<StoryTheme> themes) {
-        for (StoryTheme stortTheme : themes) {
-            if (stortTheme.selected) {
+        for (StoryTheme storyTheme : themes) {
+            if (storyTheme.selected) {
                 theme.selected = true;
                 return;
             }

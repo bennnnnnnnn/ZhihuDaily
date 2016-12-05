@@ -1,5 +1,6 @@
 package com.example.ben.zhihudaily.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,9 +19,14 @@ import com.example.ben.zhihudaily.adapter.ThemeAdapter;
 import com.example.ben.zhihudaily.data.ResponseError;
 import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.data.entity.ThemeStories;
+import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.example.ben.zhihudaily.network.BenFactory;
+import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.example.ben.zhihudaily.ui.base.BaseFragment;
+import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
@@ -103,6 +109,20 @@ public class ThemeFragment extends BaseFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mThemeImageLayout.scrollBy(0, dy);
+            }
+        });
+
+        mThemeAdapter.setOnStoryItemClickListener(new OnStoryItemClickListener() {
+            @Override
+            public void onClick(Story story) {
+                if (!story.isRead) {
+                    story.isRead = true;
+                    App.mDb.update(story, ConflictAlgorithm.Replace);
+                }
+                startActivity(new Intent(getActivity(), StoryDetailActivity.class)
+                        .putExtra("id", story.id)
+                        .putExtra("themeId", storyThemeId)
+                        .putExtra("type", Constant.THEME_STORY));
             }
         });
     }

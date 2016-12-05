@@ -1,9 +1,19 @@
 package com.example.ben.zhihudaily.presenter;
 
+import android.text.TextUtils;
+import android.widget.Toast;
+
+import com.example.ben.zhihudaily.data.ResponseError;
 import com.example.ben.zhihudaily.data.entity.StoriesResult;
 import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.data.entity.StoryExtra;
+import com.example.ben.zhihudaily.data.entity.ThemeStories;
 import com.example.ben.zhihudaily.network.BenFactory;
+import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.utils.Constant;
+import com.example.ben.zhihudaily.utils.DateUtils;
+import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
@@ -22,6 +32,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
 
     private StoryDetailContract.View mStoryDetailView;
     private Subscription subscription;
+    private List<Story> dailies;
 
     public StoryDetailPresenter(StoryDetailContract.View storyDetailView) {
         this.mStoryDetailView = storyDetailView;
@@ -31,6 +42,21 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
     private void unsubscribe() {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void getStoryExtra(int position) {
+        Story story = dailies.get(position);
+        getStoryExtra(story.id);
+    }
+
+    @Override
+    public void updateStoryState(int position) {
+        Story story = dailies.get(position);
+        if (!story.isRead) {
+            story.isRead = true;
+            App.mDb.update(story, ConflictAlgorithm.Replace);
         }
     }
 
@@ -73,7 +99,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                 .subscribe(new Action1<List<Story>>() {
                     @Override
                     public void call(List<Story> singleDailies) {
-                       mStoryDetailView.setStoryList(singleDailies);
+                        mStoryDetailView.setStoryList(singleDailies);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -87,7 +113,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
     public void getBeforeStories(String before) {
         unsubscribe();
         subscription = BenFactory.getStoryApi()
-                .getBeforeDailyNews(before)
+                .getBeforeDailyNews(TextUtils.isEmpty(before) ? DateUtils.msToDate(System.currentTimeMillis() + Constant.A_DAY_MS) : before)
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
                     public List<Story> call(StoriesResult dailyNews) {
@@ -102,7 +128,29 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                 .subscribe(new Action1<List<Story>>() {
                     @Override
                     public void call(List<Story> singleDailies) {
-                        mStoryDetailView.setStoryList(singleDailies);
+                        dailies = singleDailies;
+                        mStoryDetailView.setStoryList(dailies);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void getThemeStories(String themeId) {
+        unsubscribe();
+        subscription = BenFactory.getStoryThemeApi()
+                .getThemeStories(themeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ThemeStories>() {
+                    @Override
+                    public void call(ThemeStories themeStories) {
+                        dailies = themeStories.stories;
+                        mStoryDetailView.setStoryList(dailies);
                     }
                 }, new Action1<Throwable>() {
                     @Override

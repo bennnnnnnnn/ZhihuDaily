@@ -20,12 +20,14 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Story;
 
+import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.functions.OnBannerItemClickListener;
 import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
+import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.ArrayList;
@@ -132,6 +134,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
             case TYPE_CONTENT:
                 HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
                 final Story story = mDailyNews.get(position - 1);
+                updateState(story);
                 homeViewHolder.story = story;
                 if (position == 1) {
                     homeViewHolder.dateTextView.setText(R.string.today_news);
@@ -157,6 +160,20 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void updateState(Story story) {
+        QueryBuilder<Story> qb = new QueryBuilder<>(Story.class)
+                .whereEquals(Story.COL_TITLE, story.title)
+                .whereAppendAnd()
+                .whereEquals(Story.COL_ID, story.id);
+        List<Story> stories = App.mDb.query(qb);
+        for (Story mStory : stories) {
+            if (mStory.isRead) {
+                story.isRead = true;
+                App.mDb.update(story, ConflictAlgorithm.Replace);
+            }
         }
     }
 

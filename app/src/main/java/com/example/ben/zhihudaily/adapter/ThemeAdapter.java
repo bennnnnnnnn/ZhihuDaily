@@ -1,6 +1,7 @@
 package com.example.ben.zhihudaily.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,12 +14,16 @@ import android.widget.TextView;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Editor;
 import com.example.ben.zhihudaily.data.entity.Story;
+import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
+import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class ThemeAdapter extends RecyclerView.Adapter {
     private Context context;
     static final int TYPE_HEAD = 0;
     static final int TYPE_CONTENT = 1;
+    private OnStoryItemClickListener onStoryItemClickListener;
 
     public ThemeAdapter(Context context) {
         this.context = context;
@@ -58,6 +64,10 @@ public class ThemeAdapter extends RecyclerView.Adapter {
     public void addStories(List<Story> stories) {
         this.stories.addAll(stories);
         notifyDataSetChanged();
+    }
+
+    public void setOnStoryItemClickListener(OnStoryItemClickListener onStoryItemClickListener) {
+        this.onStoryItemClickListener = onStoryItemClickListener;
     }
 
     @Override
@@ -116,6 +126,7 @@ public class ThemeAdapter extends RecyclerView.Adapter {
             case TYPE_CONTENT:
                 ThemeViewHolder themeViewHolder = (ThemeViewHolder) holder;
                 Story story = stories.get(position - 1);
+                updateState(story);
                 themeViewHolder.mTitleTxtView.setText(story.title);
                 if (null != story.images) {
                     GlideUtils.loadingImage(context, themeViewHolder.mImageView, story.images[0]);
@@ -132,6 +143,20 @@ public class ThemeAdapter extends RecyclerView.Adapter {
             default:
                 break;
 
+        }
+    }
+
+    private void updateState(Story story) {
+        QueryBuilder<Story> qb = new QueryBuilder<>(Story.class)
+                .whereEquals(Story.COL_TITLE, story.title)
+                .whereAppendAnd()
+                .whereEquals(Story.COL_ID, story.id);
+        List<Story> stories = App.mDb.query(qb);
+        for (Story mStory : stories) {
+            if (mStory.isRead) {
+                story.isRead = true;
+                App.mDb.update(story, ConflictAlgorithm.Replace);
+            }
         }
     }
 
@@ -164,11 +189,9 @@ public class ThemeAdapter extends RecyclerView.Adapter {
         @OnClick(R.id.theme_story_cardView)
         void onDetail(View v) {
             Story story = stories.get(getLayoutPosition() - 1);
-            if (!story.isRead) {
-                story.isRead = true;
-                App.mDb.update(story, ConflictAlgorithm.Replace);
+            if (onStoryItemClickListener != null) {
+                onStoryItemClickListener.onClick(story);
             }
         }
     }
-
 }

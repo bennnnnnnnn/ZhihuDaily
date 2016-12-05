@@ -3,7 +3,9 @@ package com.example.ben.zhihudaily.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.PagerAdapter;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -65,6 +67,7 @@ public class DetailAdapter extends PagerAdapter {
         final TextView mTitleTextView = (TextView) view.findViewById(R.id.title_textview);
         final TextView mImageSource = (TextView) view.findViewById(R.id.image_source);
         final WebView mContentWebView = (WebView) view.findViewById(R.id.content_webview);
+        final AppBarLayout mAppBarLayout = (AppBarLayout) view.findViewById(R.id.top_layout);
         setWebViewSettings(mContentWebView);
 
         Story singleDaily = dailies.get(position);
@@ -78,7 +81,12 @@ public class DetailAdapter extends PagerAdapter {
                     public void call(final StoryDetail storyDetail) {
                         mTitleTextView.setText(storyDetail.title);
                         mImageSource.setText(storyDetail.image_source);
-                        GlideUtils.loadingImage(context, mTopImage, storyDetail.image);
+                        if (!TextUtils.isEmpty(storyDetail.image)) {
+                            mAppBarLayout.getLayoutParams().height = (int) (200 * App.screenDensity);
+                            GlideUtils.loadingImage(context, mTopImage, storyDetail.image);
+                        } else {
+                            mAppBarLayout.getLayoutParams().height = 0;
+                        }
                         String cssUrl = storyDetail.css[0];
                         OkHttpClient mOkHttpClient = new OkHttpClient();
                         final Request request = new Request.Builder()

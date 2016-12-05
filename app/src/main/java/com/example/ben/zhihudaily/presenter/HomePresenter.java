@@ -1,10 +1,13 @@
 package com.example.ben.zhihudaily.presenter;
 
+import android.text.TextUtils;
+
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.StoriesResult;
 import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.network.BenFactory;
 import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.DateUtils;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
@@ -30,7 +33,6 @@ public class HomePresenter implements HomeContract.Presenter {
     private List<Story> homeStories = new ArrayList<>();
     private long time;
     private String today;
-    private static long A_DAY_MS = 24L * 60 * 60 * 1000;
 
     public HomePresenter(HomeContract.View homeView) {
         this.mHomeView = homeView;
@@ -49,7 +51,7 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void loadBeforeStories() {
-        time = time - A_DAY_MS;
+        time = time - Constant.A_DAY_MS;
         addHomeList(DateUtils.msToDate(time));
     }
 
@@ -70,7 +72,7 @@ public class HomePresenter implements HomeContract.Presenter {
     private void addHomeList(String beforeTime) {
         unsubscribe();
         subscription = BenFactory.getStoryApi()
-                .getBeforeDailyNews(beforeTime)
+                .getBeforeDailyNews(TextUtils.isEmpty(beforeTime) ? DateUtils.msToDate(System.currentTimeMillis()) : beforeTime)
                 .map(new Func1<StoriesResult, List<Story>>() {
                     @Override
                     public List<Story> call(StoriesResult storiesResult) {
@@ -86,7 +88,7 @@ public class HomePresenter implements HomeContract.Presenter {
                     @Override
                     public void call(List<Story> stories) {
                         for (Story story : stories) {
-                            story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
+                            story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
                         }
                         homeStories.addAll(stories);
@@ -118,9 +120,9 @@ public class HomePresenter implements HomeContract.Presenter {
                         if (storiesResult != null) {
                             topStories = storiesResult.top_stories;
                             today = DateUtils.dateWithWeekday(System.currentTimeMillis());
-                            time = System.currentTimeMillis() + A_DAY_MS;
+                            time = System.currentTimeMillis() + Constant.A_DAY_MS;
                             for (Story daily : topStories) {
-                                daily.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
+                                daily.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                                 daily.before = DateUtils.msToDate(time);
                             }
                             return storiesResult.stories;
@@ -134,7 +136,7 @@ public class HomePresenter implements HomeContract.Presenter {
                     @Override
                     public void call(List<Story> stories) {
                         for (Story story : stories) {
-                            story.date = DateUtils.dateWithWeekday(time - A_DAY_MS);
+                            story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
                         }
                         homeStories = stories;
