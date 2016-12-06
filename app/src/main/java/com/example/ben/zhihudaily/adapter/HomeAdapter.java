@@ -1,8 +1,8 @@
 package com.example.ben.zhihudaily.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +20,9 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.Story;
 
-import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.functions.OnBannerItemClickListener;
 import com.example.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.example.ben.zhihudaily.ui.App;
-import com.example.ben.zhihudaily.ui.activity.StoryDetailActivity;
-import com.example.ben.zhihudaily.utils.Constant;
 import com.example.ben.zhihudaily.utils.GlideUtils;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
@@ -42,12 +39,12 @@ import butterknife.OnClick;
  */
 
 public class HomeAdapter extends RecyclerView.Adapter {
-    List<Story> mDailyNews;
-    List<Story> mBannerThemes;
-    Context context;
+    private List<Story> mDailyNews;
+    private List<Story> mBannerThemes;
+    private Context context;
     static final int TYPE_HEAD = 0;
     static final int TYPE_CONTENT = 1;
-    boolean initialized = false;
+    private boolean initialized = false;
     private OnStoryItemClickListener onStoryItemClickListener;
     private OnBannerItemClickListener onBannerItemClickListener;
 
@@ -147,9 +144,9 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 }
                 homeViewHolder.titleTextView.setText(story.title);
                 if (story.isRead) {
-                    homeViewHolder.titleTextView.setTextColor(context.getResources().getColor(R.color.textReadColor));
+                    homeViewHolder.titleTextView.setTextColor(ContextCompat.getColor(context, R.color.textReadColor));
                 } else {
-                    homeViewHolder.titleTextView.setTextColor(context.getResources().getColor(R.color.textColor));
+                    homeViewHolder.titleTextView.setTextColor(ContextCompat.getColor(context, R.color.textColor));
                 }
                 GlideUtils.loadingImage(context, homeViewHolder.newsImageView, story.images[0]);
                 if (story.multipic) {
@@ -206,7 +203,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     class HeadViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.banner_viewpager)
-        ConvenientBanner mBannerViewPager;
+        ConvenientBanner<Story> mBannerViewPager;
 
         HeadViewHolder(View itemView) {
             super(itemView);

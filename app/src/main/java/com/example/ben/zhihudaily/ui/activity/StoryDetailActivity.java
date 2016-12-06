@@ -109,7 +109,6 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
     }
 
 
-
     @Override
     public void setStoryExtra(StoryExtra storyExtra) {
         comments = storyExtra.comments;
@@ -145,7 +144,8 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
                 startActivity(new Intent(mContext, CommentActivity.class)
                         .putExtra(Constant.COMMENTS, comments)
                         .putExtra(Constant.LONG_COMMENTS, long_comments)
-                        .putExtra(Constant.SHORT_COMMENTS, short_comments).putExtra("id", currentId));
+                        .putExtra(Constant.SHORT_COMMENTS, short_comments)
+                        .putExtra("id", currentId));
             }
         });
         praiseActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {

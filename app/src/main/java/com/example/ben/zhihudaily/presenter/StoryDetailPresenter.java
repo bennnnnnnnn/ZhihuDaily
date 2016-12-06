@@ -99,7 +99,8 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                 .subscribe(new Action1<List<Story>>() {
                     @Override
                     public void call(List<Story> singleDailies) {
-                        mStoryDetailView.setStoryList(singleDailies);
+                        dailies = singleDailies;
+                        mStoryDetailView.setStoryList(dailies);
                     }
                 }, new Action1<Throwable>() {
                     @Override

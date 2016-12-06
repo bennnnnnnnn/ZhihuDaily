@@ -56,7 +56,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         initSwipeRefreshLayout();
         initHomeList();
         setTitle(R.string.home_page);
-        if (mPresenter!= null) {
+        if (mPresenter != null) {
             mPresenter.start();
         }
         return rootView;
@@ -130,16 +130,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                     story.isRead = true;
                     App.mDb.update(story, ConflictAlgorithm.Replace);
                 }
-                startActivity(new Intent(getActivity(), StoryDetailActivity.class).putExtra("id", story.id)
-                        .putExtra("before", story.before).putExtra("type", Constant.STORY));
+                startActivity(new Intent(getActivity(), StoryDetailActivity.class)
+                        .putExtra("id", story.id)
+                        .putExtra("before", story.before)
+                        .putExtra("type", Constant.STORY));
             }
         });
 
         mHomeAdapter.setOnBannerItemClickListener(new OnBannerItemClickListener() {
             @Override
             public void onClick(Story story) {
-                startActivity(new Intent(getActivity(), StoryDetailActivity.class).putExtra("id", story.id)
-                        .putExtra("before", story.before).putExtra("type", Constant.TOP_STORIES));
+                startActivity(new Intent(getActivity(), StoryDetailActivity.class)
+                        .putExtra("id", story.id)
+                        .putExtra("before", story.before)
+                        .putExtra("type", Constant.TOP_STORIES));
             }
         });
     }

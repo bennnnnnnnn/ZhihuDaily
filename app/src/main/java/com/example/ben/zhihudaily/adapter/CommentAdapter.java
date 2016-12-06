@@ -126,8 +126,8 @@ public class CommentAdapter extends RecyclerView.Adapter {
 
                 longCountViewHolder.mCommentCountTextView.setText(long_comments + "条长评论");
 
-                longCountViewHolder.mEmptyLayout.getLayoutParams().height = (int) (App.screenHeight - App.statusBarHeight
-                        - longCountViewHolder.mCommentCountTextView.getLayoutParams().height * 2 - 50 * App.screenDensity);
+                longCountViewHolder.mEmptyLayout.getLayoutParams().height
+                        = (int) (App.screenHeight - App.statusBarHeight - longCountViewHolder.mCommentCountTextView.getLayoutParams().height * 2 - 50 * App.screenDensity);
                 longCountViewHolder.mEmptyLayout.setVisibility(longComments != null && longComments.size() > 0 ? View.GONE : View.VISIBLE);
                 break;
             case TYPE_LONG_COMMENT:

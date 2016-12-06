@@ -23,7 +23,9 @@ import com.example.ben.zhihudaily.ui.base.BaseActivity;
 import com.example.ben.zhihudaily.ui.fragment.HomeFragment;
 import com.example.ben.zhihudaily.ui.fragment.ThemeFragment;
 import com.example.ben.zhihudaily.utils.SharePreUtils;
+import com.example.ben.zhihudaily.utils.ToastUtils;
 import com.litesuits.orm.db.assit.QueryBuilder;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,7 @@ public class MainActivity extends BaseActivity {
     private MenuItem item1;
     private MenuItem item2;
     private MenuItem item3;
+    private StoryTheme followedTheme;
 
     private HomePresenter mHomePresenter;
 
@@ -144,8 +147,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        item0 = menu.findItem(R.id.collecion_item);
-        item1 = menu.findItem(R.id.favorite_icon);
+        item0 = menu.findItem(R.id.remind_item);
+        item1 = menu.findItem(R.id.follow_item);
         item2 = menu.findItem(R.id.mode_item);
         item3 = menu.findItem(R.id.setting_item);
         if (isNightMode()) {
@@ -154,7 +157,6 @@ public class MainActivity extends BaseActivity {
             item2.setTitle("夜间模式");
         }
         changeMenuItems(isHomePage);
-
         return true;
     }
 
@@ -175,6 +177,20 @@ public class MainActivity extends BaseActivity {
             return true;
         } else if (id == R.id.setting_item) {
             return true;
+        } else if (id == R.id.follow_item) {
+            boolean follow = followedTheme.followed;
+            if (follow) {
+                ToastUtils.shortToast(mContext, "卧槽,竟敢取关我!");
+            } else {
+                ToastUtils.shortToast(mContext, "哇哦,谢谢大大的关注!");
+            }
+            followedTheme.followed = !follow;
+            setFollowIcon(followedTheme);
+            App.mDb.update(followedTheme, ConflictAlgorithm.Replace);
+            if (mSideAdapter != null) {
+                mSideAdapter.notifyDataSetChanged();
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -189,9 +205,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 1) {
-                    StoryTheme storyTheme = storyThemes.get(position - 2);
-                    storyThemeId = storyTheme.id;
-                    storyThemeName = storyTheme.name;
+                    followedTheme = storyThemes.get(position - 2);
+                    storyThemeId = followedTheme.id;
+                    storyThemeName = followedTheme.name;
                     showHomePage(false);
                 } else if (position == 1) {
                     storyThemeName = "首页";
@@ -233,12 +249,17 @@ public class MainActivity extends BaseActivity {
                 item2.setVisible(true);
                 item3.setVisible(true);
             } else {
+                setFollowIcon(followedTheme);
                 item0.setVisible(false);
                 item1.setVisible(true);
                 item2.setVisible(false);
                 item3.setVisible(false);
             }
         }
+    }
+
+    private void setFollowIcon(StoryTheme followedTheme) {
+        item1.setIcon(followedTheme.followed ? R.drawable.minus_icon : R.drawable.plus_icon);
     }
 
     private void getSideList() {
@@ -279,12 +300,12 @@ public class MainActivity extends BaseActivity {
 
     private void wheatherSelected(StoryTheme theme, List<StoryTheme> themes) {
         for (StoryTheme storyTheme : themes) {
-            if (storyTheme.selected) {
-                theme.selected = true;
+            if (storyTheme.followed) {
+                theme.followed = true;
                 return;
             }
         }
-        theme.selected = false;
+        theme.followed = false;
         App.mDb.save(theme);
     }
 
@@ -296,10 +317,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (isHomePage) {
-            android.os.Process.killProcess(android.os.Process.myPid());
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            showHomePage(true);
+            if (isHomePage) {
+                android.os.Process.killProcess(android.os.Process.myPid());
+            } else {
+                showHomePage(true);
+            }
         }
     }
 }

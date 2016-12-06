@@ -1,6 +1,7 @@
 package com.example.ben.zhihudaily.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.utils.ToastUtils;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
@@ -111,15 +112,15 @@ public class SideAdapter extends BaseAdapter {
         switch (type) {
             case TYPE_0:
                 if (isHomePage) {
-                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.side_item_selected));
+                    homeItem.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.side_item_selected));
                 } else {
-                    homeItem.itemLayout.setBackgroundColor(mContext.getResources().getColor(R.color.side_bg));
+                    homeItem.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.side_bg));
                 }
                 break;
             case TYPE_1:
                 final StoryTheme dailyTheme = dailyThemes.get(position - 1);
                 item.themeTitle.setText(dailyTheme.name);
-                item.tipView.setImageResource(dailyTheme.selected ? R.drawable.go_icon : R.drawable.plus_icon);
+                item.tipView.setImageResource(dailyTheme.followed ? R.drawable.go_icon : R.drawable.plus_list_icon);
                 item.tipView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -133,14 +134,14 @@ public class SideAdapter extends BaseAdapter {
         return cv;
     }
 
-    private void updateThemeState(StoryTheme s) {
-        if (!s.selected) {
+    private void updateThemeState(StoryTheme storyTheme) {
+        if (!storyTheme.followed) {
             ToastUtils.shortToast(mContext, "关注成功,关注内容会在首页呈现哦~");
         } else {
             ToastUtils.shortToast(mContext, "卧槽,居然取关窝,其他事件宝宝懒得做了!");
         }
-        s.selected = !s.selected;
-        App.mDb.update(s);
+        storyTheme.followed = !storyTheme.followed;
+        App.mDb.update(storyTheme, ConflictAlgorithm.Replace);
         notifyDataSetChanged();
     }
 

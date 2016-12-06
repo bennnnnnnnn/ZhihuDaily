@@ -1,6 +1,5 @@
 package com.example.ben.zhihudaily.data.entity;
 
-
 import com.example.ben.zhihudaily.data.BaseBean;
 import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.annotation.Table;
@@ -15,7 +14,7 @@ public class StoryTheme extends BaseBean {
     public static final String COL_DESCRIPTION = "description";
     public static final String COL_ID = "id";
     public static final String COL_NAME = "name";
-    public static final String COL_SELECTED = "selected";
+    public static final String COL_FOLLOWED = "followed";
 
     @Column(COL_COLOR)
     public String color;
@@ -27,6 +26,6 @@ public class StoryTheme extends BaseBean {
     public String id;
     @Column(COL_NAME)
     public String name;
-    @Column(COL_SELECTED)
-    public boolean selected;
+    @Column(COL_FOLLOWED)
+    public boolean followed;
 }

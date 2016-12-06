@@ -2,6 +2,7 @@ package com.example.ben.zhihudaily.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -135,9 +136,9 @@ public class ThemeAdapter extends RecyclerView.Adapter {
                     themeViewHolder.mImageView.setVisibility(View.GONE);
                 }
                 if (story.isRead) {
-                    themeViewHolder.mTitleTxtView.setTextColor(context.getResources().getColor(R.color.textReadColor));
+                    themeViewHolder.mTitleTxtView.setTextColor(ContextCompat.getColor(context, R.color.textReadColor));
                 } else {
-                    themeViewHolder.mTitleTxtView.setTextColor(context.getResources().getColor(R.color.textColor));
+                    themeViewHolder.mTitleTxtView.setTextColor(ContextCompat.getColor(context, R.color.textColor));
                 }
                 break;
             default:
