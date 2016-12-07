@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.ben.zhihudaily.R;
+import com.example.ben.zhihudaily.utils.SharePreUtils;
 
 import rx.Subscription;
 
@@ -35,16 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean isNightMode() {
-        currentNightMode = getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                return false;
-            case Configuration.UI_MODE_NIGHT_YES:
-                return true;
-            default:
-                return false;
-        }
+        return SharePreUtils.isNight();
     }
 
     @Override

@@ -23,4 +23,5 @@
     <string name="report">举报</string>
     <string name="agree">赞同</string>
     <string name="empty_view">空视图</string>
+    <string name="long_comment_zero">深度长评虚位以待</string>
 </resources>

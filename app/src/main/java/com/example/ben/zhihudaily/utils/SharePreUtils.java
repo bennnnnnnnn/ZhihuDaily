@@ -3,6 +3,8 @@ package com.example.ben.zhihudaily.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.ben.zhihudaily.ui.App;
+
 /**
  * Created by Zhou bangquan on 16/10/11.
  */
@@ -11,12 +13,14 @@ import android.content.SharedPreferences;
 public class SharePreUtils {
 
     private static final String FILE_NAME = "zhihu_sharePre_dates";
+    public static final String NIGHT_MODE = "isNight";
 
-    public static void put(Context context, String key, Object object) {
+    private static SharedPreferences getSharedPreferences() {
+        return App.getInstance().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+    }
 
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
+    public static void put(String key, Object object) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
         if (object instanceof String) {
             editor.putString(key, (String) object);
         } else if (object instanceof Integer) {
@@ -33,8 +37,8 @@ public class SharePreUtils {
         editor.apply();
     }
 
-    public static Object get(Context context, String key, Object defaultObject) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+    public static Object get(String key, Object defaultObject) {
+        SharedPreferences sp = getSharedPreferences();
         if (defaultObject instanceof String) {
             return sp.getString(key, (String) defaultObject);
         } else if (defaultObject instanceof Integer) {
@@ -48,4 +52,9 @@ public class SharePreUtils {
         }
         return null;
     }
+
+    public static boolean isNight() {
+        return getSharedPreferences().getBoolean(NIGHT_MODE, false);
+    }
+
 }

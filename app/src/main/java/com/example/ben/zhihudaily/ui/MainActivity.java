@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity {
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
-            SharePreUtils.put(mContext, App.ZHIHU_MODE, !isNightMode());
+            SharePreUtils.put(App.NIGHT_MODE, !isNightMode());
             recreate();
             return true;
         } else if (id == R.id.setting_item) {

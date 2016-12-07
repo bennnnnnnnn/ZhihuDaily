@@ -124,7 +124,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
             case TYPE_LONG_COUNT:
                 LongCountViewHolder longCountViewHolder = (LongCountViewHolder) holder;
 
-                longCountViewHolder.mCommentCountTextView.setText(long_comments + "条长评论");
+                longCountViewHolder.mCommentCountTextView.setText("" + long_comments + "条长评");
 
                 longCountViewHolder.mEmptyLayout.getLayoutParams().height
                         = (int) (App.screenHeight - App.statusBarHeight - longCountViewHolder.mCommentCountTextView.getLayoutParams().height * 2 - 50 * App.screenDensity);
@@ -150,7 +150,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
                 break;
             case TYPE_SHORT_COUNT:
                 ShortCountViewHolder shortCountViewHolder = (ShortCountViewHolder) holder;
-                shortCountViewHolder.mCommentCountTextView.setText(short_comments + "条短评论");
+                shortCountViewHolder.mCommentCountTextView.setText("" + short_comments + "条短评");
                 if (shortComments.size() > 0) {
                     shortCountViewHolder.mBottimLine.setVisibility(View.GONE);
                     shortCountViewHolder.mShowButton.setSelected(true);

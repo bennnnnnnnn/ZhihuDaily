@@ -96,7 +96,7 @@ public class DetailAdapter extends PagerAdapter {
                         call.enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                String htmlWithCss = HtmlUtils.get("", storyDetail.body, (boolean) SharePreUtils.get(context, App.ZHIHU_MODE, false));
+                                String htmlWithCss = HtmlUtils.get("", storyDetail.body, (boolean) SharePreUtils.get(App.NIGHT_MODE, false));
                                 final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
                                 ((Activity) context).runOnUiThread(new Runnable() {
                                     @Override
@@ -109,7 +109,7 @@ public class DetailAdapter extends PagerAdapter {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 String css = response.body().string();
-                                String htmlWithCss = HtmlUtils.get(css, storyDetail.body, (boolean) SharePreUtils.get(context, App.ZHIHU_MODE, false));
+                                String htmlWithCss = HtmlUtils.get(css, storyDetail.body, (boolean) SharePreUtils.get(App.NIGHT_MODE, false));
                                 final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
                                 ((Activity) context).runOnUiThread(new Runnable() {
                                     @Override

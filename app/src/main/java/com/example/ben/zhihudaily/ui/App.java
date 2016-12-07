@@ -33,7 +33,7 @@ public class App extends Application {
 
     private static final String ZHIHU_DB_NAME = "zhihu.db";
 
-    public static String ZHIHU_MODE = "zhihu_mode";
+    public static String NIGHT_MODE = "isNight";
 
     public static LiteOrm mDb;
 
@@ -47,7 +47,7 @@ public class App extends Application {
             mDb.setDebugged(true);
         }
 
-        boolean isNightMode = (boolean) SharePreUtils.get(this, App.ZHIHU_MODE, false);
+        boolean isNightMode = SharePreUtils.isNight();
         if (isNightMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {

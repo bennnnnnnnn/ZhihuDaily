@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.ben.zhihudaily.data.entity.Story;
 import com.example.ben.zhihudaily.ui.App;
+import com.example.ben.zhihudaily.utils.SharePreUtils;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.List;
@@ -43,6 +44,10 @@ public class BaseFragment extends Fragment {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
+    }
+
+    protected boolean isNight() {
+        return SharePreUtils.isNight();
     }
 
     public void changeReadState(List<Story> stories) {

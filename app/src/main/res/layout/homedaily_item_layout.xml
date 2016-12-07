@@ -63,22 +63,23 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:background="@color/translucent"
-                    android:visibility="gone">
+                    android:padding="2dp"
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/multip_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:padding="2dp"
-                        android:src="@drawable/go_icon" />
+                        android:paddingTop="2dp"
+                        android:src="@drawable/multiple_img_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/multip_image"
                         android:layout_toRightOf="@+id/multip_image"
-                        android:padding="2dp"
                         android:text="@string/multipic"
                         android:textColor="@color/md_white_1000"
                         android:textSize="12sp" />
