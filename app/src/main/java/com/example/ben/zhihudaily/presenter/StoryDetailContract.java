@@ -33,5 +33,7 @@ public interface StoryDetailContract {
         void getBeforeStories(String before);
 
         void getThemeStories(String themeId);
+
+        String getCurrentId(int position);
     }
 }

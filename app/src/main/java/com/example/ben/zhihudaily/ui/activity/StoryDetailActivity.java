@@ -99,6 +99,7 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
             public void onPageSelected(int position) {
                 mPresenter.getStoryExtra(position);
                 mPresenter.updateStoryState(position);
+                currentId = mPresenter.getCurrentId(position);
             }
 
             @Override

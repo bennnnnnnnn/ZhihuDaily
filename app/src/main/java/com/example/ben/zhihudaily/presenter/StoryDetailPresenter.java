@@ -161,6 +161,10 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                 });
     }
 
+    public String getCurrentId(int position) {
+        return dailies.get(position).id;
+    }
+
     @Override
     public void start() {
 

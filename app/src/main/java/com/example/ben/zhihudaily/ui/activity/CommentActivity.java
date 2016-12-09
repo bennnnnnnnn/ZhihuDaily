@@ -100,8 +100,8 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
     private OnCommentClickListener getOnCommentClickListener() {
         return new OnCommentClickListener() {
             @Override
-            public void onClick() {
-                showDialog();
+            public void onClick(Comment comment) {
+                showDialog(comment);
             }
         };
     }
@@ -133,7 +133,7 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
     }
 
     @Override
-    public void showDialog() {
+    public void showDialog(final Comment comment) {
         if (tipDialog == null) {
             tipDialog = new TipDialog(mContext, R.layout.comment_dialog_layout, new TipDialogInterface() {
                 @Override
@@ -161,8 +161,9 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
                         @Override
                         public void onClick(View v) {
                             ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clipData = ClipData.newPlainText(Constant.COPY, "1234,2234");
+                            ClipData clipData = ClipData.newPlainText(Constant.COPY, comment.content);
                             clipboardManager.setPrimaryClip(clipData);
+                            ToastUtils.shortToast(mContext, "已复制该条评论~");
                             tipDialog.cancel();
                         }
                     });

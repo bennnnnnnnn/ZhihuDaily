@@ -133,7 +133,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
             case TYPE_LONG_COMMENT:
                 CommentViewHolder longCommentViewHolder = (CommentViewHolder) holder;
                 Comment longComment = longComments.get(position - 1);
-
+                longCommentViewHolder.mComment = longComment;
                 longCommentViewHolder.mAuthorDraweeView.setHierarchy(hierarchy);
                 longCommentViewHolder.mAuthorDraweeView.setImageURI(longComment.avatar);
 
@@ -162,7 +162,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
             case TYPE_SHORT_COMMENT:
                 CommentViewHolder shortCommentViewHolder = (CommentViewHolder) holder;
                 Comment shortComment = shortComments.get(position - longComments.size() - 2);
-
+                shortCommentViewHolder.mComment = shortComment;
                 shortCommentViewHolder.mAuthorDraweeView.setHierarchy(hierarchy);
                 shortCommentViewHolder.mAuthorDraweeView.setImageURI(shortComment.avatar);
 
@@ -232,6 +232,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
         TextView mCommentContent;
         @Bind(R.id.comment_time_textView)
         TextView mCommentTime;
+        Comment mComment;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
@@ -241,7 +242,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
         @OnClick(R.id.comment_cardView)
         void onItemClick(View v) {
             if (onCommentClickListener != null) {
-                onCommentClickListener.onClick();
+                onCommentClickListener.onClick(mComment);
             }
         }
     }

@@ -19,7 +19,7 @@ public interface CommentContract {
 
         void clearShortComments();
 
-        void showDialog();
+        void showDialog(Comment comment);
     }
 
     interface Presenter extends BasePresenter {
