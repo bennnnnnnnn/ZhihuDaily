@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private SideAdapter mSideAdapter;
     private List<StoryTheme> storyThemes = new ArrayList<>();
+    private List<StoryTheme> requestStoryThemes = new ArrayList<>();
     private Subscription mSideSub;
     private String storyThemeId;
     private String storyThemeName;
@@ -85,7 +86,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initDrawerLayout() {
-
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -137,6 +137,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showOrCloseSideView() {
+        System.out.println("---------------");
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -187,6 +188,7 @@ public class MainActivity extends BaseActivity {
             followedTheme.followed = !follow;
             setFollowIcon(followedTheme);
             App.mDb.update(followedTheme, ConflictAlgorithm.Replace);
+            reorderAndSaveThemes(requestStoryThemes);
             if (mSideAdapter != null) {
                 mSideAdapter.notifyDataSetChanged();
             }
@@ -218,7 +220,6 @@ public class MainActivity extends BaseActivity {
                 showOrCloseSideView();
             }
         });
-
         mListView.getLayoutParams().width = (int) (App.screenWidth * 0.8);
     }
 
@@ -279,16 +280,10 @@ public class MainActivity extends BaseActivity {
                 .subscribe(new Action1<List<StoryTheme>>() {
                     @Override
                     public void call(List<StoryTheme> themes) {
-                        storyThemes = themes;
-                        for (StoryTheme theme : themes) {
-                            QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
-                                    .whereEquals(StoryTheme.COL_NAME, theme.name)
-                                    .whereAppendAnd()
-                                    .whereEquals(StoryTheme.COL_ID, theme.id);
-                            wheatherSelected(theme, App.mDb.query(qb));
-                        }
+                        requestStoryThemes = themes;
+                        reorderAndSaveThemes(requestStoryThemes);
                         mSideAdapter.isHomePage = true;
-                        mSideAdapter.setDailyThemes(themes);
+                        mSideAdapter.setDailyThemes(storyThemes, themes);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -298,15 +293,30 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-    private void wheatherSelected(StoryTheme theme, List<StoryTheme> themes) {
-        for (StoryTheme storyTheme : themes) {
-            if (storyTheme.followed) {
-                theme.followed = true;
-                return;
-            }
+    private void reorderAndSaveThemes(List<StoryTheme> themes) {
+        if (storyThemes != null) {
+            storyThemes.clear();
+            storyThemes.addAll(themes);
         }
-        theme.followed = false;
-        App.mDb.save(theme);
+        int size = themes.size();
+        int amount = 0;
+        for (int i = size - 1; i > -1; i--) {
+            StoryTheme theme = themes.get(i);
+            QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
+                    .whereEquals(StoryTheme.COL_NAME, theme.name)
+                    .whereAppendAnd()
+                    .whereEquals(StoryTheme.COL_ID, theme.id)
+                    .whereAppendAnd()
+                    .whereEquals(StoryTheme.COL_FOLLOWED, true);
+            if (App.mDb.query(qb) != null && App.mDb.query(qb).size() > 0) {
+                theme.followed = true;
+                storyThemes.remove(i + (amount++));
+                storyThemes.add(0, theme);
+            } else {
+                theme.followed = false;
+            }
+            App.mDb.save(theme);
+        }
     }
 
     @Override

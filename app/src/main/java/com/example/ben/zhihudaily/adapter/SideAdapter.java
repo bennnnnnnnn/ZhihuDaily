@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.example.ben.zhihudaily.R;
 import com.example.ben.zhihudaily.data.entity.StoryTheme;
 import com.example.ben.zhihudaily.ui.App;
 import com.example.ben.zhihudaily.utils.ToastUtils;
+import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
@@ -30,6 +30,7 @@ public class SideAdapter extends BaseAdapter {
     private LayoutInflater inflater;
 
     private List<StoryTheme> dailyThemes;
+    private List<StoryTheme> requestThemes;
 
     private final int VIEW_TYPE = 2;
     private final int TYPE_0 = 0;
@@ -42,8 +43,9 @@ public class SideAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(mContext);
     }
 
-    public void setDailyThemes(List<StoryTheme> dailyThemes) {
+    public void setDailyThemes(List<StoryTheme> dailyThemes, List<StoryTheme> requestThemes) {
         this.dailyThemes = dailyThemes;
+        this.requestThemes = requestThemes;
         notifyDataSetChanged();
     }
 
@@ -63,7 +65,7 @@ public class SideAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return dailyThemes == null ? 0 : dailyThemes.size();
+        return dailyThemes == null ? 1 : dailyThemes.size() + 1;
     }
 
     @Override
@@ -77,7 +79,7 @@ public class SideAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View cv, ViewGroup parent) {
+    public View getView(final int position, View cv, ViewGroup parent) {
         ViewHolder homeItem = null;
         ViewHolder1 item = null;
         int type = getItemViewType(position);
@@ -142,7 +144,33 @@ public class SideAdapter extends BaseAdapter {
         }
         storyTheme.followed = !storyTheme.followed;
         App.mDb.update(storyTheme, ConflictAlgorithm.Replace);
+        resetAndReorderThemes();
         notifyDataSetChanged();
+    }
+
+    private void resetAndReorderThemes() {
+        if (dailyThemes != null) {
+            dailyThemes.clear();
+            dailyThemes.addAll(requestThemes);
+        }
+        int size = requestThemes.size();
+        int amount = 0;
+        for (int i = size - 1; i > -1; i--) {
+            StoryTheme theme = requestThemes.get(i);
+            QueryBuilder<StoryTheme> qb = new QueryBuilder<>(StoryTheme.class)
+                    .whereEquals(StoryTheme.COL_NAME, theme.name)
+                    .whereAppendAnd()
+                    .whereEquals(StoryTheme.COL_ID, theme.id)
+                    .whereAppendAnd()
+                    .whereEquals(StoryTheme.COL_FOLLOWED, true);
+            if (App.mDb.query(qb) != null && App.mDb.query(qb).size() > 0) {
+                theme.followed = true;
+                dailyThemes.remove(i + (amount++));
+                dailyThemes.add(0, theme);
+            } else {
+                theme.followed = false;
+            }
+        }
     }
 
     private class ViewHolder {
@@ -154,5 +182,4 @@ public class SideAdapter extends BaseAdapter {
         TextView themeTitle;
         ImageView tipView;
     }
-
 }
