@@ -23,7 +23,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Subscription subscription;
     protected Context mContext;
-    int currentNightMode = -1;
     public Toolbar mToolbar;
     public ActionBar mActionbar;
 

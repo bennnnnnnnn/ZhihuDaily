@@ -66,6 +66,8 @@ public class MainActivity extends BaseActivity {
     private MenuItem item2;
     private MenuItem item3;
     private StoryTheme followedTheme;
+    private boolean request;
+    private boolean updateList;
 
     private HomePresenter mHomePresenter;
 
@@ -103,32 +105,29 @@ public class MainActivity extends BaseActivity {
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
-
                 if (mDrawerToggle != null) {
                     mDrawerToggle.onDrawerOpened(drawerView);
+                    afterDrawerOpened();
                 }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-
                 if (mDrawerToggle != null) {
                     mDrawerToggle.onDrawerClosed(drawerView);
+                    afterDrawerClosed();
                 }
             }
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-
                 if (mDrawerToggle != null) {
                     mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
                 }
-
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-
                 if (mDrawerToggle != null) {
                     mDrawerToggle.onDrawerStateChanged(newState);
                 }
@@ -136,8 +135,26 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    private void afterDrawerOpened() {
+        if (updateList) {
+            reorderAndSaveThemes(requestStoryThemes);
+            if (mSideAdapter != null) {
+                mSideAdapter.notifyDataSetChanged();
+            }
+            updateList = false;
+        }
+    }
+
+    private void afterDrawerClosed() {
+        if (request) {
+            setTitle(storyThemeName);
+            mSideAdapter.notifyDataSetChanged();
+            showHomePage(isHomePage);
+            request = false;
+        }
+    }
+
     private void showOrCloseSideView() {
-        System.out.println("---------------");
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -152,11 +169,7 @@ public class MainActivity extends BaseActivity {
         item1 = menu.findItem(R.id.follow_item);
         item2 = menu.findItem(R.id.mode_item);
         item3 = menu.findItem(R.id.setting_item);
-        if (isNightMode()) {
-            item2.setTitle("日间模式");
-        } else {
-            item2.setTitle("夜间模式");
-        }
+        item2.setTitle(isNightMode() ? "日间模式" : "夜间模式");
         changeMenuItems(isHomePage);
         return true;
     }
@@ -164,10 +177,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            showOrCloseSideView();
-            return true;
-        } else if (id == R.id.mode_item) {
+        if (id == R.id.mode_item) {
             if (isNightMode()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             } else {
@@ -188,10 +198,7 @@ public class MainActivity extends BaseActivity {
             followedTheme.followed = !follow;
             setFollowIcon(followedTheme);
             App.mDb.update(followedTheme, ConflictAlgorithm.Replace);
-            reorderAndSaveThemes(requestStoryThemes);
-            if (mSideAdapter != null) {
-                mSideAdapter.notifyDataSetChanged();
-            }
+            updateList = true;
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -199,7 +206,6 @@ public class MainActivity extends BaseActivity {
 
     private void initSideList() {
         View headView = getLayoutInflater().inflate(R.layout.side_headerview, mListView, false);
-
         mListView.addHeaderView(headView);
         mSideAdapter = new SideAdapter(this);
         mListView.setAdapter(mSideAdapter);
@@ -210,13 +216,13 @@ public class MainActivity extends BaseActivity {
                     followedTheme = storyThemes.get(position - 2);
                     storyThemeId = followedTheme.id;
                     storyThemeName = followedTheme.name;
-                    showHomePage(false);
+                    isHomePage = false;
+                    request = true;
                 } else if (position == 1) {
                     storyThemeName = "首页";
-                    showHomePage(true);
+                    isHomePage = true;
+                    request = true;
                 }
-                setTitle(storyThemeName);
-                mSideAdapter.notifyDataSetChanged();
                 showOrCloseSideView();
             }
         });
@@ -238,8 +244,7 @@ public class MainActivity extends BaseActivity {
             mSideAdapter = new SideAdapter(this);
         }
         mSideAdapter.isHomePage = showHomePage;
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_layout, currentFragment)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_layout, currentFragment).commit();
     }
 
     private void changeMenuItems(boolean isHomePage) {
