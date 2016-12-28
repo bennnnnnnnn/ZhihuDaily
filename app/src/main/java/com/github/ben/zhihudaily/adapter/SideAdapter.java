@@ -113,14 +113,11 @@ public class SideAdapter extends BaseAdapter {
 
         switch (type) {
             case TYPE_0:
-                if (isHomePage) {
-                    homeItem.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.side_item_selected));
-                } else {
-                    homeItem.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.side_bg));
-                }
+                homeItem.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, isHomePage ? R.color.side_item_selected : R.color.side_bg));
                 break;
             case TYPE_1:
                 final StoryTheme dailyTheme = dailyThemes.get(position - 1);
+                item.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, dailyTheme.selected ? R.color.side_item_selected : R.color.side_bg));
                 item.themeTitle.setText(dailyTheme.name);
                 item.tipView.setImageResource(dailyTheme.followed ? R.drawable.go_icon : R.drawable.plus_list_icon);
                 item.tipView.setOnClickListener(new View.OnClickListener() {

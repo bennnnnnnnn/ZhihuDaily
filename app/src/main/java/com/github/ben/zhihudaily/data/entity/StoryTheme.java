@@ -15,6 +15,7 @@ public class StoryTheme extends BaseBean {
     public static final String COL_ID = "id";
     public static final String COL_NAME = "name";
     public static final String COL_FOLLOWED = "followed";
+    public static final String COL_SELECTED = "selected";
 
     @Column(COL_COLOR)
     public String color;
@@ -28,4 +29,6 @@ public class StoryTheme extends BaseBean {
     public String name;
     @Column(COL_FOLLOWED)
     public boolean followed;
+
+    public boolean selected;
 }

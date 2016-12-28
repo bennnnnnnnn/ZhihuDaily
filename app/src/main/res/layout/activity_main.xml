@@ -29,9 +29,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/side_bg"
-        android:choiceMode="singleChoice"
         android:divider="@null"
-        android:listSelector="@color/side_item_selected"
         android:scrollbars="none" />
 
 </android.support.v4.widget.DrawerLayout>

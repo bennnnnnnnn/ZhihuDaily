@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
     private MenuItem item1;
     private MenuItem item2;
     private MenuItem item3;
-    private StoryTheme followedTheme;
+    private StoryTheme selectedTheme;
     private boolean request;
     private boolean updateList;
 
@@ -189,15 +189,15 @@ public class MainActivity extends BaseActivity {
         } else if (id == R.id.setting_item) {
             return true;
         } else if (id == R.id.follow_item) {
-            boolean follow = followedTheme.followed;
+            boolean follow = selectedTheme.followed;
             if (follow) {
                 ToastUtils.shortToast(mContext, "卧槽,竟敢取关我!");
             } else {
                 ToastUtils.shortToast(mContext, "哇哦,谢谢大大的关注!");
             }
-            followedTheme.followed = !follow;
-            setFollowIcon(followedTheme);
-            App.mDb.update(followedTheme, ConflictAlgorithm.Replace);
+            selectedTheme.followed = !follow;
+            setFollowIcon(selectedTheme);
+            App.mDb.update(selectedTheme, ConflictAlgorithm.Replace);
             updateList = true;
             return true;
         }
@@ -212,16 +212,24 @@ public class MainActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // headView homeItem takes two position
                 if (position > 1) {
-                    followedTheme = storyThemes.get(position - 2);
-                    storyThemeId = followedTheme.id;
-                    storyThemeName = followedTheme.name;
+                    selectedTheme = storyThemes.get(position - 2);
+                    selectedTheme.selected = true;
+                    storyThemeId = selectedTheme.id;
+                    storyThemeName = selectedTheme.name;
+                    for (int i = 0; i < storyThemes.size(); i++) {
+                        if (i != position - 2) {
+                            storyThemes.get(i).selected = false;
+                        }
+                    }
                     isHomePage = false;
                     request = true;
                 } else if (position == 1) {
                     storyThemeName = "首页";
                     isHomePage = true;
                     request = true;
+                    selectedTheme.selected = false;
                 }
                 showOrCloseSideView();
             }
@@ -255,7 +263,7 @@ public class MainActivity extends BaseActivity {
                 item2.setVisible(true);
                 item3.setVisible(true);
             } else {
-                setFollowIcon(followedTheme);
+                setFollowIcon(selectedTheme);
                 item0.setVisible(false);
                 item1.setVisible(true);
                 item2.setVisible(false);
