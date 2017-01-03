@@ -4,6 +4,8 @@ import com.github.ben.zhihudaily.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
+import java.net.SocketTimeoutException;
+
 import retrofit2.adapter.rxjava.HttpException;
 
 /**
@@ -42,6 +44,8 @@ public class ResponseError {
 
                 }
             }
+        } else if (throwable instanceof SocketTimeoutException) {
+            error = new ResponseError(0, "请求时间过长,请稍后再试");
         } else {
 
         }
