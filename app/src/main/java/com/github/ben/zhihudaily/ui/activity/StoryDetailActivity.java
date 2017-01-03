@@ -48,7 +48,7 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
 
     @Override
     protected int provideContentViewId() {
-        return R.layout.story_detail_layout;
+        return R.layout.activity_story_detail;
     }
 
     @Override

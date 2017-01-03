@@ -56,11 +56,11 @@ public class HomeAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEAD) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.banner_header_layout, parent, false);
+                    .inflate(R.layout.adapter_item_header_banner, parent, false);
             return new HeadViewHolder(view);
         } else if (viewType == TYPE_CONTENT) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.homedaily_item_layout, parent, false);
+                    .inflate(R.layout.adapter_item_homestory, parent, false);
             return new HomeViewHolder(view);
         }
         return null;

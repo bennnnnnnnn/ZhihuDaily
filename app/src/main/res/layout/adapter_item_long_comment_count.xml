@@ -20,7 +20,7 @@
             android:textColor="@color/textColor"
             android:textSize="12sp" />
 
-        <include layout="@layout/line_view" />
+        <include layout="@layout/include_line_view" />
 
         <LinearLayout
             android:id="@+id/empty_layout"
@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <include layout="@layout/line_view" />
+            <include layout="@layout/include_line_view" />
 
             <LinearLayout
                 android:layout_width="match_parent"

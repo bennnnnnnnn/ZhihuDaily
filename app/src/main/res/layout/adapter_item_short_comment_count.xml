@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/line_view" />
+        <include layout="@layout/include_line_view" />
 
         <LinearLayout
             android:id="@+id/short_comment_layout"

@@ -41,7 +41,7 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
 
     @Override
     protected int provideContentViewId() {
-        return R.layout.layout_comment_activity;
+        return R.layout.activity_comment;
     }
 
     @Bind(R.id.comment_recyclerView)
@@ -135,7 +135,7 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
     @Override
     public void showDialog(final Comment comment) {
         if (tipDialog == null) {
-            tipDialog = new TipDialog(mContext, R.layout.comment_dialog_layout, new TipDialogInterface() {
+            tipDialog = new TipDialog(mContext, R.layout.dialog_comment, new TipDialogInterface() {
                 @Override
                 public void init(@NonNull final TipDialog tipDialog, Window window) {
                     TextView agreeTextView = (TextView) window.findViewById(R.id.agree_textView);

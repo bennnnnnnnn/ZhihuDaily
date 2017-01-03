@@ -98,16 +98,16 @@ public class CommentAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_LONG_COUNT) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_long_comment_count, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_long_comment_count, parent, false);
             return new LongCountViewHolder(view);
         } else if (viewType == TYPE_LONG_COMMENT) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_comment_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_comment, parent, false);
             return new CommentViewHolder(view);
         } else if (viewType == TYPE_SHORT_COUNT) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_short_comment_count, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_short_comment_count, parent, false);
             return new ShortCountViewHolder(view);
         } else if (viewType == TYPE_SHORT_COMMENT) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_comment_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_comment, parent, false);
             return new CommentViewHolder(view);
         }
         return null;

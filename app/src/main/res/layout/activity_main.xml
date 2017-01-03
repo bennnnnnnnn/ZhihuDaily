@@ -19,7 +19,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/view_toolbar" />
+        <include layout="@layout/include_toolbar" />
 
     </android.support.design.widget.CoordinatorLayout>
 

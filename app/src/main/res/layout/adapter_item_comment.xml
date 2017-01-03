@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="20dp">
 
-        <include layout="@layout/line_view" />
+        <include layout="@layout/include_line_view" />
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/author_image"

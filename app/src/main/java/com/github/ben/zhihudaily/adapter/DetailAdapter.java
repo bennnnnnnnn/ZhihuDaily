@@ -62,7 +62,7 @@ public class DetailAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = View.inflate(context, R.layout.story_detail_item, null);
+        View view = View.inflate(context, R.layout.adapter_item_story_detail, null);
         final ImageView mTopImage = (ImageView) view.findViewById(R.id.top_image);
         final TextView mTitleTextView = (TextView) view.findViewById(R.id.title_textview);
         final TextView mImageSource = (TextView) view.findViewById(R.id.image_source);

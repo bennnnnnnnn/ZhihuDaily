@@ -37,7 +37,7 @@ public class DetailStoryActionProvider extends ActionProvider {
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(size, size);
         View view = LayoutInflater.from(getContext())
-                .inflate(R.layout.collection_layout, null, false);
+                .inflate(R.layout.utils_layout_collection, null, false);
         view.setLayoutParams(layoutParams);
         imageView = (ImageView) view.findViewById(R.id.comment_image);
         textView = (TextView) view.findViewById(R.id.comment_number);

@@ -83,11 +83,11 @@ public class ThemeAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEAD) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.editor_layout, parent, false);
+                    .inflate(R.layout.adapter_item_editor, parent, false);
             return new EditorViewHolder(view);
         } else if (viewType == TYPE_CONTENT) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.theme_story_item, parent, false);
+                    .inflate(R.layout.adapter_item_theme_story, parent, false);
             return new ThemeViewHolder(view);
         }
         return null;
