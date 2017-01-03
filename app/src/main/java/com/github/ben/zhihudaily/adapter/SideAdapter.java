@@ -119,7 +119,7 @@ public class SideAdapter extends BaseAdapter {
                 final StoryTheme dailyTheme = dailyThemes.get(position - 1);
                 item.itemLayout.setBackgroundColor(ContextCompat.getColor(mContext, dailyTheme.selected ? R.color.side_item_selected : R.color.side_bg));
                 item.themeTitle.setText(dailyTheme.name);
-                item.tipView.setImageResource(dailyTheme.followed ? R.drawable.go_icon : R.drawable.plus_list_icon);
+                item.tipView.setImageResource(dailyTheme.followed ? R.drawable.right_icon : R.drawable.plus_list_icon);
                 item.tipView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
