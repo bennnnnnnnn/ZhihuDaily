@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -79,7 +80,12 @@ public class StartActivity extends BaseActivity {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        startActivity();
+                        Observable.timer(3, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
+                            @Override
+                            public void call(Long aLong) {
+                                startActivity();
+                            }
+                        });
                     }
                 });
     }
