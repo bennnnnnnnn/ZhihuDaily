@@ -77,4 +77,9 @@ public class App extends Application {
         scaledScaledDensity = display.scaledDensity;
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        mContext = null;
+    }
 }

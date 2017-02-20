@@ -288,14 +288,19 @@ public class MainActivity extends BaseActivity {
                         return null;
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<StoryTheme>>() {
+                .doOnNext(new Action1<List<StoryTheme>>() {
                     @Override
                     public void call(List<StoryTheme> themes) {
                         requestStoryThemes = themes;
                         reorderAndSaveThemes(requestStoryThemes);
                         mSideAdapter.isHomePage = true;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<StoryTheme>>() {
+                    @Override
+                    public void call(List<StoryTheme> themes) {
                         mSideAdapter.setDailyThemes(storyThemes, themes);
                     }
                 }, new Action1<Throwable>() {

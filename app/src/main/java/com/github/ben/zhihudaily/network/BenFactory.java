@@ -16,7 +16,7 @@ public class BenFactory {
     public static StoryThemeApi getStoryThemeApi() {
         synchronized (object) {
             if (null == mDailyThemeApi) {
-                mDailyThemeApi = new BenRetrofit().getStoryThemeApi();
+                mDailyThemeApi = BenRetrofit.build().getStoryThemeApi();
             }
             return mDailyThemeApi;
         }
@@ -25,7 +25,7 @@ public class BenFactory {
     public static StoryApi getStoryApi() {
         synchronized (object) {
             if (null == mDailyNewsApi) {
-                mDailyNewsApi = new BenRetrofit().getStoryApi();
+                mDailyNewsApi = BenRetrofit.build().getStoryApi();
             }
             return mDailyNewsApi;
         }

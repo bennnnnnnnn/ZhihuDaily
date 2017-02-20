@@ -1,17 +1,10 @@
 package com.github.ben.zhihudaily.ui.activity;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.TextView;
 
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.adapter.CommentAdapter;
@@ -22,10 +15,9 @@ import com.github.ben.zhihudaily.presenter.CommentContract;
 import com.github.ben.zhihudaily.presenter.CommentPresenter;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.ui.base.BaseActivity;
+import com.github.ben.zhihudaily.ui.fragment.CommentDialogFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.ToastUtils;
-import com.github.ben.zhihudaily.views.TipDialog;
-import com.github.ben.zhihudaily.views.TipDialogInterface;
 
 import java.util.List;
 
@@ -52,7 +44,6 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
     private int comments;
     private int long_comments;
     private int short_comments;
-    private TipDialog tipDialog;
 
     private boolean isShowShortComments = false;
 
@@ -134,52 +125,7 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
 
     @Override
     public void showDialog(final Comment comment) {
-        if (tipDialog == null) {
-            tipDialog = new TipDialog(mContext, R.layout.dialog_comment, new TipDialogInterface() {
-                @Override
-                public void init(@NonNull final TipDialog tipDialog, Window window) {
-                    TextView agreeTextView = (TextView) window.findViewById(R.id.agree_textView);
-                    TextView reportTextView = (TextView) window.findViewById(R.id.report_textView);
-                    TextView copyTextView = (TextView) window.findViewById(R.id.copy_textView);
-                    TextView replyTextView = (TextView) window.findViewById(R.id.reply_textView);
-
-                    agreeTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-
-                    reportTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-
-                    copyTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clipData = ClipData.newPlainText(Constant.COPY, comment.content);
-                            clipboardManager.setPrimaryClip(clipData);
-                            ToastUtils.shortToast(mContext, "已复制该条评论~");
-                            tipDialog.cancel();
-                        }
-                    });
-
-                    replyTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ToastUtils.shortToast(mContext, "想回复我 没门~");
-                            tipDialog.cancel();
-                        }
-                    });
-
-                }
-            });
-        }
-        tipDialog.showDialog();
+        CommentDialogFragment.newInstance(comment).show(getSupportFragmentManager(), Constant.COMMENT);
     }
 
     @Override

@@ -46,7 +46,11 @@ public class BenRetrofit {
     private StoryApi dailyNewsApi;
     private static final String TAG = "LogInterceptor.java";
 
-    BenRetrofit() {
+    public static BenRetrofit build() {
+        return new BenRetrofit();
+    }
+
+    private BenRetrofit() {
         initOkHttpClient();
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
@@ -171,5 +175,4 @@ public class BenRetrofit {
         }
         return dailyNewsApi;
     }
-
 }

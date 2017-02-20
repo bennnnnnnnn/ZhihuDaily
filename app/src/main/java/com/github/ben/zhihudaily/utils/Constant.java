@@ -14,4 +14,5 @@ public class Constant {
     public static final String SHORT_COMMENTS = "short_comments";
     public static final String COPY = "copy";
     public static long A_DAY_MS = 24L * 60 * 60 * 1000;
+    public static final String COMMENT = "comment";
 }
