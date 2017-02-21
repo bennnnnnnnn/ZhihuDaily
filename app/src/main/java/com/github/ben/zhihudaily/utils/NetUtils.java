@@ -7,7 +7,8 @@ import android.net.NetworkInfo;
 import com.github.ben.zhihudaily.ui.App;
 
 /**
- * Created by Zhou bangquan on 16/10/18.
+ * Created on 16/10/18.
+ * @author Ben
  */
 
 
