@@ -14,7 +14,8 @@ import retrofit2.http.Path;
 import rx.Observable;
 
 /**
- * Created by Zhou bangquan on 16/9/11.
+ * Created on 16/9/11.
+ * @author Ben
  */
 
 public interface StoryApi {

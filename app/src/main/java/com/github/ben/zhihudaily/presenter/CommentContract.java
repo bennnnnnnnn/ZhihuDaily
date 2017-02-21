@@ -5,7 +5,8 @@ import com.github.ben.zhihudaily.data.entity.Comment;
 import java.util.List;
 
 /**
- * Created by Zhou bangquan on 16/11/22.
+ * Created on 16/11/22.
+ * @author Ben
  */
 
 

@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 /**
- * Created by Zhou bangquan on 16/9/11.
+ * Created on 16/9/11.
+ * @author Ben
  */
 
 public class GlideUtils {

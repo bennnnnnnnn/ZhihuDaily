@@ -5,7 +5,8 @@ import com.github.ben.zhihudaily.data.BaseBean;
 import java.util.List;
 
 /**
- * Created by Zhou bangquan on 16/11/3.
+ * Created on 16/11/3.
+ * @author Ben
  */
 
 

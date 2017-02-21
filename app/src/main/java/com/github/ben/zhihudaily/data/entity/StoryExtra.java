@@ -3,7 +3,8 @@ package com.github.ben.zhihudaily.data.entity;
 import com.github.ben.zhihudaily.data.BaseBean;
 
 /**
- * Created by Zhou bangquan on 16/9/20.
+ * Created on 16/9/20.
+ * @author Ben
  */
 
 

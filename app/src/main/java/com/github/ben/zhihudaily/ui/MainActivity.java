@@ -38,6 +38,11 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created on 16/10/8.
+ * @author Ben
+ */
+
 public class MainActivity extends BaseActivity {
 
     @Override

@@ -35,7 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Zhou bangquan on 16/9/11.
+ * Created on 16/9/11.
+ * @author Ben
  */
 
 public class HomeAdapter extends RecyclerView.Adapter {

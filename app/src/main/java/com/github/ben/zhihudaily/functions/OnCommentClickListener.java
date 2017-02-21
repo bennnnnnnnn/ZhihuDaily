@@ -3,7 +3,8 @@ package com.github.ben.zhihudaily.functions;
 import com.github.ben.zhihudaily.data.entity.Comment;
 
 /**
- * Created by Zhou bangquan on 16/11/9.
+ * Created on 16/11/9.
+ * @author Ben
  */
 
 

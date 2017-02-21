@@ -6,8 +6,11 @@ import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.annotation.Table;
 
 /**
- * Created by Zhou bangquan on 16/9/11.
+ * Created on 16/9/11.
+ * @author Ben
  */
+
+
 @Table("storyDetail")
 public class Story extends BaseBean {
     public static final String COL_IMAGES = "images";

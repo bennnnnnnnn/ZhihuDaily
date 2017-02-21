@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import com.github.ben.zhihudaily.ui.App;
 
 /**
- * Created by Zhou bangquan on 16/10/11.
+ * Created on 16/10/11.
+ * @author Ben
  */
 
 

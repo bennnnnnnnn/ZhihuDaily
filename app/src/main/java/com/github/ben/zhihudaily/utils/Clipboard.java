@@ -4,10 +4,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 
-import com.github.ben.zhihudaily.utils.Constant;
-
 /**
- * Created by Zhou bangquan on 17/2/20.
+ * Created on 17/2/20.
+ * @author Ben
  */
 
 

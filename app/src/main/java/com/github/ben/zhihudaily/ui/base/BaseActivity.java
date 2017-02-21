@@ -14,7 +14,8 @@ import com.github.ben.zhihudaily.utils.SharePreUtils;
 import rx.Subscription;
 
 /**
- * Created by Zhou bangquan on 16/9/20.
+ * Created on 16/9/20.
+ * @author Ben
  */
 
 

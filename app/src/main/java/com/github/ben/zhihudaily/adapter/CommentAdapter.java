@@ -31,7 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Zhou bangquan on 16/11/4.
+ * Created on 16/11/4.
+ * @author Ben
  */
 
 

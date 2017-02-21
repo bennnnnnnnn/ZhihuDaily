@@ -5,7 +5,8 @@ import com.github.ben.zhihudaily.data.BaseBean;
 import java.io.Serializable;
 
 /**
- * Created by Zhou bangquan on 16/11/1.
+ * Created on 16/11/1.
+ * @author Ben
  */
 
 

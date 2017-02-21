@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.github.ben.zhihudaily.R;
 
 /**
- * Created by Zhou bangquan on 16/9/19.
+ * Created on 16/9/19.
+ * @author Ben
  */
 
 

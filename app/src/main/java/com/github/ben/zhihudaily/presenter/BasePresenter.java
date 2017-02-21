@@ -1,7 +1,8 @@
 package com.github.ben.zhihudaily.presenter;
 
 /**
- * Created by Zhou bangquan on 16/11/22.
+ * Created on 16/11/22.
+ * @author Ben
  */
 
 

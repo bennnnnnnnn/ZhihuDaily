@@ -24,7 +24,8 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Zhou bangquan on 16/10/8.
+ * Created on 16/10/8.
+ * @author Ben
  */
 
 

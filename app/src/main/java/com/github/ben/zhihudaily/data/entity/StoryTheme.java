@@ -5,8 +5,10 @@ import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.annotation.Table;
 
 /**
- * Created by Zhou bangquan on 16/9/10.
+ * Created on 16/9/10.
+ * @author Ben
  */
+
 @Table("zhihuthemes")
 public class StoryTheme extends BaseBean {
     public static final String COL_COLOR = "color";

@@ -6,7 +6,8 @@ import com.github.ben.zhihudaily.data.BaseBean;
 import java.util.List;
 
 /**
- * Created by Zhou bangquan on 16/9/10.
+ * Created on 16/9/10.
+ * @author Ben
  */
 
 public class StoryThemeResult extends BaseBean {

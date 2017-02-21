@@ -1,7 +1,8 @@
 package com.github.ben.zhihudaily.functions;
 
 /**
- * Created by Zhou bangquan on 16/11/9.
+ * Created on 16/11/9.
+ * @author Ben
  */
 
 

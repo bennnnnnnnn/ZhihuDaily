@@ -5,7 +5,8 @@ import com.github.ben.zhihudaily.data.entity.Story;
 import java.util.List;
 
 /**
- * Created by Zhou bangquan on 16/11/24.
+ * Created on 16/11/24.
+ * @author Ben
  */
 
 

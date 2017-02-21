@@ -24,7 +24,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Zhou bangquan on 16/9/11.
+ * Created on 16/9/11.
+ * @author Ben
  */
 
 public class StoryDetailActivity extends BaseActivity implements StoryDetailContract.View {

@@ -36,7 +36,8 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Zhou bangquan on 16/9/20.
+ * Created on 16/9/20.
+ * @author Ben
  */
 
 

@@ -6,7 +6,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Created by Zhou bangquan on 16/9/13.
+ * Created on 16/9/13.
+ * @author Ben
  */
 
 public class DateUtils {

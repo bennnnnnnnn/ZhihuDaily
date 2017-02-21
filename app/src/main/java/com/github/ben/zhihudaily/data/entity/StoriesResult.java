@@ -6,7 +6,8 @@ import com.github.ben.zhihudaily.data.BaseBean;
 import java.util.List;
 
 /**
- * Created by Zhou bangquan on 16/9/11.
+ * Created on 16/9/11.
+ * @author Ben
  */
 public class StoriesResult extends BaseBean {
     public String date;

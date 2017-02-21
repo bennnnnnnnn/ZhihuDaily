@@ -25,7 +25,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Zhou bangquan on 16/10/31.
+ * Created on 16/10/31.
+ * @author Ben
  */
 
 

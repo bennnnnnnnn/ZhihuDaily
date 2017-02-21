@@ -9,7 +9,8 @@ import java.net.SocketTimeoutException;
 import retrofit2.adapter.rxjava.HttpException;
 
 /**
- * Created by Zhou bangquan on 16/9/27.
+ * Created on 16/9/27.
+ * @author Ben
  */
 
 

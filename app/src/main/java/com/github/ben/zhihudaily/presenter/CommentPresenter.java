@@ -14,7 +14,8 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Zhou bangquan on 16/11/22.
+ * Created on 16/11/22.
+ * @author Ben
  */
 
 public class CommentPresenter implements CommentContract.Presenter {

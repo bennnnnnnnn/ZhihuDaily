@@ -37,10 +37,11 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Zhou bangquan on 16/10/13.
+ * Created on 16/10/13.
+ * @author Ben
  */
 
-//该页面没有 MVP (比较用)
+//该页面没有 MVP (比较用,个人感觉一些简单的页面完全没有必要使用 MVP, 本 Application 使用仅用作个人学习)
 public class ThemeFragment extends BaseFragment {
 
     @Bind(R.id.swipe_refresh_layout)
