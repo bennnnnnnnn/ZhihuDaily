@@ -30,10 +30,10 @@ android {
         }
 
         release {
-            storeFile file("../zhihudaily.jks")
-            storePassword "121212"
-            keyAlias "ZHIHUKEY"
-            keyPassword "121212"
+            storeFile file("zhihudaily.jks")
+            storePassword "123456"
+            keyAlias "ZHIHUDAILY"
+            keyPassword "123456"
         }
     }
 
