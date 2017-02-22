@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created on 16/9/11.
+ *
  * @author Ben
  */
 
@@ -78,9 +80,13 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
     }
 
     private void initViewPager() {
-        mAdapter = new DetailAdapter(this);
+        mAdapter = new DetailAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
+    }
+
+    private OnPageChangeListener getOnPageChangeListener() {
+        return new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -97,9 +103,8 @@ public class StoryDetailActivity extends BaseActivity implements StoryDetailCont
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        };
     }
-
 
     @Override
     public void setStoryExtra(StoryExtra storyExtra) {
