@@ -214,6 +214,13 @@ public class CommentAdapter extends RecyclerView.Adapter {
                 onCommentCountClickListener.onClick();
             }
         }
+
+        @OnClick(R.id.short_comment_button)
+        void onButtonClick(View v) {
+            if (onCommentCountClickListener != null) {
+                onCommentCountClickListener.onClick();
+            }
+        }
     }
 
     class CommentViewHolder extends RecyclerView.ViewHolder {

@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -64,21 +66,24 @@ public class CommentDialogFragment extends DialogFragment {
                 .create();
     }
 
+    @SuppressLint("InflateParams")
     private View onCreateDialogContentView(Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View root = inflater.inflate(R.layout.dialog_comment, null);
+         View root = inflater.inflate(R.layout.dialog_comment, null);
         ButterKnife.bind(this, root);
         return root;
     }
 
     @OnClick(R.id.agree_textView)
     void onAgree(View v) {
-
+        ToastUtils.shortToast(mContext, "不让点赞~");
+        getDialog().dismiss();
     }
 
     @OnClick(R.id.report_textView)
     void onReport(View v) {
-
+        ToastUtils.shortToast(mContext, "不让举报~");
+        getDialog().dismiss();
     }
 
     @OnClick(R.id.copy_textView)
@@ -94,4 +99,15 @@ public class CommentDialogFragment extends DialogFragment {
         getDialog().dismiss();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e("----------onDestroyView","onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("----------onDestroy","onDestroy");
+    }
 }

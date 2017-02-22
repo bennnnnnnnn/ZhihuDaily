@@ -120,6 +120,7 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
 
     private void smoothShortCommentTitleToTop() {
         int[] location = new int[2];
+        System.out.println("-------"+mCommentRecyclerView.getChildCount());
         mCommentRecyclerView.getChildAt(mCommentRecyclerView.getChildCount() - 1).getLocationOnScreen(location);
         mCommentRecyclerView.smoothScrollBy(0, location[1] - App.statusBarHeight - mActionbar.getHeight());
     }
