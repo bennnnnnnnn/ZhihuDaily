@@ -12,11 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.adapter.ThemeAdapter;
-import com.github.ben.zhihudaily.data.ResponseError;
 import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.data.entity.ThemeStories;
 import com.github.ben.zhihudaily.functions.OnStoryItemClickListener;
@@ -26,6 +24,7 @@ import com.github.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.github.ben.zhihudaily.ui.base.BaseFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.GlideUtils;
+import com.github.ben.zhihudaily.utils.ToastUtils;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
@@ -36,8 +35,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static com.github.ben.zhihudaily.data.ResponseError.displayCustomErrorAction;
+import static com.github.ben.zhihudaily.data.ResponseError.OnResult;
+
 /**
  * Created on 16/10/13.
+ *
  * @author Ben
  */
 
@@ -144,18 +147,12 @@ public class ThemeFragment extends BaseFragment {
                         mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }, new Action1<Throwable>() {
+                }, displayCustomErrorAction(getContext(), new OnResult() {
                     @Override
-                    public void call(Throwable throwable) {
-                        new ResponseError(throwable).handle(new ResponseError.OnResult() {
-                            @Override
-                            public void onResult(ResponseError error) {
-                                Toast.makeText(mContext, error.error_msg, Toast.LENGTH_SHORT).show();
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
+                    public void onResult(String errorMessage) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
-                });
+                }));
     }
 
     @Override

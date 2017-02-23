@@ -40,7 +40,7 @@ public class BenRetrofit {
     public static final String CACHE_CONTROL = "Cache-Control: public, max-age=";
     public static final int CACHE_MAX_STALE_LONG = 60 * 60 * 24 * 3;
     public static final int CHCHE_MAX_STALE_SHORT = 60;
-    private static final int DEFAULT_TIMEOUT = 1;
+    private static final int DEFAULT_TIMEOUT = 15;
     private OkHttpClient okHttpClient;
     private static Retrofit retrofit;
     private StoryThemeApi dailyThemeApi;
