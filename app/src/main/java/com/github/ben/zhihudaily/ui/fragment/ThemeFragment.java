@@ -24,7 +24,6 @@ import com.github.ben.zhihudaily.ui.activity.StoryDetailActivity;
 import com.github.ben.zhihudaily.ui.base.BaseFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.GlideUtils;
-import com.github.ben.zhihudaily.utils.ToastUtils;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
