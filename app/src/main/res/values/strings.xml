@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZhihuDaily</string>
+    <string name="app_name">随时阅</string>
     <string name="home_page">首页</string>
     <string name="add">添加</string>
     <string name="open">打开</string>
@@ -14,7 +14,6 @@
     <string name="commend">评论</string>
     <string name="praise">赞</string>
     <string name="editors">主编</string>
-    <string name="app_name_cn">知乎日报</string>
     <string name="welcome_text">不止3次 不止7分钟</string>
     <string name="multipic">多图</string>
     <string name="comment">评论</string>

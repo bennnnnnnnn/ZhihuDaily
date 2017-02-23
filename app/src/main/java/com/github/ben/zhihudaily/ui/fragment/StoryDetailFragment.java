@@ -1,7 +1,6 @@
 package com.github.ben.zhihudaily.ui.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ben.zhihudaily.R;
-import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.data.entity.StoryDetail;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.App;
