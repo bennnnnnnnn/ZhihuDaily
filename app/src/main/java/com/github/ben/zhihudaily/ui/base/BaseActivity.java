@@ -23,10 +23,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Subscription subscription;
     protected Context mContext;
-    public Toolbar mToolbar;
-    public ActionBar mActionbar;
-
-    abstract protected int provideContentViewId();
 
     protected void unsubscribe() {
         if (subscription != null && !subscription.isUnsubscribed()) {
@@ -41,29 +37,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(provideContentViewId());
         mContext = this;
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(mToolbar);
-        mActionbar = getSupportActionBar();
-        if (null != mActionbar) {
-            mActionbar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unsubscribe();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

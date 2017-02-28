@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +20,7 @@ import com.github.ben.zhihudaily.data.entity.StoryTheme;
 import com.github.ben.zhihudaily.data.entity.StoryThemeResult;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.presenter.HomePresenter;
-import com.github.ben.zhihudaily.ui.base.BaseActivity;
+import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
 import com.github.ben.zhihudaily.ui.fragment.HomeFragment;
 import com.github.ben.zhihudaily.ui.fragment.ThemeFragment;
 import com.github.ben.zhihudaily.utils.SharePreUtils;
@@ -40,10 +41,11 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created on 16/10/8.
+ *
  * @author Ben
  */
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends ToolBarActivity {
 
     @Override
     protected int provideContentViewId() {
@@ -70,6 +72,7 @@ public class MainActivity extends BaseActivity {
     private MenuItem item1;
     private MenuItem item2;
     private MenuItem item3;
+    private MenuItem item4;
     private StoryTheme selectedTheme;
     private boolean request;
     private boolean updateList;
@@ -174,6 +177,7 @@ public class MainActivity extends BaseActivity {
         item1 = menu.findItem(R.id.follow_item);
         item2 = menu.findItem(R.id.mode_item);
         item3 = menu.findItem(R.id.setting_item);
+        item4 = menu.findItem(R.id.about_item);
         item2.setTitle(isNightMode() ? "日间模式" : "夜间模式");
         changeMenuItems(isHomePage);
         return true;
@@ -204,6 +208,9 @@ public class MainActivity extends BaseActivity {
             setFollowIcon(selectedTheme);
             App.mDb.update(selectedTheme, ConflictAlgorithm.Replace);
             updateList = true;
+            return true;
+        } else if (id == R.id.about_item) {
+            startActivity(new Intent(mContext, AboutActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -267,12 +274,14 @@ public class MainActivity extends BaseActivity {
                 item1.setVisible(false);
                 item2.setVisible(true);
                 item3.setVisible(true);
+                item4.setVisible(true);
             } else {
                 setFollowIcon(selectedTheme);
                 item0.setVisible(false);
                 item1.setVisible(true);
                 item2.setVisible(false);
                 item3.setVisible(false);
+                item4.setVisible(false);
             }
         }
     }

@@ -15,7 +15,7 @@ import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.data.entity.StoryExtra;
 import com.github.ben.zhihudaily.presenter.StoryDetailContract;
 import com.github.ben.zhihudaily.presenter.StoryDetailPresenter;
-import com.github.ben.zhihudaily.ui.base.BaseActivity;
+import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.DetailStoryActionProvider;
 
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
  * @author Ben
  */
 
-public class StoryDetailActivity extends BaseActivity implements StoryDetailContract.View {
+public class StoryDetailActivity extends ToolBarActivity implements StoryDetailContract.View {
 
     @Bind(R.id.daily_viewPager)
     ViewPager mViewPager;

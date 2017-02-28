@@ -28,4 +28,14 @@
         <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
     </style>
 
+    <style name="ExpandedTitleTextAppearance"
+        parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
+    <style name="CollapsingToolbarTitleStyle"
+        parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/md_white_1000</item>
+    </style>
+
 </resources>

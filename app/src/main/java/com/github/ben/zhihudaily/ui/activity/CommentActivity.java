@@ -14,7 +14,7 @@ import com.github.ben.zhihudaily.functions.OnCommentCountClickListener;
 import com.github.ben.zhihudaily.presenter.CommentContract;
 import com.github.ben.zhihudaily.presenter.CommentPresenter;
 import com.github.ben.zhihudaily.ui.App;
-import com.github.ben.zhihudaily.ui.base.BaseActivity;
+import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
 import com.github.ben.zhihudaily.ui.fragment.CommentDialogFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.ToastUtils;
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
  */
 
 
-public class CommentActivity extends BaseActivity implements CommentContract.View {
+public class CommentActivity extends ToolBarActivity implements CommentContract.View {
 
     @Override
     protected int provideContentViewId() {

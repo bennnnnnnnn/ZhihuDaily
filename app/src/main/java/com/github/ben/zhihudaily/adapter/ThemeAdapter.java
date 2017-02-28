@@ -30,6 +30,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created on 16/9/22.
@@ -110,14 +111,19 @@ public class ThemeAdapter extends RecyclerView.Adapter {
                     int length = (int) (30 * App.screenDensity);
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(length, length);
                     for (Editor editor : editors) {
-                        SimpleDraweeView editorImage = new SimpleDraweeView(context);
+//                        SimpleDraweeView editorImage = new SimpleDraweeView(context);
+//                        editorImage.setLayoutParams(params);
+//                        editorImage.setPadding(10, 10, 10, 10);
+//                        editorImage.setScaleType(ImageView.ScaleType.FIT_XY);
+//                        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(context.getResources())
+//                                .setRoundingParams(RoundingParams.asCircle()).build();
+//                        editorImage.setHierarchy(hierarchy);
+//                        editorImage.setImageURI(editor.avatar);
+//                        editorViewHolder.editosImage.addView(editorImage);
+                        CircleImageView editorImage = new CircleImageView(context);
                         editorImage.setLayoutParams(params);
                         editorImage.setPadding(10, 10, 10, 10);
-                        editorImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(context.getResources())
-                                .setRoundingParams(RoundingParams.asCircle()).build();
-                        editorImage.setHierarchy(hierarchy);
-                        editorImage.setImageURI(editor.avatar);
+                        GlideUtils.loadingImage(context, editorImage, editor.avatar);
                         editorViewHolder.editosImage.addView(editorImage);
                     }
                 }
