@@ -1,6 +1,8 @@
-package com.github.ben.zhihudaily.presenter;
+package com.github.ben.zhihudaily.ui.module.home;
 
 import com.github.ben.zhihudaily.data.entity.Story;
+import com.github.ben.zhihudaily.mvpbase.BasePresenter;
+import com.github.ben.zhihudaily.mvpbase.BaseView;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
 
 public interface HomeContract {
 
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseView {
 
         void lataestStoriesLoaded(List<Story> stories, List<Story> topStories);
 
@@ -26,9 +28,11 @@ public interface HomeContract {
 
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
 
-        void refreshList();
+        void getHomeList();
+
+        void refreshHomeList();
 
         void loadBeforeStories();
 

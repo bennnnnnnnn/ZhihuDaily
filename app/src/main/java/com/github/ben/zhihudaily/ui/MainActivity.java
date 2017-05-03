@@ -19,9 +19,8 @@ import com.github.ben.zhihudaily.adapter.SideAdapter;
 import com.github.ben.zhihudaily.data.entity.StoryTheme;
 import com.github.ben.zhihudaily.data.entity.StoryThemeResult;
 import com.github.ben.zhihudaily.network.BenFactory;
-import com.github.ben.zhihudaily.presenter.HomePresenter;
 import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
-import com.github.ben.zhihudaily.ui.fragment.HomeFragment;
+import com.github.ben.zhihudaily.ui.module.home.HomeFragment;
 import com.github.ben.zhihudaily.ui.fragment.ThemeFragment;
 import com.github.ben.zhihudaily.utils.SharePreUtils;
 import com.github.ben.zhihudaily.utils.ToastUtils;
@@ -76,8 +75,6 @@ public class MainActivity extends ToolBarActivity {
     private StoryTheme selectedTheme;
     private boolean request;
     private boolean updateList;
-
-    private HomePresenter mHomePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,7 +252,6 @@ public class MainActivity extends ToolBarActivity {
         if (showHomePage) {
             homeFragment = HomeFragment.newInstance();
             currentFragment = homeFragment;
-            mHomePresenter = new HomePresenter(homeFragment);
         } else {
             themeFragment = ThemeFragment.newInstance(storyThemeId);
             currentFragment = themeFragment;

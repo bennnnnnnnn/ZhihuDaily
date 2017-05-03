@@ -30,12 +30,12 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.github.ben.zhihudaily.ui.activity.StoryDetailActivity"
+            android:name=".ui.module.story.StoryDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.github.ben.zhihudaily.ui.activity.CommentActivity"
+            android:name=".ui.module.comment.CommentActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 

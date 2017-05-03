@@ -1,4 +1,4 @@
-package com.github.ben.zhihudaily.presenter;
+package com.github.ben.zhihudaily.ui.module.story;
 
 import android.text.TextUtils;
 
@@ -7,6 +7,7 @@ import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.data.entity.StoryExtra;
 import com.github.ben.zhihudaily.data.entity.ThemeStories;
 import com.github.ben.zhihudaily.network.BenFactory;
+import com.github.ben.zhihudaily.mvpbase.BasePresentImpl;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.DateUtils;
@@ -22,20 +23,15 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created on 16/11/24.
+ *
  * @author Ben
  */
 
 
-public class StoryDetailPresenter implements StoryDetailContract.Presenter {
+public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.View> implements StoryDetailContract.Presenter {
 
-    private StoryDetailContract.View mStoryDetailView;
     private Subscription subscription;
     private List<Story> dailies;
-
-    public StoryDetailPresenter(StoryDetailContract.View storyDetailView) {
-        this.mStoryDetailView = storyDetailView;
-        mStoryDetailView.setPresenter(this);
-    }
 
     private void unsubscribe() {
         if (subscription != null && !subscription.isUnsubscribed()) {
@@ -68,7 +64,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                 .subscribe(new Action1<StoryExtra>() {
                     @Override
                     public void call(StoryExtra storyExtra) {
-                        mStoryDetailView.setStoryExtra(storyExtra);
+                        mView.setStoryExtra(storyExtra);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -98,7 +94,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                     @Override
                     public void call(List<Story> singleDailies) {
                         dailies = singleDailies;
-                        mStoryDetailView.setStoryList(dailies);
+                        mView.setStoryList(dailies);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -128,7 +124,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                     @Override
                     public void call(List<Story> singleDailies) {
                         dailies = singleDailies;
-                        mStoryDetailView.setStoryList(dailies);
+                        mView.setStoryList(dailies);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -149,7 +145,7 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
                     @Override
                     public void call(ThemeStories themeStories) {
                         dailies = themeStories.stories;
-                        mStoryDetailView.setStoryList(dailies);
+                        mView.setStoryList(dailies);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -161,11 +157,6 @@ public class StoryDetailPresenter implements StoryDetailContract.Presenter {
 
     public String getCurrentId(int position) {
         return dailies.get(position).id;
-    }
-
-    @Override
-    public void start() {
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.ben.zhihudaily.ui.activity;
+package com.github.ben.zhihudaily.ui.module.story;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,8 @@ import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.adapter.DetailAdapter;
 import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.data.entity.StoryExtra;
-import com.github.ben.zhihudaily.presenter.StoryDetailContract;
-import com.github.ben.zhihudaily.presenter.StoryDetailPresenter;
-import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
+import com.github.ben.zhihudaily.ui.module.comment.CommentActivity;
+import com.github.ben.zhihudaily.mvpbase.MVPBaseActivity;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.DetailStoryActionProvider;
 
@@ -30,7 +29,7 @@ import butterknife.ButterKnife;
  * @author Ben
  */
 
-public class StoryDetailActivity extends ToolBarActivity implements StoryDetailContract.View {
+public class StoryDetailActivity extends MVPBaseActivity<StoryDetailContract.View, StoryDetailPresenter> implements StoryDetailContract.View {
 
     @Bind(R.id.daily_viewPager)
     ViewPager mViewPager;
@@ -45,9 +44,6 @@ public class StoryDetailActivity extends ToolBarActivity implements StoryDetailC
     private int comments;
     private int long_comments;
     private int short_comments;
-
-    private StoryDetailContract.Presenter mPresenter;
-    private StoryDetailPresenter mStoryDetailPresenter;
 
     @Override
     protected int provideContentViewId() {
@@ -64,7 +60,6 @@ public class StoryDetailActivity extends ToolBarActivity implements StoryDetailC
         type = getIntent().getStringExtra("type");
         themeId = getIntent().getStringExtra("themeId");
         initViewPager();
-        if (mStoryDetailPresenter == null) mStoryDetailPresenter = new StoryDetailPresenter(this);
     }
 
     @Override
@@ -163,10 +158,5 @@ public class StoryDetailActivity extends ToolBarActivity implements StoryDetailC
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setPresenter(StoryDetailContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 }

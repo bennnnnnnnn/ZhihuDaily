@@ -1,4 +1,4 @@
-package com.github.ben.zhihudaily.ui.activity;
+package com.github.ben.zhihudaily.ui.module.comment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,10 +11,8 @@ import com.github.ben.zhihudaily.adapter.CommentAdapter;
 import com.github.ben.zhihudaily.data.entity.Comment;
 import com.github.ben.zhihudaily.functions.OnCommentClickListener;
 import com.github.ben.zhihudaily.functions.OnCommentCountClickListener;
-import com.github.ben.zhihudaily.presenter.CommentContract;
-import com.github.ben.zhihudaily.presenter.CommentPresenter;
 import com.github.ben.zhihudaily.ui.App;
-import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
+import com.github.ben.zhihudaily.mvpbase.MVPBaseActivity;
 import com.github.ben.zhihudaily.ui.fragment.CommentDialogFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.ToastUtils;
@@ -26,11 +24,12 @@ import butterknife.ButterKnife;
 
 /**
  * Created on 16/10/31.
+ *
  * @author Ben
  */
 
 
-public class CommentActivity extends ToolBarActivity implements CommentContract.View {
+public class CommentActivity extends MVPBaseActivity<CommentContract.View, CommentPresenter> implements CommentContract.View {
 
     @Override
     protected int provideContentViewId() {
@@ -41,15 +40,10 @@ public class CommentActivity extends ToolBarActivity implements CommentContract.
     RecyclerView mCommentRecyclerView;
 
     private CommentAdapter mCommentAdapter;
-    private String id;
-    private int comments;
     private int long_comments;
     private int short_comments;
 
     private boolean isShowShortComments = false;
-
-    private CommentContract.Presenter mPresenter;
-    private CommentPresenter mCommentPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,21 +51,23 @@ public class CommentActivity extends ToolBarActivity implements CommentContract.
         ButterKnife.bind(this);
         initViews();
         initRecyclerView();
-        if (mCommentPresenter == null) mCommentPresenter = new CommentPresenter(this, id);
+    }
+
+    @Override
+    public String getStoryId() {
+        return getIntent().getStringExtra("id");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mPresenter != null) mPresenter.start();
+        mPresenter.requestLongComments();
     }
 
     private void initViews() {
-        id = getIntent().getStringExtra("id");
-        comments = getIntent().getIntExtra(Constant.COMMENTS, 0);
         long_comments = getIntent().getIntExtra(Constant.LONG_COMMENTS, 0);
         short_comments = getIntent().getIntExtra(Constant.SHORT_COMMENTS, 0);
-        setTitle(comments + "条点评");
+        setTitle(getIntent().getIntExtra(Constant.COMMENTS, 0) + "条点评");
     }
 
     private void initRecyclerView() {
@@ -160,10 +156,5 @@ public class CommentActivity extends ToolBarActivity implements CommentContract.
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setPresenter(CommentContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 }

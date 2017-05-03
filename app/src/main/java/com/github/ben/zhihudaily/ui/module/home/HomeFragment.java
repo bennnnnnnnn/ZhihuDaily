@@ -1,4 +1,4 @@
-package com.github.ben.zhihudaily.ui.fragment;
+package com.github.ben.zhihudaily.ui.module.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +15,9 @@ import com.github.ben.zhihudaily.adapter.HomeAdapter;
 import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.functions.OnBannerItemClickListener;
 import com.github.ben.zhihudaily.functions.OnStoryItemClickListener;
-import com.github.ben.zhihudaily.presenter.HomeContract;
 import com.github.ben.zhihudaily.ui.App;
-import com.github.ben.zhihudaily.ui.activity.StoryDetailActivity;
-import com.github.ben.zhihudaily.ui.base.BaseFragment;
+import com.github.ben.zhihudaily.ui.module.story.StoryDetailActivity;
+import com.github.ben.zhihudaily.mvpbase.MVPBaseFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
@@ -29,11 +28,12 @@ import butterknife.ButterKnife;
 
 /**
  * Created on 16/10/13.
+ *
  * @author Ben
  */
 
 
-public class HomeFragment extends BaseFragment implements HomeContract.View {
+public class HomeFragment extends MVPBaseFragment<HomeContract.View, HomePresenter> implements HomeContract.View {
 
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -42,7 +42,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private HomeAdapter mHomeAdapter;
     private LinearLayoutManager mHomelinearLayoutManager;
-    public HomeContract.Presenter mPresenter;
+
+    private boolean initialized;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,9 +58,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         initSwipeRefreshLayout();
         initHomeList();
         setTitle(R.string.home_page);
-        if (mPresenter != null) {
-            mPresenter.start();
-        }
         return rootView;
     }
 
@@ -73,7 +71,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPresenter.refreshList();
+                mPresenter.refreshHomeList();
             }
         });
     }
@@ -156,11 +154,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setPresenter(HomeContract.Presenter presenter) {
-        mPresenter = presenter;
+        if (!initialized) {
+            mPresenter.getHomeList();
+            initialized = true;
+        } else {
+            if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
+        }
     }
 }

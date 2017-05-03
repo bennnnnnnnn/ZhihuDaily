@@ -1,10 +1,11 @@
-package com.github.ben.zhihudaily.presenter;
+package com.github.ben.zhihudaily.ui.module.home;
 
 import android.text.TextUtils;
 
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.data.entity.StoriesResult;
 import com.github.ben.zhihudaily.data.entity.Story;
+import com.github.ben.zhihudaily.mvpbase.BasePresentImpl;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.utils.Constant;
@@ -22,32 +23,27 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created on 16/11/24.
+ *
  * @author Ben
  */
 
 
-public class HomePresenter implements HomeContract.Presenter {
+public class HomePresenter extends BasePresentImpl<HomeContract.View> implements HomeContract.Presenter {
 
-    private HomeContract.View mHomeView;
     private Subscription subscription;
     private List<Story> topStories = new ArrayList<>();
     private List<Story> homeStories = new ArrayList<>();
     private long time;
     private String today;
 
-    public HomePresenter(HomeContract.View homeView) {
-        this.mHomeView = homeView;
-        mHomeView.setPresenter(this);
+    @Override
+    public void getHomeList() {
+        getHomeListMsg();
     }
 
     @Override
-    public void start() {
-        getHomeList();
-    }
-
-    @Override
-    public void refreshList() {
-        getHomeList();
+    public void refreshHomeList() {
+        getHomeListMsg();
     }
 
     @Override
@@ -59,13 +55,13 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void setCurrentTile(int position) {
         if (position == 0) {
-            mHomeView.setTitle(R.string.home_page);
+            mView.setTitle(R.string.home_page);
         } else {
             String date = homeStories.get(position - 1).date;
             if (today.equals(date)) {
-                mHomeView.setTitle(R.string.today_news);
+                mView.setTitle(R.string.today_news);
             } else {
-                mHomeView.setTitle(date);
+                mView.setTitle(date);
             }
         }
     }
@@ -94,13 +90,13 @@ public class HomePresenter implements HomeContract.Presenter {
                         }
                         homeStories.addAll(stories);
                         changeReadState(stories);
-                        mHomeView.beforeStoriesLoaded(stories);
-                        mHomeView.isSwipeRefreshing(false);
+                        mView.beforeStoriesLoaded(stories);
+                        mView.isSwipeRefreshing(false);
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        mHomeView.isSwipeRefreshing(false);
+                        mView.isSwipeRefreshing(false);
                     }
                 });
     }
@@ -111,7 +107,7 @@ public class HomePresenter implements HomeContract.Presenter {
         }
     }
 
-    private void getHomeList() {
+    private void getHomeListMsg() {
         unsubscribe();
         subscription = BenFactory.getStoryApi()
                 .getDailyNews("latest")
@@ -142,8 +138,8 @@ public class HomePresenter implements HomeContract.Presenter {
                         }
                         homeStories = stories;
                         changeReadState(homeStories);
-                        mHomeView.lataestStoriesLoaded(stories, topStories);
-                        mHomeView.isSwipeRefreshing(false);
+                        mView.lataestStoriesLoaded(stories, topStories);
+                        mView.isSwipeRefreshing(false);
                     }
                 }, new Action1<Throwable>() {
                     @Override

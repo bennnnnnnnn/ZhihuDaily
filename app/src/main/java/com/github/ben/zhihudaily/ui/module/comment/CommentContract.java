@@ -1,6 +1,8 @@
-package com.github.ben.zhihudaily.presenter;
+package com.github.ben.zhihudaily.ui.module.comment;
 
 import com.github.ben.zhihudaily.data.entity.Comment;
+import com.github.ben.zhihudaily.mvpbase.BasePresenter;
+import com.github.ben.zhihudaily.mvpbase.BaseView;
 
 import java.util.List;
 
@@ -12,7 +14,8 @@ import java.util.List;
 
 public interface CommentContract {
 
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseView {
+        String getStoryId();
 
         void refreshLongComments(List<Comment> comments);
 
@@ -23,9 +26,11 @@ public interface CommentContract {
         void showDialog(Comment comment);
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
 
         void requestShortCommentsList();
+
+        void requestLongComments();
     }
 
 }

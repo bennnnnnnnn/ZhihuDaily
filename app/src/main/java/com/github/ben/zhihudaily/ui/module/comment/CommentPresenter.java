@@ -1,9 +1,10 @@
-package com.github.ben.zhihudaily.presenter;
+package com.github.ben.zhihudaily.ui.module.comment;
 
 
 import com.github.ben.zhihudaily.data.entity.Comment;
 import com.github.ben.zhihudaily.data.entity.CommentsResult;
 import com.github.ben.zhihudaily.network.BenFactory;
+import com.github.ben.zhihudaily.mvpbase.BasePresentImpl;
 
 import java.util.List;
 
@@ -15,20 +16,13 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created on 16/11/22.
+ *
  * @author Ben
  */
 
-public class CommentPresenter implements CommentContract.Presenter {
+public class CommentPresenter extends BasePresentImpl<CommentContract.View> implements CommentContract.Presenter {
 
-    private CommentContract.View mCommentView;
-    private String id;
     private Subscription subscription;
-
-    public CommentPresenter(CommentContract.View commentView, String id) {
-        this.mCommentView = commentView;
-        this.id = id;
-        mCommentView.setPresenter(this);
-    }
 
     @Override
     public void requestShortCommentsList() {
@@ -41,10 +35,11 @@ public class CommentPresenter implements CommentContract.Presenter {
         }
     }
 
-    private void requestLongComments() {
+    @Override
+    public void requestLongComments() {
         unsubscribe();
         subscription = BenFactory.getStoryApi()
-                .getLongComments(id)
+                .getLongComments(mView.getStoryId())
                 .map(new Func1<CommentsResult, List<Comment>>() {
                     @Override
                     public List<Comment> call(CommentsResult commentsResult) {
@@ -59,7 +54,7 @@ public class CommentPresenter implements CommentContract.Presenter {
                 .subscribe(new Action1<List<Comment>>() {
                     @Override
                     public void call(List<Comment> comments) {
-                        mCommentView.refreshLongComments(comments);
+                        mView.refreshLongComments(comments);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -73,7 +68,7 @@ public class CommentPresenter implements CommentContract.Presenter {
     private void requestShortComments() {
         unsubscribe();
         subscription = BenFactory.getStoryApi()
-                .getShortComments(id)
+                .getShortComments(mView.getStoryId())
                 .map(new Func1<CommentsResult, List<Comment>>() {
                     @Override
                     public List<Comment> call(CommentsResult commentsResult) {
@@ -88,7 +83,7 @@ public class CommentPresenter implements CommentContract.Presenter {
                 .subscribe(new Action1<List<Comment>>() {
                     @Override
                     public void call(List<Comment> comments) {
-                        mCommentView.refreshShortComments(comments);
+                        mView.refreshShortComments(comments);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -96,10 +91,5 @@ public class CommentPresenter implements CommentContract.Presenter {
 
                     }
                 });
-    }
-
-    @Override
-    public void start() {
-        requestLongComments();
     }
 }

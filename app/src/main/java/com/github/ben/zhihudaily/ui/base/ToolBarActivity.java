@@ -28,11 +28,12 @@ public abstract class ToolBarActivity extends BaseActivity {
         setContentView(provideContentViewId());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(mToolbar);
-        mActionbar = getSupportActionBar();
-        if (null != mActionbar) {
-            mActionbar.setDisplayHomeAsUpEnabled(true);
+        if (null != mToolbar) {
+            setSupportActionBar(mToolbar);
+            mActionbar = getSupportActionBar();
+            if (null != mActionbar) {
+                mActionbar.setDisplayHomeAsUpEnabled(true);
+            }
         }
     }
 

@@ -20,7 +20,7 @@ import com.github.ben.zhihudaily.data.entity.ThemeStories;
 import com.github.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.App;
-import com.github.ben.zhihudaily.ui.activity.StoryDetailActivity;
+import com.github.ben.zhihudaily.ui.module.story.StoryDetailActivity;
 import com.github.ben.zhihudaily.ui.base.BaseFragment;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.GlideUtils;
