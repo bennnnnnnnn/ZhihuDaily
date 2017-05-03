@@ -38,4 +38,17 @@
         <item name="android:textColor">@color/md_white_1000</item>
     </style>
 
+
+    <!-- theme 改这个，popupTheme 去掉 即可改图标颜色 -->
+    <style name="ThemeToolbar" parent="ThemeOverlay.AppCompat.Light">
+
+        <!--&lt;!&ndash; navigation icon color &ndash;&gt;-->
+        <!--<item name="colorControlNormal">@color/md_green_500</item>-->
+
+        <!--&lt;!&ndash; color of the menu overflow icon &ndash;&gt;-->
+        <!--<item name="android:textColorSecondary">@color/md_red_500</item>-->
+        <!--<item name="android:textColorPrimary">@color/md_amber_500</item>-->
+
+    </style>
+
 </resources>

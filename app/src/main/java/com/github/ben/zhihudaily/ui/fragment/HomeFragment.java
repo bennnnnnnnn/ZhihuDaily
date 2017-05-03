@@ -141,6 +141,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         mHomeAdapter.setOnBannerItemClickListener(new OnBannerItemClickListener() {
             @Override
             public void onClick(Story story) {
+                if (!story.isRead) {
+                    story.isRead = true;
+                    App.mDb.update(story, ConflictAlgorithm.Replace);
+                }
                 startActivity(new Intent(getActivity(), StoryDetailActivity.class)
                         .putExtra("id", story.id)
                         .putExtra("before", story.before)

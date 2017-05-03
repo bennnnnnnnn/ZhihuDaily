@@ -25,6 +25,7 @@ import butterknife.OnClick;
 
 /**
  * Created on 17/2/20.
+ *
  * @author Ben
  */
 
@@ -69,7 +70,7 @@ public class CommentDialogFragment extends DialogFragment {
     @SuppressLint("InflateParams")
     private View onCreateDialogContentView(Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-         View root = inflater.inflate(R.layout.dialog_comment, null);
+        View root = inflater.inflate(R.layout.dialog_comment, null);
         ButterKnife.bind(this, root);
         return root;
     }
@@ -102,12 +103,12 @@ public class CommentDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.e("----------onDestroyView","onDestroyView");
+        Log.e("----------onDestroyView", "onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e("----------onDestroy","onDestroy");
+        Log.e("----------onDestroy", "onDestroy");
     }
 }

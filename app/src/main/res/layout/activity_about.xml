@@ -154,7 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="3dp"
-                        android:text="@string/contact"
+                        android:text="@string/email"
                         android:textColor="@color/textAboutColor"
                         android:textSize="12sp" />
 

@@ -53,6 +53,6 @@
     <string name="https_github_com_hdodenhof_circleimageview">https://github.com/hdodenhof/CircleImageView</string>
     <string name="ben">Ben</string>
     <string name="android_developer">Android Developer</string>
-    <string name="me_github_url">Github:https://github.com/bennnnnnnnn</string>
-    <string name="contact">contact:zhoubangquan1992@gmail.com</string>
+    <string name="me_github_url">Github: https://github.com/bennnnnnnnn</string>
+    <string name="email">E-mail: zhoubangquan1992@gmail.com</string>
 </resources>
