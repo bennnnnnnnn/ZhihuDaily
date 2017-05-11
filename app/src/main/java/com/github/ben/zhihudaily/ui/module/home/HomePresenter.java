@@ -15,11 +15,10 @@ import com.litesuits.orm.db.assit.QueryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created on 16/11/24.
@@ -30,7 +29,6 @@ import rx.schedulers.Schedulers;
 
 public class HomePresenter extends BasePresentImpl<HomeContract.View> implements HomeContract.Presenter {
 
-    private Subscription subscription;
     private List<Story> topStories = new ArrayList<>();
     private List<Story> homeStories = new ArrayList<>();
     private long time;
@@ -67,12 +65,12 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
     }
 
     private void addHomeList(String beforeTime) {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
+        BenFactory.getStoryApi()
                 .getBeforeDailyNews(TextUtils.isEmpty(beforeTime) ? DateUtils.msToDate(System.currentTimeMillis()) : beforeTime)
-                .map(new Func1<StoriesResult, List<Story>>() {
+                .compose(mView.<StoriesResult>bindToLife())
+                .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> call(StoriesResult storiesResult) {
+                    public List<Story> apply(StoriesResult storiesResult) {
                         if (storiesResult != null) {
                             return storiesResult.stories;
                         }
@@ -81,9 +79,9 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
+                .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void call(List<Story> stories) {
+                    public void accept(List<Story> stories) {
                         for (Story story : stories) {
                             story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
@@ -93,27 +91,21 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                         mView.beforeStoriesLoaded(stories);
                         mView.isSwipeRefreshing(false);
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
                         mView.isSwipeRefreshing(false);
                     }
                 });
     }
 
-    private void unsubscribe() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-    }
-
     private void getHomeListMsg() {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
+        BenFactory.getStoryApi()
                 .getDailyNews("latest")
-                .map(new Func1<StoriesResult, List<Story>>() {
+                .compose(mView.<StoriesResult>bindToLife())
+                .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> call(StoriesResult storiesResult) {
+                    public List<Story> apply(StoriesResult storiesResult) {
                         if (storiesResult != null) {
                             topStories = storiesResult.top_stories;
                             today = DateUtils.dateWithWeekday(System.currentTimeMillis());
@@ -129,9 +121,9 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
+                .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void call(List<Story> stories) {
+                    public void accept(List<Story> stories) {
                         for (Story story : stories) {
                             story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
@@ -140,11 +132,6 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                         changeReadState(homeStories);
                         mView.lataestStoriesLoaded(stories, topStories);
                         mView.isSwipeRefreshing(false);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
     }

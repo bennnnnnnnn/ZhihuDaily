@@ -3,7 +3,6 @@ package com.github.ben.zhihudaily.ui.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +11,19 @@ import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.utils.SharePreUtils;
 import com.litesuits.orm.db.assit.QueryBuilder;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.List;
 
-import rx.Subscription;
-
 /**
  * Created on 16/9/23.
+ *
  * @author Ben
  */
 
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends RxFragment {
 
-    protected Subscription subscription;
     protected Context mContext;
 
     @Nullable
@@ -33,18 +31,6 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = getActivity();
         return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unsubscribe();
-    }
-
-    protected void unsubscribe() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
     }
 
     protected boolean isNight() {

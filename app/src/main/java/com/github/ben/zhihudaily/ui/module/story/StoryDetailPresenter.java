@@ -15,11 +15,10 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created on 16/11/24.
@@ -30,14 +29,7 @@ import rx.schedulers.Schedulers;
 
 public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.View> implements StoryDetailContract.Presenter {
 
-    private Subscription subscription;
     private List<Story> dailies;
-
-    private void unsubscribe() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-    }
 
     @Override
     public void getStoryExtra(int position) {
@@ -56,32 +48,27 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
 
     @Override
     public void getStoryExtra(String id) {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
+        BenFactory.getStoryApi()
                 .getStoryExtra(id)
+                .compose(mView.<StoryExtra>bindToLife())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<StoryExtra>() {
+                .subscribe(new Consumer<StoryExtra>() {
                     @Override
-                    public void call(StoryExtra storyExtra) {
+                    public void accept(StoryExtra storyExtra) {
                         mView.setStoryExtra(storyExtra);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
     }
 
     @Override
     public void getTopStories() {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
+        BenFactory.getStoryApi()
                 .getDailyNews("latest")
-                .map(new Func1<StoriesResult, List<Story>>() {
+                .compose(mView.<StoriesResult>bindToLife())
+                .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> call(StoriesResult dailyNews) {
+                    public List<Story> apply(StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.top_stories;
                         }
@@ -90,28 +77,23 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
+                .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void call(List<Story> singleDailies) {
+                    public void accept(List<Story> singleDailies) {
                         dailies = singleDailies;
                         mView.setStoryList(dailies);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
     }
 
     @Override
     public void getBeforeStories(String before) {
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
+        BenFactory.getStoryApi()
                 .getBeforeDailyNews(TextUtils.isEmpty(before) ? DateUtils.msToDate(System.currentTimeMillis() + Constant.A_DAY_MS) : before)
-                .map(new Func1<StoriesResult, List<Story>>() {
+                .compose(mView.<StoriesResult>bindToLife())
+                .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> call(StoriesResult dailyNews) {
+                    public List<Story> apply(StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.stories;
                         }
@@ -120,37 +102,27 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
+                .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void call(List<Story> singleDailies) {
+                    public void accept(List<Story> singleDailies) {
                         dailies = singleDailies;
                         mView.setStoryList(dailies);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
     }
 
     @Override
     public void getThemeStories(String themeId) {
-        unsubscribe();
-        subscription = BenFactory.getStoryThemeApi()
+        BenFactory.getStoryThemeApi()
                 .getThemeStories(themeId)
+                .compose(mView.<ThemeStories>bindToLife())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ThemeStories>() {
+                .subscribe(new Consumer<ThemeStories>() {
                     @Override
-                    public void call(ThemeStories themeStories) {
+                    public void accept(ThemeStories themeStories) {
                         dailies = themeStories.stories;
                         mView.setStoryList(dailies);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
     }

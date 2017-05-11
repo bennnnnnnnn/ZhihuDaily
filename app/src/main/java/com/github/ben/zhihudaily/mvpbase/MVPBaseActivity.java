@@ -4,9 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.github.ben.zhihudaily.mvpbase.BasePresentImpl;
-import com.github.ben.zhihudaily.mvpbase.BaseView;
 import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -39,6 +38,11 @@ public abstract class MVPBaseActivity<V extends BaseView, T extends BasePresentI
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindToLife() {
+        return this.<T>bindToLifecycle();
     }
 
     @SuppressWarnings("unchecked")

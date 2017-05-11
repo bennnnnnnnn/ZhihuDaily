@@ -32,11 +32,10 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created on 16/10/8.
@@ -60,7 +59,6 @@ public class MainActivity extends ToolBarActivity {
     private SideAdapter mSideAdapter;
     private List<StoryTheme> storyThemes = new ArrayList<>();
     private List<StoryTheme> requestStoryThemes = new ArrayList<>();
-    private Subscription mSideSub;
     private String storyThemeId;
     private String storyThemeName;
     private Fragment currentFragment;
@@ -287,20 +285,21 @@ public class MainActivity extends ToolBarActivity {
     }
 
     private void getSideList() {
-        mSideSub = BenFactory.getStoryThemeApi()
+        BenFactory.getStoryThemeApi()
                 .getDailyThemes()
-                .map(new Func1<StoryThemeResult, List<StoryTheme>>() {
+                .compose(this.<StoryThemeResult>bindToLifecycle())
+                .map(new Function<StoryThemeResult, List<StoryTheme>>() {
                     @Override
-                    public List<StoryTheme> call(StoryThemeResult dailyThemeResult) {
+                    public List<StoryTheme> apply(StoryThemeResult dailyThemeResult) {
                         if (null != dailyThemeResult) {
                             return dailyThemeResult.others;
                         }
                         return null;
                     }
                 })
-                .doOnNext(new Action1<List<StoryTheme>>() {
+                .doOnNext(new Consumer<List<StoryTheme>>() {
                     @Override
-                    public void call(List<StoryTheme> themes) {
+                    public void accept(List<StoryTheme> themes) {
                         requestStoryThemes = themes;
                         reorderAndSaveThemes(requestStoryThemes);
                         mSideAdapter.isHomePage = true;
@@ -308,15 +307,10 @@ public class MainActivity extends ToolBarActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<StoryTheme>>() {
+                .subscribe(new Consumer<List<StoryTheme>>() {
                     @Override
-                    public void call(List<StoryTheme> themes) {
+                    public void accept(List<StoryTheme> themes) {
                         mSideAdapter.setDailyThemes(storyThemes, themes);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
     }
@@ -345,12 +339,6 @@ public class MainActivity extends ToolBarActivity {
             }
             App.mDb.save(theme);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (null != mSideSub && mSideSub.isUnsubscribed()) mSideSub.unsubscribe();
     }
 
     @Override

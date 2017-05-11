@@ -26,14 +26,14 @@ import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created on 17/2/22.
@@ -92,11 +92,12 @@ public class StoryDetailFragment extends BaseFragment {
     private void getDetail(String id) {
         BenFactory.getStoryApi()
                 .getDailyNewsDetail(id)
+                .compose(this.<StoryDetail>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<StoryDetail>() {
+                .subscribe(new Consumer<StoryDetail>() {
                     @Override
-                    public void call(final StoryDetail storyDetail) {
+                    public void accept(final StoryDetail storyDetail) {
                         mTitleTextView.setText(storyDetail.title);
                         mImageSource.setText(storyDetail.image_source);
                         if (!TextUtils.isEmpty(storyDetail.image)) {
@@ -138,9 +139,9 @@ public class StoryDetailFragment extends BaseFragment {
                             }
                         });
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
 
                     }
                 });

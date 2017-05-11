@@ -30,12 +30,10 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-
-import static com.github.ben.zhihudaily.data.ResponseError.displayCustomErrorAction;
-import static com.github.ben.zhihudaily.data.ResponseError.OnResult;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created on 16/10/13.
@@ -131,14 +129,14 @@ public class ThemeFragment extends BaseFragment {
     }
 
     private void getThemeStoryList(String id) {
-        unsubscribe();
-        subscription = BenFactory.getStoryThemeApi()
+        BenFactory.getStoryThemeApi()
                 .getThemeStories(id)
+                .compose(this.<ThemeStories>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ThemeStories>() {
+                .subscribe(new Consumer<ThemeStories>() {
                     @Override
-                    public void call(ThemeStories themeStories) {
+                    public void accept(ThemeStories themeStories) {
                         GlideUtils.loadingImage(getActivity(), mThemeImageView, themeStories.image);
                         mDescriptionTextView.setText(themeStories.description);
                         mThemeStories = themeStories.stories;
@@ -146,12 +144,12 @@ public class ThemeFragment extends BaseFragment {
                         mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }, displayCustomErrorAction(getContext(), new OnResult() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onResult(String errorMessage) {
+                    public void accept(@NonNull Throwable throwable) throws Exception {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }));
+                });
     }
 
     @Override

@@ -10,6 +10,10 @@ import com.github.ben.zhihudaily.utils.SharePreUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.litesuits.orm.LiteOrm;
 
+import io.reactivex.plugins.RxJavaPlugins;
+
+import static com.github.ben.zhihudaily.data.ResponseError.displayCustomErrorConsumer;
+
 /**
  * Created on 16/9/28.
  * @author Ben
@@ -56,6 +60,8 @@ public class App extends Application {
         }
         initStatusBarHeight();
         initConfigues();
+
+        RxJavaPlugins.setErrorHandler(displayCustomErrorConsumer(this));
     }
 
     public static Context getInstance() {

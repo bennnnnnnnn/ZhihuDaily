@@ -18,13 +18,14 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created on 16/10/8.
+ *
  * @author Ben
  */
 
@@ -54,32 +55,32 @@ public class StartActivity extends BaseActivity {
 
     private void loadStartImage() {
         String size = App.screenWidth + "*" + imageLayoutHeight;
-        unsubscribe();
-        subscription = BenFactory.getStoryApi()
+        BenFactory.getStoryApi()
                 .getStartImage(size)
+                .compose(this.<StartImage>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .delay(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Action1<StartImage>() {
+                .doOnNext(new Consumer<StartImage>() {
                     @Override
-                    public void call(StartImage startImage) {
+                    public void accept(StartImage startImage) {
                         GlideUtils.loadingImage(mContext, mStartImageView, startImage.img);
                         mAuthorTextView.setText(startImage.text);
                     }
                 })
                 .delay(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<StartImage>() {
+                .subscribe(new Consumer<StartImage>() {
                     @Override
-                    public void call(StartImage startImage) {
+                    public void accept(StartImage startImage) {
                         startActivity();
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
-                        Observable.timer(3, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
+                    public void accept(Throwable throwable) {
+                        Flowable.timer(3, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
                             @Override
-                            public void call(Long aLong) {
+                            public void accept(Long aLong) {
                                 startActivity();
                             }
                         });

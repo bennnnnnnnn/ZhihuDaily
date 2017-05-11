@@ -2,6 +2,8 @@ package com.github.ben.zhihudaily.mvpbase;
 
 import android.content.Context;
 
+import com.trello.rxlifecycle2.LifecycleTransformer;
+
 /**
  * Created on 16/11/22.
  *
@@ -10,6 +12,7 @@ import android.content.Context;
 
 
 public interface BaseView {
-    //    void setPresenter(T presenter);
     Context getContext();
+
+    <T> LifecycleTransformer<T> bindToLife();
 }

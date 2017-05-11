@@ -2,7 +2,7 @@ package com.github.ben.zhihudaily.data;
 
 import com.google.gson.Gson;
 
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 
 /**
  * Created on 17/2/23.
