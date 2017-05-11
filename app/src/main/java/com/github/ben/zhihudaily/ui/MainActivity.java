@@ -33,6 +33,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -290,7 +291,7 @@ public class MainActivity extends ToolBarActivity {
                 .compose(this.<StoryThemeResult>bindToLifecycle())
                 .map(new Function<StoryThemeResult, List<StoryTheme>>() {
                     @Override
-                    public List<StoryTheme> apply(StoryThemeResult dailyThemeResult) {
+                    public List<StoryTheme> apply(@NonNull StoryThemeResult dailyThemeResult) {
                         if (null != dailyThemeResult) {
                             return dailyThemeResult.others;
                         }
@@ -299,7 +300,7 @@ public class MainActivity extends ToolBarActivity {
                 })
                 .doOnNext(new Consumer<List<StoryTheme>>() {
                     @Override
-                    public void accept(List<StoryTheme> themes) {
+                    public void accept(@NonNull List<StoryTheme> themes) {
                         requestStoryThemes = themes;
                         reorderAndSaveThemes(requestStoryThemes);
                         mSideAdapter.isHomePage = true;
@@ -309,7 +310,7 @@ public class MainActivity extends ToolBarActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<StoryTheme>>() {
                     @Override
-                    public void accept(List<StoryTheme> themes) {
+                    public void accept(@NonNull List<StoryTheme> themes) {
                         mSideAdapter.setDailyThemes(storyThemes, themes);
                     }
                 });

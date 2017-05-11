@@ -8,6 +8,7 @@ import com.github.ben.zhihudaily.utils.ToastUtils;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import retrofit2.HttpException;
 
@@ -55,7 +56,7 @@ public class ResponseError {
     public static Consumer<Throwable> displayCustomErrorConsumer(final Context context) {
         return new Consumer<Throwable>() {
             @Override
-            public void accept(Throwable throwable) {
+            public void accept(@NonNull Throwable throwable) {
                 displayError(context, throwable);
             }
         };

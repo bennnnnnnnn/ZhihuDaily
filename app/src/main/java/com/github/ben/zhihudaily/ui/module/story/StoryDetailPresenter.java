@@ -16,6 +16,7 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -55,7 +56,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<StoryExtra>() {
                     @Override
-                    public void accept(StoryExtra storyExtra) {
+                    public void accept(@NonNull StoryExtra storyExtra) {
                         mView.setStoryExtra(storyExtra);
                     }
                 });
@@ -68,7 +69,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 .compose(mView.<StoriesResult>bindToLife())
                 .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> apply(StoriesResult dailyNews) {
+                    public List<Story> apply(@NonNull StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.top_stories;
                         }
@@ -79,7 +80,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void accept(List<Story> singleDailies) {
+                    public void accept(@NonNull List<Story> singleDailies) {
                         dailies = singleDailies;
                         mView.setStoryList(dailies);
                     }
@@ -93,7 +94,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 .compose(mView.<StoriesResult>bindToLife())
                 .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> apply(StoriesResult dailyNews) {
+                    public List<Story> apply(@NonNull StoriesResult dailyNews) {
                         if (dailyNews != null) {
                             return dailyNews.stories;
                         }
@@ -104,7 +105,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void accept(List<Story> singleDailies) {
+                    public void accept(@NonNull List<Story> singleDailies) {
                         dailies = singleDailies;
                         mView.setStoryList(dailies);
                     }
@@ -120,7 +121,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ThemeStories>() {
                     @Override
-                    public void accept(ThemeStories themeStories) {
+                    public void accept(@NonNull ThemeStories themeStories) {
                         dailies = themeStories.stories;
                         mView.setStoryList(dailies);
                     }

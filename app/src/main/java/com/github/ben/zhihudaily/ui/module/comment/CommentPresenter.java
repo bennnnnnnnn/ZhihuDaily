@@ -9,6 +9,7 @@ import com.github.ben.zhihudaily.mvpbase.BasePresentImpl;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -33,7 +34,7 @@ public class CommentPresenter extends BasePresentImpl<CommentContract.View> impl
                 .compose(mView.<CommentsResult>bindToLife())
                 .map(new Function<CommentsResult, List<Comment>>() {
                     @Override
-                    public List<Comment> apply(CommentsResult commentsResult) {
+                    public List<Comment> apply(@NonNull CommentsResult commentsResult) {
                         if (commentsResult != null) {
                             return commentsResult.comments;
                         }
@@ -44,7 +45,7 @@ public class CommentPresenter extends BasePresentImpl<CommentContract.View> impl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Comment>>() {
                     @Override
-                    public void accept(List<Comment> comments) {
+                    public void accept(@NonNull List<Comment> comments) {
                         mView.refreshLongComments(comments);
                     }
                 });
@@ -57,7 +58,7 @@ public class CommentPresenter extends BasePresentImpl<CommentContract.View> impl
                 .compose(mView.<CommentsResult>bindToLife())
                 .map(new Function<CommentsResult, List<Comment>>() {
                     @Override
-                    public List<Comment> apply(CommentsResult commentsResult) {
+                    public List<Comment> apply(@NonNull CommentsResult commentsResult) {
                         if (commentsResult != null) {
                             return commentsResult.comments;
                         }
@@ -68,7 +69,7 @@ public class CommentPresenter extends BasePresentImpl<CommentContract.View> impl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Comment>>() {
                     @Override
-                    public void accept(List<Comment> comments) {
+                    public void accept(@NonNull List<Comment> comments) {
                         mView.refreshShortComments(comments);
                     }
                 });

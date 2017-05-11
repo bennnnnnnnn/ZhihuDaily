@@ -27,6 +27,7 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
@@ -97,7 +98,7 @@ public class StoryDetailFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<StoryDetail>() {
                     @Override
-                    public void accept(final StoryDetail storyDetail) {
+                    public void accept(@NonNull final StoryDetail storyDetail) {
                         mTitleTextView.setText(storyDetail.title);
                         mImageSource.setText(storyDetail.image_source);
                         if (!TextUtils.isEmpty(storyDetail.image)) {
@@ -138,11 +139,6 @@ public class StoryDetailFragment extends BaseFragment {
                                 });
                             }
                         });
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-
                     }
                 });
     }

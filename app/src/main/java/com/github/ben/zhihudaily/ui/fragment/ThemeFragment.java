@@ -136,7 +136,7 @@ public class ThemeFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ThemeStories>() {
                     @Override
-                    public void accept(ThemeStories themeStories) {
+                    public void accept(@NonNull ThemeStories themeStories) {
                         GlideUtils.loadingImage(getActivity(), mThemeImageView, themeStories.image);
                         mDescriptionTextView.setText(themeStories.description);
                         mThemeStories = themeStories.stories;

@@ -20,6 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -63,7 +64,7 @@ public class StartActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<StartImage>() {
                     @Override
-                    public void accept(StartImage startImage) {
+                    public void accept(@NonNull StartImage startImage) {
                         GlideUtils.loadingImage(mContext, mStartImageView, startImage.img);
                         mAuthorTextView.setText(startImage.text);
                     }
@@ -72,15 +73,15 @@ public class StartActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<StartImage>() {
                     @Override
-                    public void accept(StartImage startImage) {
+                    public void accept(@NonNull StartImage startImage) {
                         startActivity();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) {
+                    public void accept(@NonNull Throwable throwable) {
                         Flowable.timer(3, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
                             @Override
-                            public void accept(Long aLong) {
+                            public void accept(@NonNull Long aLong) {
                                 startActivity();
                             }
                         });

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -70,7 +71,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 .compose(mView.<StoriesResult>bindToLife())
                 .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> apply(StoriesResult storiesResult) {
+                    public List<Story> apply(@NonNull StoriesResult storiesResult) {
                         if (storiesResult != null) {
                             return storiesResult.stories;
                         }
@@ -81,7 +82,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void accept(List<Story> stories) {
+                    public void accept(@NonNull List<Story> stories) {
                         for (Story story : stories) {
                             story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
@@ -93,7 +94,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) {
+                    public void accept(@NonNull Throwable throwable) {
                         mView.isSwipeRefreshing(false);
                     }
                 });
@@ -105,7 +106,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 .compose(mView.<StoriesResult>bindToLife())
                 .map(new Function<StoriesResult, List<Story>>() {
                     @Override
-                    public List<Story> apply(StoriesResult storiesResult) {
+                    public List<Story> apply(@NonNull StoriesResult storiesResult) {
                         if (storiesResult != null) {
                             topStories = storiesResult.top_stories;
                             today = DateUtils.dateWithWeekday(System.currentTimeMillis());
@@ -123,7 +124,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Story>>() {
                     @Override
-                    public void accept(List<Story> stories) {
+                    public void accept(@NonNull List<Story> stories) {
                         for (Story story : stories) {
                             story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
                             story.before = DateUtils.msToDate(time);
