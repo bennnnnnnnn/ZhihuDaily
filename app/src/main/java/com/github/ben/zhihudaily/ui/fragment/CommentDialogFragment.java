@@ -77,13 +77,13 @@ public class CommentDialogFragment extends DialogFragment {
 
     @OnClick(R.id.agree_textView)
     void onAgree(View v) {
-        ToastUtils.shortToast(mContext, "不让点赞~");
+        ToastUtils.shortToast(mContext, "不让点赞 嘿~");
         getDialog().dismiss();
     }
 
     @OnClick(R.id.report_textView)
     void onReport(View v) {
-        ToastUtils.shortToast(mContext, "不让举报~");
+        ToastUtils.shortToast(mContext, "不让举报 哼~");
         getDialog().dismiss();
     }
 
