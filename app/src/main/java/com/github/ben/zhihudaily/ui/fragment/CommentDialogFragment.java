@@ -19,7 +19,7 @@ import com.github.ben.zhihudaily.utils.Clipboard;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.ToastUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -32,13 +32,13 @@ import butterknife.OnClick;
 
 public class CommentDialogFragment extends DialogFragment {
 
-    @Bind(R.id.agree_textView)
+    @BindView(R.id.agree_textView)
     TextView agreeTextView;
-    @Bind(R.id.report_textView)
+    @BindView(R.id.report_textView)
     TextView reportTextView;
-    @Bind(R.id.copy_textView)
+    @BindView(R.id.copy_textView)
     TextView copyTextView;
-    @Bind(R.id.reply_textView)
+    @BindView(R.id.reply_textView)
     TextView replyTextView;
 
     private Context mContext;
@@ -96,7 +96,7 @@ public class CommentDialogFragment extends DialogFragment {
 
     @OnClick(R.id.reply_textView)
     void onReply(View v) {
-        ToastUtils.shortToast(mContext, "想回复我 没门~");
+        ToastUtils.shortToast(mContext, "想回复我 没门的呢~");
         getDialog().dismiss();
     }
 

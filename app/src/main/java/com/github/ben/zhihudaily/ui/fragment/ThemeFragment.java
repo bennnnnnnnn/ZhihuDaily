@@ -28,7 +28,7 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -44,15 +44,15 @@ import io.reactivex.schedulers.Schedulers;
 //该页面没有 MVP (比较用,个人感觉一些简单的页面完全没有必要使用 MVP, 本 Application 使用仅用作个人学习)
 public class ThemeFragment extends BaseFragment {
 
-    @Bind(R.id.swipe_refresh_layout)
+    @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.theme_imageView)
+    @BindView(R.id.theme_imageView)
     ImageView mThemeImageView;
-    @Bind(R.id.description_textView)
+    @BindView(R.id.description_textView)
     TextView mDescriptionTextView;
-    @Bind(R.id.theme_stories_recyclerView)
+    @BindView(R.id.theme_stories_recyclerView)
     RecyclerView mThemeRecyclerView;
-    @Bind(R.id.theme_image_layout)
+    @BindView(R.id.theme_image_layout)
     RelativeLayout mThemeImageLayout;
 
     private ThemeAdapter mThemeAdapter;

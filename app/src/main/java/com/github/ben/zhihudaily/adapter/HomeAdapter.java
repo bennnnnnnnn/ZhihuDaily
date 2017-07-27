@@ -30,12 +30,13 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created on 16/9/11.
+ *
  * @author Ben
  */
 
@@ -176,15 +177,15 @@ public class HomeAdapter extends RecyclerView.Adapter {
     }
 
     class HomeViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.item_cardview)
+        @BindView(R.id.item_cardview)
         CardView mCardView;
-        @Bind(R.id.news_image)
+        @BindView(R.id.news_image)
         ImageView newsImageView;
-        @Bind(R.id.news_title)
+        @BindView(R.id.news_title)
         TextView titleTextView;
-        @Bind(R.id.date_textView)
+        @BindView(R.id.date_textView)
         TextView dateTextView;
-        @Bind(R.id.multip_layout)
+        @BindView(R.id.multip_layout)
         RelativeLayout multipLayout;
 
         Story story;
@@ -203,7 +204,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     }
 
     class HeadViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.banner_viewpager)
+        @BindView(R.id.banner_viewpager)
         ConvenientBanner<Story> mBannerViewPager;
 
         HeadViewHolder(View itemView) {
@@ -234,8 +235,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
         @Override
         public View createView(Context context) {
             View view = LayoutInflater.from(context).inflate(R.layout.banner_layout, null);
-            imageView = (ImageView) view.findViewById(R.id.banner_image);
-            textView = (TextView) view.findViewById(R.id.banner_title);
+            imageView = view.findViewById(R.id.banner_image);
+            textView = view.findViewById(R.id.banner_title);
             return view;
         }
 

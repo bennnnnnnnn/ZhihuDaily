@@ -30,8 +30,8 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mVersionTv = (TextView) findViewById(R.id.version_tv);
+        mToolbar = findViewById(R.id.toolbar);
+        mVersionTv = findViewById(R.id.version_tv);
 
         setSupportActionBar(mToolbar);
         mActionbar = getSupportActionBar();

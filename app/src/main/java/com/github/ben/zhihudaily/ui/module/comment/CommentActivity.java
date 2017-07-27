@@ -19,7 +19,7 @@ import com.github.ben.zhihudaily.utils.ToastUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -36,7 +36,7 @@ public class CommentActivity extends MVPBaseActivity<CommentContract.View, Comme
         return R.layout.activity_comment;
     }
 
-    @Bind(R.id.comment_recyclerView)
+    @BindView(R.id.comment_recyclerView)
     RecyclerView mCommentRecyclerView;
 
     private CommentAdapter mCommentAdapter;

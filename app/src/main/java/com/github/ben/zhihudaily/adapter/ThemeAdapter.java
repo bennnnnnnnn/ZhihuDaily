@@ -27,7 +27,7 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -166,9 +166,9 @@ public class ThemeAdapter extends RecyclerView.Adapter {
     }
 
     class EditorViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.editor_layout)
+        @BindView(R.id.editor_layout)
         LinearLayout editosLayout;
-        @Bind(R.id.editor_images)
+        @BindView(R.id.editor_images)
         LinearLayout editosImage;
 
         public EditorViewHolder(View itemView) {
@@ -179,11 +179,11 @@ public class ThemeAdapter extends RecyclerView.Adapter {
 
     class ThemeViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.theme_story_cardView)
+        @BindView(R.id.theme_story_cardView)
         CardView mCardView;
-        @Bind(R.id.title_textView)
+        @BindView(R.id.title_textView)
         TextView mTitleTxtView;
-        @Bind(R.id.description_imageView)
+        @BindView(R.id.description_imageView)
         ImageView mImageView;
 
         public ThemeViewHolder(View itemView) {

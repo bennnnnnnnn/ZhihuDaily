@@ -26,7 +26,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -182,9 +182,9 @@ public class CommentAdapter extends RecyclerView.Adapter {
     }
 
     class LongCountViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.comment_count_textView)
+        @BindView(R.id.comment_count_textView)
         TextView mCommentCountTextView;
-        @Bind(R.id.empty_layout)
+        @BindView(R.id.empty_layout)
         LinearLayout mEmptyLayout;
 
         public LongCountViewHolder(View itemView) {
@@ -194,13 +194,13 @@ public class CommentAdapter extends RecyclerView.Adapter {
     }
 
     class ShortCountViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.comment_count_textView)
+        @BindView(R.id.comment_count_textView)
         TextView mCommentCountTextView;
-        @Bind(R.id.short_comment_button)
+        @BindView(R.id.short_comment_button)
         ImageButton mShowButton;
-        @Bind(R.id.short_comment_layout)
+        @BindView(R.id.short_comment_layout)
         LinearLayout mShowLayout;
-        @Bind(R.id.bottom_line_view)
+        @BindView(R.id.bottom_line_view)
         RelativeLayout mBottimLine;
 
         public ShortCountViewHolder(View itemView) {
@@ -224,19 +224,19 @@ public class CommentAdapter extends RecyclerView.Adapter {
     }
 
     class CommentViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.comment_cardView)
+        @BindView(R.id.comment_cardView)
         CardView mCommentCardView;
-        @Bind(R.id.author_image)
+        @BindView(R.id.author_image)
         SimpleDraweeView mAuthorDraweeView;
-        @Bind(R.id.author_name_textView)
+        @BindView(R.id.author_name_textView)
         TextView mAuthorTextView;
-        @Bind(R.id.praise_icon)
+        @BindView(R.id.praise_icon)
         ImageView mPraiseIcon;
-        @Bind(R.id.praise_number)
+        @BindView(R.id.praise_number)
         TextView mPraiseNumber;
-        @Bind(R.id.comment_content_textview)
+        @BindView(R.id.comment_content_textview)
         TextView mCommentContent;
-        @Bind(R.id.comment_time_textView)
+        @BindView(R.id.comment_time_textView)
         TextView mCommentTime;
         Comment mComment;
 

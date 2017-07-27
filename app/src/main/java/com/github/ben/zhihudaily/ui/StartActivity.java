@@ -16,7 +16,7 @@ import com.github.ben.zhihudaily.utils.GlideUtils;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,13 +33,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StartActivity extends BaseActivity {
 
-    @Bind(R.id.start_image)
+    @BindView(R.id.start_image)
     ImageView mStartImageView;
-    @Bind(R.id.image_author)
+    @BindView(R.id.image_author)
     TextView mAuthorTextView;
-    @Bind(R.id.start_image_layout)
+    @BindView(R.id.start_image_layout)
     RelativeLayout mStartLayout;
-    @Bind(R.id.bottom_animation_layout)
+    @BindView(R.id.bottom_animation_layout)
     RelativeLayout mBottomLayout;
     private int imageLayoutHeight = 0;
 
@@ -108,7 +108,7 @@ public class StartActivity extends BaseActivity {
     }
 
     private void getHeights() {
-        imageLayoutHeight = (int) (App.screenHeight - (mBottomLayout.getLayoutParams().height) - App.statusBarHeight - 5 * App.screenDensity);
+            imageLayoutHeight = (int) (App.screenHeight - (mBottomLayout.getLayoutParams().height) - App.statusBarHeight - 5 * App.screenDensity);
     }
 
     @Override

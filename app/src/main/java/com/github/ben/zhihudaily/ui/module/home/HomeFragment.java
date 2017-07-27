@@ -23,7 +23,7 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -35,9 +35,9 @@ import butterknife.ButterKnife;
 
 public class HomeFragment extends MVPBaseFragment<HomeContract.View, HomePresenter> implements HomeContract.View {
 
-    @Bind(R.id.swipe_refresh_layout)
+    @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.home_view)
+    @BindView(R.id.home_view)
     RecyclerView mHomeRecyclerView;
 
     private HomeAdapter mHomeAdapter;

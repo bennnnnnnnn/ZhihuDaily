@@ -17,10 +17,11 @@ import com.github.ben.zhihudaily.ui.module.comment.CommentActivity;
 import com.github.ben.zhihudaily.mvpbase.MVPBaseActivity;
 import com.github.ben.zhihudaily.utils.Constant;
 import com.github.ben.zhihudaily.utils.DetailStoryActionProvider;
+import com.github.ben.zhihudaily.utils.ToastUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class StoryDetailActivity extends MVPBaseActivity<StoryDetailContract.View, StoryDetailPresenter> implements StoryDetailContract.View {
 
-    @Bind(R.id.daily_viewPager)
+    @BindView(R.id.daily_viewPager)
     ViewPager mViewPager;
 
     private DetailAdapter mAdapter;
@@ -143,7 +144,7 @@ public class StoryDetailActivity extends MVPBaseActivity<StoryDetailContract.Vie
         praiseActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
             @Override
             public void onClick() {
-
+                ToastUtils.shortToast(StoryDetailActivity.this, "想给我点赞，没门的呢~");
             }
         });
         return true;

@@ -27,7 +27,7 @@ public abstract class ToolBarActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(provideContentViewId());
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         if (null != mToolbar) {
             setSupportActionBar(mToolbar);
             mActionbar = getSupportActionBar();

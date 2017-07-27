@@ -24,7 +24,7 @@ import com.github.ben.zhihudaily.utils.SharePreUtils;
 
 import java.io.IOException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -45,15 +45,15 @@ import okhttp3.Response;
 
 public class StoryDetailFragment extends BaseFragment {
 
-    @Bind(R.id.top_image)
+    @BindView(R.id.top_image)
     ImageView mTopImage;
-    @Bind(R.id.title_textview)
+    @BindView(R.id.title_textview)
     TextView mTitleTextView;
-    @Bind(R.id.image_source)
+    @BindView(R.id.image_source)
     TextView mImageSource;
-    @Bind(R.id.content_webview)
+    @BindView(R.id.content_webview)
     WebView mContentWebView;
-    @Bind(R.id.top_layout)
+    @BindView(R.id.top_layout)
     AppBarLayout mAppBarLayout;
 
     private String id;

@@ -30,7 +30,7 @@ import com.litesuits.orm.db.model.ConflictAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -51,9 +51,9 @@ public class MainActivity extends ToolBarActivity {
         return R.layout.activity_main;
     }
 
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.side_listview)
+    @BindView(R.id.side_listview)
     ListView mListView;
 
     private ActionBarDrawerToggle mDrawerToggle;

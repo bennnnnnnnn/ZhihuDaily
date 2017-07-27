@@ -13,6 +13,7 @@ import com.github.ben.zhihudaily.R;
 
 /**
  * Created on 16/9/19.
+ *
  * @author Ben
  */
 
@@ -40,8 +41,8 @@ public class DetailStoryActionProvider extends ActionProvider {
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.utils_layout_collection, null, false);
         view.setLayoutParams(layoutParams);
-        imageView = (ImageView) view.findViewById(R.id.comment_image);
-        textView = (TextView) view.findViewById(R.id.comment_number);
+        imageView = view.findViewById(R.id.comment_image);
+        textView = view.findViewById(R.id.comment_number);
 
         if (imageResInt > 0) {
             imageView.setImageResource(imageResInt);

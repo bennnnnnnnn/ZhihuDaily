@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Created on 16/9/10.
+ *
  * @author Ben
  */
 
@@ -89,15 +90,15 @@ public class SideAdapter extends BaseAdapter {
                 case TYPE_0:
                     cv = inflater.inflate(R.layout.adapter_item_home_theme, parent, false);
                     homeItem = new ViewHolder();
-                    homeItem.itemLayout = (LinearLayout) cv.findViewById(R.id.home_item);
+                    homeItem.itemLayout = cv.findViewById(R.id.home_item);
                     cv.setTag(R.id.tag_zero, homeItem);
                     break;
                 case TYPE_1:
                     cv = inflater.inflate(R.layout.adapter_item_story_theme, parent, false);
                     item = new ViewHolder1();
-                    item.itemLayout = (RelativeLayout) cv.findViewById(R.id.item_layout);
-                    item.themeTitle = (TextView) cv.findViewById(R.id.theme_title_textview);
-                    item.tipView = (ImageView) cv.findViewById(R.id.theme_state_image);
+                    item.itemLayout = cv.findViewById(R.id.item_layout);
+                    item.themeTitle = cv.findViewById(R.id.theme_title_textview);
+                    item.tipView = cv.findViewById(R.id.theme_state_image);
                     cv.setTag(R.id.tag_first, item);
                     break;
             }
