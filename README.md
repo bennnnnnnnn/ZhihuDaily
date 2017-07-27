@@ -1,4 +1,4 @@
-# 随时阅
+# ZHDaily
 An Unofficial ZhihuDaily Client
 
 ## APIs
