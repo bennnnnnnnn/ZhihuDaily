@@ -5,14 +5,14 @@ def releaseTime() {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion configs.compileSdkVersion
+    buildToolsVersion  configs.buildToolsVersion
     defaultConfig {
-        applicationId "com.github.ben.zhihudaily"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0.0"
+        applicationId  configs.applicationId
+        minSdkVersion  configs.minSdkVersion
+        targetSdkVersion  configs.targetSdkVersion
+        versionCode  configs.versionCode
+        versionName  configs.versionName
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // dex突破65535的限制
         multiDexEnabled true
@@ -85,7 +85,7 @@ android {
     }
 
     lintOptions {
-        //忽略Lint错误
+        // 忽略Lint错误
         abortOnError false
     }
 }
@@ -93,30 +93,30 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation files('libs/lite-orm-1.9.2.jar')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
-    testCompile 'junit:junit:4.12'
-    implementation 'com.jakewharton:butterknife:8.7.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.7.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
-    implementation('com.trello.rxlifecycle2:rxlifecycle-components:2.0.1', {
-        exclude group: 'com.google.code.findbugs'
-        exclude group: 'com.android.support'
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support.constraint:constraint-layout:$constraint_version"
+    testImplementation "junit:junit:4.12"
+    implementation "com.jakewharton:butterknife:$butterknife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
+    implementation "com.android.support:design:$support_library_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    implementation("com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycle2_version", {
+        exclude group: "com.google.code.findbugs"
+        exclude group: "com.android.support"
     })
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
-    implementation 'com.bigkoo:convenientbanner:2.0.5'
-    implementation 'com.facebook.fresco:fresco:0.14.0'
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
+    implementation "com.android.support:cardview-v7:$support_library_version"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.bigkoo:convenientbanner:$convenientbanner_version"
+    implementation "com.facebook.fresco:fresco:$fresco_version"
+    implementation "de.hdodenhof:circleimageview:$circleimageview_version"
 }

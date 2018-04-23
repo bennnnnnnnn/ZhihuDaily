@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -22,4 +22,27 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    configs = [compileSdkVersion: 27,
+               buildToolsVersion: '27.0.3',
+               applicationId    : "com.github.ben.zhihudaily",
+               minSdkVersion    : 15,
+               targetSdkVersion : 27,
+               versionCode      : 1,
+               versionName      : "1.0.0"]
+
+    support_library_version = '27.1.1'
+    constraint_version = '1.1.0'
+    glide_version = '3.7.0'
+    butterknife_version = '8.7.0'
+    rxjava_version = '2.0.7'
+    rxandroid_version = '2.0.1'
+    okhttp3_version = '3.7.0'
+    retrofit2_version = '2.2.0'
+    rxlifecycle2_version = '2.2.0'
+    convenientbanner_version = '2.0.5'
+    fresco_version = '0.14.0'
+    circleimageview_version = '2.1.0'
 }
