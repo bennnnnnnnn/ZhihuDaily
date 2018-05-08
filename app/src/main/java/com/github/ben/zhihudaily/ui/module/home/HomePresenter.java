@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui.module.home;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.github.ben.zhihudaily.R;
@@ -65,6 +66,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
         }
     }
 
+    @SuppressLint("CheckResult")
     private void addHomeList(String beforeTime) {
         BenFactory.getStoryApi()
                 .getBeforeDailyNews(TextUtils.isEmpty(beforeTime) ? DateUtils.msToDate(System.currentTimeMillis()) : beforeTime)
@@ -100,6 +102,7 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
                 });
     }
 
+    @SuppressLint("CheckResult")
     private void getHomeListMsg() {
         BenFactory.getStoryApi()
                 .getDailyNews("latest")

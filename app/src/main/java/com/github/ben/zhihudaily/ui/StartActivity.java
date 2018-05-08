@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -54,6 +55,7 @@ public class StartActivity extends BaseActivity {
         loadStartImage();
     }
 
+    @SuppressLint("CheckResult")
     private void loadStartImage() {
         String size = App.screenWidth + "*" + imageLayoutHeight;
         BenFactory.getStoryApi()

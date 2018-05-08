@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -128,6 +129,7 @@ public class ThemeFragment extends BaseFragment {
         });
     }
 
+    @SuppressLint("CheckResult")
     private void getThemeStoryList(String id) {
         BenFactory.getStoryThemeApi()
                 .getThemeStories(id)

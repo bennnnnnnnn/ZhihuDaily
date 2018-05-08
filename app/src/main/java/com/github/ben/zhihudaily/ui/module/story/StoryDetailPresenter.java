@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui.module.story;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.github.ben.zhihudaily.data.entity.StoriesResult;
@@ -47,6 +48,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getStoryExtra(String id) {
         BenFactory.getStoryApi()
@@ -62,6 +64,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getTopStories() {
         BenFactory.getStoryApi()
@@ -87,6 +90,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getBeforeStories(String before) {
         BenFactory.getStoryApi()
@@ -112,6 +116,7 @@ public class StoryDetailPresenter extends BasePresentImpl<StoryDetailContract.Vi
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getThemeStories(String themeId) {
         BenFactory.getStoryThemeApi()

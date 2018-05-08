@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -285,6 +286,7 @@ public class MainActivity extends ToolBarActivity {
         item1.setIcon(followedTheme.followed ? R.drawable.minus_icon : R.drawable.plus_icon);
     }
 
+    @SuppressLint("CheckResult")
     private void getSideList() {
         BenFactory.getStoryThemeApi()
                 .getDailyThemes()

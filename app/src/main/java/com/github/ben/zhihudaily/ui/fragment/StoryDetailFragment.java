@@ -90,6 +90,7 @@ public class StoryDetailFragment extends BaseFragment {
         mWebSetting.setAppCacheEnabled(true);
     }
 
+    @SuppressLint("CheckResult")
     private void getDetail(String id) {
         BenFactory.getStoryApi()
                 .getDailyNewsDetail(id)

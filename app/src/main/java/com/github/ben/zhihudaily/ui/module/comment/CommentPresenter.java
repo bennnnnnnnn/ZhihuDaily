@@ -1,6 +1,8 @@
 package com.github.ben.zhihudaily.ui.module.comment;
 
 
+import android.annotation.SuppressLint;
+
 import com.github.ben.zhihudaily.data.entity.Comment;
 import com.github.ben.zhihudaily.data.entity.CommentsResult;
 import com.github.ben.zhihudaily.network.BenFactory;
@@ -27,6 +29,7 @@ public class CommentPresenter extends BasePresentImpl<CommentContract.View> impl
         requestShortComments();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void requestLongComments() {
         BenFactory.getStoryApi()
@@ -52,6 +55,7 @@ public class CommentPresenter extends BasePresentImpl<CommentContract.View> impl
     }
 
     //前 20 条
+    @SuppressLint("CheckResult")
     private void requestShortComments() {
         BenFactory.getStoryApi()
                 .getShortComments(mView.getStoryId())
