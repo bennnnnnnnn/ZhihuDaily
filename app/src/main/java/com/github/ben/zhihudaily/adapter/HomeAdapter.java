@@ -2,6 +2,7 @@ package com.github.ben.zhihudaily.adapter;
 
 import android.content.Context;
 
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
-import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.data.entity.Story;
 
@@ -44,8 +44,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
     private List<Story> mDailyNews;
     private List<Story> mBannerThemes;
     private Context context;
-    static final int TYPE_HEAD = 0;
-    static final int TYPE_CONTENT = 1;
+    private static final int TYPE_HEAD = 0;
+    private static final int TYPE_CONTENT = 1;
     private boolean initialized = false;
     private OnStoryItemClickListener onStoryItemClickListener;
     private OnBannerItemClickListener onBannerItemClickListener;
@@ -54,8 +54,9 @@ public class HomeAdapter extends RecyclerView.Adapter {
         this.context = context;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEAD) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.adapter_item_header_banner, parent, false);
@@ -120,13 +121,10 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 } else {
                     headViewHolder.mBannerViewPager.setVisibility(View.VISIBLE);
                 }
-                headViewHolder.mBannerViewPager.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Story story = mBannerThemes.get(position);
-                        if (onBannerItemClickListener != null) {
-                            onBannerItemClickListener.onClick(story);
-                        }
+                headViewHolder.mBannerViewPager.setOnItemClickListener(position1 -> {
+                    Story story = mBannerThemes.get(position1);
+                    if (onBannerItemClickListener != null) {
+                        onBannerItemClickListener.onClick(story);
                     }
                 });
                 break;
@@ -215,12 +213,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     private void initConvenientBanner(HeadViewHolder headViewHolder, List<Story> singleDailies) {
         headViewHolder.mBannerViewPager.setPages(
-                new CBViewHolderCreator<LocalImageHolderView>() {
-                    @Override
-                    public LocalImageHolderView createHolder() {
-                        return new LocalImageHolderView();
-                    }
-                }, singleDailies)
+                (CBViewHolderCreator<LocalImageHolderView>) LocalImageHolderView::new, singleDailies)
                 .setPageIndicator(new int[]{R.drawable.icon_banner_normal, R.drawable.icon_banner_selected})
                 .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
 

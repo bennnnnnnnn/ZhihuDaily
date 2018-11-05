@@ -131,22 +131,12 @@ public class StoryDetailActivity extends MVPBaseActivity<StoryDetailContract.Vie
         praiseActionProvider = (DetailStoryActionProvider) MenuItemCompat.getActionProvider(praiseItem);
         commentActionProvider.setImageResource(R.drawable.comment_icon);
         praiseActionProvider.setImageResource(R.drawable.praise_icon);
-        commentActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
-            @Override
-            public void onClick() {
-                startActivity(new Intent(mContext, CommentActivity.class)
-                        .putExtra(Constant.COMMENTS, comments)
-                        .putExtra(Constant.LONG_COMMENTS, long_comments)
-                        .putExtra(Constant.SHORT_COMMENTS, short_comments)
-                        .putExtra("id", currentId));
-            }
-        });
-        praiseActionProvider.setOnClickListener(new DetailStoryActionProvider.OnClickListener() {
-            @Override
-            public void onClick() {
-                ToastUtils.shortToast(StoryDetailActivity.this, "想给我点赞，没门的呢~");
-            }
-        });
+        commentActionProvider.setOnClickListener(() -> startActivity(new Intent(mContext, CommentActivity.class)
+                .putExtra(Constant.COMMENTS, comments)
+                .putExtra(Constant.LONG_COMMENTS, long_comments)
+                .putExtra(Constant.SHORT_COMMENTS, short_comments)
+                .putExtra("id", currentId)));
+        praiseActionProvider.setOnClickListener(() -> ToastUtils.shortToast(StoryDetailActivity.this, "想给我点赞，没门的呢~"));
         return true;
     }
 

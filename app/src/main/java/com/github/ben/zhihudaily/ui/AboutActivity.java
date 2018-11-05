@@ -1,11 +1,11 @@
 package com.github.ben.zhihudaily.ui;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import com.github.ben.zhihudaily.R;
@@ -25,6 +25,7 @@ public class AboutActivity extends BaseActivity {
     public Toolbar mToolbar;
     public ActionBar mActionbar;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +39,7 @@ public class AboutActivity extends BaseActivity {
         if (null != mActionbar) {
             mActionbar.setDisplayHomeAsUpEnabled(true);
         }
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(v -> onBackPressed());
         setTitle(R.string.app_name);
         mVersionTv.setText("Version " + getVersion() + "");
     }

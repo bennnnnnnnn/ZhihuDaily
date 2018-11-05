@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ben.zhihudaily.R;
-import com.github.ben.zhihudaily.data.entity.StoryDetail;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.ui.base.BaseFragment;
@@ -23,12 +22,11 @@ import com.github.ben.zhihudaily.utils.HtmlUtils;
 import com.github.ben.zhihudaily.utils.SharePreUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -94,53 +92,40 @@ public class StoryDetailFragment extends BaseFragment {
     private void getDetail(String id) {
         BenFactory.getStoryApi()
                 .getDailyNewsDetail(id)
-                .compose(this.<StoryDetail>bindToLifecycle())
+                .compose(this.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<StoryDetail>() {
-                    @Override
-                    public void accept(@NonNull final StoryDetail storyDetail) {
-                        mTitleTextView.setText(storyDetail.title);
-                        mImageSource.setText(storyDetail.image_source);
-                        if (!TextUtils.isEmpty(storyDetail.image)) {
-                            mAppBarLayout.getLayoutParams().height = (int) (200 * App.screenDensity);
-                            GlideUtils.loadingImage(getActivity(), mTopImage, storyDetail.image);
-                        } else {
-                            mAppBarLayout.getLayoutParams().height = 0;
-                        }
-                        String cssUrl = storyDetail.css[0];
-                        OkHttpClient mOkHttpClient = new OkHttpClient();
-                        final Request request = new Request.Builder()
-                                .url(cssUrl)
-                                .build();
-                        Call call = mOkHttpClient.newCall(request);
-                        call.enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                String htmlWithCss = HtmlUtils.get("", storyDetail.body, (boolean) SharePreUtils.get(App.NIGHT_MODE, false));
-                                final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mContentWebView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                String css = response.body().string();
-                                String htmlWithCss = HtmlUtils.get(css, storyDetail.body, (boolean) SharePreUtils.get(App.NIGHT_MODE, false));
-                                final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mContentWebView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
-                                    }
-                                });
-                            }
-                        });
+                .subscribe(storyDetail -> {
+                    mTitleTextView.setText(storyDetail.title);
+                    mImageSource.setText(storyDetail.image_source);
+                    if (!TextUtils.isEmpty(storyDetail.image)) {
+                        mAppBarLayout.getLayoutParams().height = (int) (200 * App.screenDensity);
+                        GlideUtils.loadingImage(getActivity(), mTopImage, storyDetail.image);
+                    } else {
+                        mAppBarLayout.getLayoutParams().height = 0;
                     }
+                    String cssUrl = storyDetail.css[0];
+                    OkHttpClient mOkHttpClient = new OkHttpClient();
+                    final Request request = new Request.Builder()
+                            .url(cssUrl)
+                            .build();
+                    Call call = mOkHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            String htmlWithCss = HtmlUtils.get("", storyDetail.body, (boolean) SharePreUtils.get(App.NIGHT_MODE, false));
+                            final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
+                            Objects.requireNonNull(getActivity()).runOnUiThread(() -> mContentWebView.loadDataWithBaseURL("", html, "text/html", "utf-8", ""));
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            String css = response.body().string();
+                            String htmlWithCss = HtmlUtils.get(css, storyDetail.body, (boolean) SharePreUtils.get(App.NIGHT_MODE, false));
+                            final String html = htmlWithCss.replace("<div class=\"img-place-holder\">", "");
+                            Objects.requireNonNull(getActivity()).runOnUiThread(() -> mContentWebView.loadDataWithBaseURL("", html, "text/html", "utf-8", ""));
+                        }
+                    });
                 });
     }
 }

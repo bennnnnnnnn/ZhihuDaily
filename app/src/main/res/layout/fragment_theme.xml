@@ -19,7 +19,7 @@
                 android:id="@+id/theme_stories_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+                android:scrollbars="none" />
 
             <RelativeLayout
                 android:id="@+id/theme_image_layout"

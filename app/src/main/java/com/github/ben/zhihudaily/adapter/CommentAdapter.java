@@ -1,5 +1,6 @@
 package com.github.ben.zhihudaily.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -114,6 +115,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
         return null;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type = getItemViewType(position);

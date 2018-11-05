@@ -16,7 +16,7 @@ public interface HomeContract {
 
     interface View extends BaseView {
 
-        void lataestStoriesLoaded(List<Story> stories, List<Story> topStories);
+        void latestStoriesLoaded(List<Story> stories, List<Story> topStories);
 
         void beforeStoriesLoaded(List<Story> stories);
 

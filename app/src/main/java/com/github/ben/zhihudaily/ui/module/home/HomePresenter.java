@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.github.ben.zhihudaily.R;
-import com.github.ben.zhihudaily.data.entity.StoriesResult;
 import com.github.ben.zhihudaily.data.entity.Story;
 import com.github.ben.zhihudaily.mvpbase.BasePresentImpl;
 import com.github.ben.zhihudaily.network.BenFactory;
@@ -17,9 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -70,73 +66,56 @@ public class HomePresenter extends BasePresentImpl<HomeContract.View> implements
     private void addHomeList(String beforeTime) {
         BenFactory.getStoryApi()
                 .getBeforeDailyNews(TextUtils.isEmpty(beforeTime) ? DateUtils.msToDate(System.currentTimeMillis()) : beforeTime)
-                .compose(mView.<StoriesResult>bindToLife())
-                .map(new Function<StoriesResult, List<Story>>() {
-                    @Override
-                    public List<Story> apply(@NonNull StoriesResult storiesResult) {
-                        if (storiesResult != null) {
-                            return storiesResult.stories;
-                        }
-                        return null;
+                .compose(mView.bindToLife())
+                .map(storiesResult -> {
+                    if (storiesResult != null) {
+                        return storiesResult.stories;
                     }
+                    return null;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Story>>() {
-                    @Override
-                    public void accept(@NonNull List<Story> stories) {
-                        for (Story story : stories) {
-                            story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
-                            story.before = DateUtils.msToDate(time);
-                        }
-                        homeStories.addAll(stories);
-                        changeReadState(stories);
-                        mView.beforeStoriesLoaded(stories);
-                        mView.isSwipeRefreshing(false);
+                .subscribe(stories -> {
+                    for (Story story : stories) {
+                        story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
+                        story.before = DateUtils.msToDate(time);
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) {
-                        mView.isSwipeRefreshing(false);
-                    }
-                });
+                    homeStories.addAll(stories);
+                    changeReadState(stories);
+                    mView.beforeStoriesLoaded(stories);
+                    mView.isSwipeRefreshing(false);
+                }, throwable -> mView.isSwipeRefreshing(false));
     }
 
     @SuppressLint("CheckResult")
     private void getHomeListMsg() {
         BenFactory.getStoryApi()
                 .getDailyNews("latest")
-                .compose(mView.<StoriesResult>bindToLife())
-                .map(new Function<StoriesResult, List<Story>>() {
-                    @Override
-                    public List<Story> apply(@NonNull StoriesResult storiesResult) {
-                        if (storiesResult != null) {
-                            topStories = storiesResult.top_stories;
-                            today = DateUtils.dateWithWeekday(System.currentTimeMillis());
-                            time = System.currentTimeMillis() + Constant.A_DAY_MS;
-                            for (Story daily : topStories) {
-                                daily.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
-                                daily.before = DateUtils.msToDate(time);
-                            }
-                            return storiesResult.stories;
+                .compose(mView.bindToLife())
+                .map(storiesResult -> {
+                    if (storiesResult != null) {
+                        topStories = storiesResult.top_stories;
+                        today = DateUtils.dateWithWeekday(System.currentTimeMillis());
+                        time = System.currentTimeMillis() + Constant.A_DAY_MS;
+                        for (Story daily : topStories) {
+                            daily.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
+                            daily.before = DateUtils.msToDate(time);
                         }
-                        return null;
+                        return storiesResult.stories;
                     }
+                    return null;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Story>>() {
-                    @Override
-                    public void accept(@NonNull List<Story> stories) {
-                        for (Story story : stories) {
-                            story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
-                            story.before = DateUtils.msToDate(time);
-                        }
-                        homeStories = stories;
-                        changeReadState(homeStories);
-                        mView.lataestStoriesLoaded(stories, topStories);
-                        mView.isSwipeRefreshing(false);
+                .subscribe(stories -> {
+                    for (Story story : stories) {
+                        story.date = DateUtils.dateWithWeekday(time - Constant.A_DAY_MS);
+                        story.before = DateUtils.msToDate(time);
                     }
+                    homeStories = stories;
+                    changeReadState(homeStories);
+                    mView.latestStoriesLoaded(stories, topStories);
+                    mView.isSwipeRefreshing(false);
                 });
     }
 

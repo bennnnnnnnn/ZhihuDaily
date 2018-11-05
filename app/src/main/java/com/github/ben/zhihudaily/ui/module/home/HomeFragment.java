@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.adapter.HomeAdapter;
 import com.github.ben.zhihudaily.data.entity.Story;
-import com.github.ben.zhihudaily.functions.OnBannerItemClickListener;
-import com.github.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.ui.module.story.StoryDetailActivity;
 import com.github.ben.zhihudaily.mvpbase.MVPBaseFragment;
@@ -41,7 +39,7 @@ public class HomeFragment extends MVPBaseFragment<HomeContract.View, HomePresent
     RecyclerView mHomeRecyclerView;
 
     private HomeAdapter mHomeAdapter;
-    private LinearLayoutManager mHomelinearLayoutManager;
+    private LinearLayoutManager mHomeLinearLayoutManager;
 
     private boolean initialized;
 
@@ -68,16 +66,11 @@ public class HomeFragment extends MVPBaseFragment<HomeContract.View, HomePresent
 
     private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.appbar_bg);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPresenter.refreshHomeList();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.refreshHomeList());
     }
 
     @Override
-    public void lataestStoriesLoaded(List<Story> stories, List<Story> topStories) {
+    public void latestStoriesLoaded(List<Story> stories, List<Story> topStories) {
         mHomeAdapter.setDailyNews(stories, topStories);
     }
 
@@ -102,52 +95,46 @@ public class HomeFragment extends MVPBaseFragment<HomeContract.View, HomePresent
     }
 
     private void initHomeList() {
-        mHomelinearLayoutManager = new LinearLayoutManager(mContext);
-        mHomeRecyclerView.setLayoutManager(mHomelinearLayoutManager);
+        mHomeLinearLayoutManager = new LinearLayoutManager(mContext);
+        mHomeRecyclerView.setLayoutManager(mHomeLinearLayoutManager);
         mHomeAdapter = new HomeAdapter(getActivity());
         mHomeRecyclerView.setAdapter(mHomeAdapter);
 
         mHomeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                boolean is = mHomelinearLayoutManager.findLastCompletelyVisibleItemPosition() >= mHomeAdapter.getItemCount() - 1;
+                boolean is = mHomeLinearLayoutManager.findLastCompletelyVisibleItemPosition() >= mHomeAdapter.getItemCount() - 1;
                 if (!mSwipeRefreshLayout.isRefreshing() && is) {
                     if (mHomeAdapter.getItemCount() - 1 > 0) {
                         isSwipeRefreshing(true);
                         mPresenter.loadBeforeStories();
                     }
                 }
-                int position = mHomelinearLayoutManager.findFirstVisibleItemPosition();
+                int position = mHomeLinearLayoutManager.findFirstVisibleItemPosition();
                 mPresenter.setCurrentTile(position);
             }
         });
 
-        mHomeAdapter.setOnStoryItemClickListener(new OnStoryItemClickListener() {
-            @Override
-            public void onClick(Story story) {
-                if (!story.isRead) {
-                    story.isRead = true;
-                    App.mDb.update(story, ConflictAlgorithm.Replace);
-                }
-                startActivity(new Intent(getActivity(), StoryDetailActivity.class)
-                        .putExtra("id", story.id)
-                        .putExtra("before", story.before)
-                        .putExtra("type", Constant.STORY));
+        mHomeAdapter.setOnStoryItemClickListener(story -> {
+            if (!story.isRead) {
+                story.isRead = true;
+                App.mDb.update(story, ConflictAlgorithm.Replace);
             }
+            startActivity(new Intent(getActivity(), StoryDetailActivity.class)
+                    .putExtra("id", story.id)
+                    .putExtra("before", story.before)
+                    .putExtra("type", Constant.STORY));
         });
 
-        mHomeAdapter.setOnBannerItemClickListener(new OnBannerItemClickListener() {
-            @Override
-            public void onClick(Story story) {
-                if (!story.isRead) {
-                    story.isRead = true;
-                    App.mDb.update(story, ConflictAlgorithm.Replace);
-                }
-                startActivity(new Intent(getActivity(), StoryDetailActivity.class)
-                        .putExtra("id", story.id)
-                        .putExtra("before", story.before)
-                        .putExtra("type", Constant.TOP_STORIES));
+        mHomeAdapter.setOnBannerItemClickListener(story -> {
+            if (!story.isRead) {
+                story.isRead = true;
+                App.mDb.update(story, ConflictAlgorithm.Replace);
             }
+            startActivity(new Intent(getActivity(), StoryDetailActivity.class)
+                    .putExtra("id", story.id)
+                    .putExtra("before", story.before)
+                    .putExtra("type", Constant.TOP_STORIES));
         });
     }
 

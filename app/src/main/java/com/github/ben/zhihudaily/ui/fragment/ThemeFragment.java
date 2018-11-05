@@ -17,8 +17,6 @@ import android.widget.TextView;
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.adapter.ThemeAdapter;
 import com.github.ben.zhihudaily.data.entity.Story;
-import com.github.ben.zhihudaily.data.entity.ThemeStories;
-import com.github.ben.zhihudaily.functions.OnStoryItemClickListener;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.App;
 import com.github.ben.zhihudaily.ui.module.story.StoryDetailActivity;
@@ -32,8 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -91,12 +87,7 @@ public class ThemeFragment extends BaseFragment {
 
     private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.appbar_bg);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getThemeStoryList(storyThemeId);
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> getThemeStoryList(storyThemeId));
     }
 
     private void initThemeList() {
@@ -114,18 +105,15 @@ public class ThemeFragment extends BaseFragment {
             }
         });
 
-        mThemeAdapter.setOnStoryItemClickListener(new OnStoryItemClickListener() {
-            @Override
-            public void onClick(Story story) {
-                if (!story.isRead) {
-                    story.isRead = true;
-                    App.mDb.update(story, ConflictAlgorithm.Replace);
-                }
-                startActivity(new Intent(getActivity(), StoryDetailActivity.class)
-                        .putExtra("id", story.id)
-                        .putExtra("themeId", storyThemeId)
-                        .putExtra("type", Constant.THEME_STORY));
+        mThemeAdapter.setOnStoryItemClickListener(story -> {
+            if (!story.isRead) {
+                story.isRead = true;
+                App.mDb.update(story, ConflictAlgorithm.Replace);
             }
+            startActivity(new Intent(getActivity(), StoryDetailActivity.class)
+                    .putExtra("id", story.id)
+                    .putExtra("themeId", storyThemeId)
+                    .putExtra("type", Constant.THEME_STORY));
         });
     }
 
@@ -133,25 +121,17 @@ public class ThemeFragment extends BaseFragment {
     private void getThemeStoryList(String id) {
         BenFactory.getStoryThemeApi()
                 .getThemeStories(id)
-                .compose(this.<ThemeStories>bindToLifecycle())
+                .compose(this.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ThemeStories>() {
-                    @Override
-                    public void accept(@NonNull ThemeStories themeStories) {
-                        GlideUtils.loadingImage(getActivity(), mThemeImageView, themeStories.image);
-                        mDescriptionTextView.setText(themeStories.description);
-                        mThemeStories = themeStories.stories;
-                        changeReadState(mThemeStories);
-                        mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                .subscribe(themeStories -> {
+                    GlideUtils.loadingImage(getActivity(), mThemeImageView, themeStories.image);
+                    mDescriptionTextView.setText(themeStories.description);
+                    mThemeStories = themeStories.stories;
+                    changeReadState(mThemeStories);
+                    mThemeAdapter.setStoriesAndEditors(themeStories.stories, themeStories.editors);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }, throwable -> mSwipeRefreshLayout.setRefreshing(false));
     }
 
     @Override

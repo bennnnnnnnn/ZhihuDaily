@@ -8,7 +8,9 @@ import com.github.ben.zhihudaily.utils.ToastUtils;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import io.reactivex.annotations.NonNull;
+import io.reactivex.exceptions.CompositeException;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
+import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.functions.Consumer;
 import retrofit2.HttpException;
 
@@ -30,6 +32,15 @@ public class ResponseError {
         }
 
         String errorMessage = null;
+        if (throwable instanceof UndeliverableException || throwable instanceof OnErrorNotImplementedException) {
+            throwable = throwable.getCause();
+        }
+        if (throwable instanceof CompositeException) {
+            throwable = ((CompositeException) throwable).getExceptions().get(0);
+            if (throwable instanceof UndeliverableException || throwable instanceof OnErrorNotImplementedException) {
+                throwable = throwable.getCause();
+            }
+        }
         if (throwable instanceof HttpException) {
             HttpException exception = (HttpException) throwable;
             errorMessage = Error.getError(exception).error_msg;
@@ -54,11 +65,6 @@ public class ResponseError {
     }
 
     public static Consumer<Throwable> displayCustomErrorConsumer(final Context context) {
-        return new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) {
-                displayError(context, throwable);
-            }
-        };
+        return throwable -> displayError(context, throwable);
     }
 }

@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.ben.zhihudaily.R;
-import com.github.ben.zhihudaily.data.entity.StartImage;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.base.BaseActivity;
 import com.github.ben.zhihudaily.utils.GlideUtils;
@@ -21,8 +20,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -51,7 +48,7 @@ public class StartActivity extends BaseActivity {
         ButterKnife.bind(this);
         getHeights();
         setImageLayout();
-        translateBottonLayout();
+        translateBottomLayoutLayout();
         loadStartImage();
     }
 
@@ -60,35 +57,17 @@ public class StartActivity extends BaseActivity {
         String size = App.screenWidth + "*" + imageLayoutHeight;
         BenFactory.getStoryApi()
                 .getStartImage(size)
-                .compose(this.<StartImage>bindToLifecycle())
+                .compose(this.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .delay(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<StartImage>() {
-                    @Override
-                    public void accept(@NonNull StartImage startImage) {
-                        GlideUtils.loadingImage(mContext, mStartImageView, startImage.img);
-                        mAuthorTextView.setText(startImage.text);
-                    }
+                .doOnNext(startImage -> {
+                    GlideUtils.loadingImage(mContext, mStartImageView, startImage.img);
+                    mAuthorTextView.setText(startImage.text);
                 })
                 .delay(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<StartImage>() {
-                    @Override
-                    public void accept(@NonNull StartImage startImage) {
-                        startActivity();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) {
-                        Flowable.timer(3, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
-                            @Override
-                            public void accept(@NonNull Long aLong) {
-                                startActivity();
-                            }
-                        });
-                    }
-                });
+                .subscribe(startImage -> startActivity(), throwable -> Flowable.timer(3, TimeUnit.SECONDS).subscribe(aLong -> startActivity()));
     }
 
     private void startActivity() {
@@ -100,7 +79,7 @@ public class StartActivity extends BaseActivity {
         mStartLayout.getLayoutParams().height = imageLayoutHeight;
     }
 
-    private void translateBottonLayout() {
+    private void translateBottomLayoutLayout() {
         float fromY = App.screenHeight;
         float toY = App.screenHeight - (mBottomLayout.getLayoutParams().height) - App.statusBarHeight;
         TranslateAnimation animation = new TranslateAnimation(0, 0, fromY, toY);

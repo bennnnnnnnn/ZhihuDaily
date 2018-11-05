@@ -12,13 +12,11 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.github.ben.zhihudaily.R;
 import com.github.ben.zhihudaily.adapter.SideAdapter;
 import com.github.ben.zhihudaily.data.entity.StoryTheme;
-import com.github.ben.zhihudaily.data.entity.StoryThemeResult;
 import com.github.ben.zhihudaily.network.BenFactory;
 import com.github.ben.zhihudaily.ui.base.ToolBarActivity;
 import com.github.ben.zhihudaily.ui.module.home.HomeFragment;
@@ -34,9 +32,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -218,30 +213,27 @@ public class MainActivity extends ToolBarActivity {
         mListView.addHeaderView(headView);
         mSideAdapter = new SideAdapter(this);
         mListView.setAdapter(mSideAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // headView homeItem takes two position
-                if (position > 1) {
-                    selectedTheme = storyThemes.get(position - 2);
-                    selectedTheme.selected = true;
-                    storyThemeId = selectedTheme.id;
-                    storyThemeName = selectedTheme.name;
-                    for (int i = 0; i < storyThemes.size(); i++) {
-                        if (i != position - 2) {
-                            storyThemes.get(i).selected = false;
-                        }
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            // headView homeItem takes two position
+            if (position > 1) {
+                selectedTheme = storyThemes.get(position - 2);
+                selectedTheme.selected = true;
+                storyThemeId = selectedTheme.id;
+                storyThemeName = selectedTheme.name;
+                for (int i = 0; i < storyThemes.size(); i++) {
+                    if (i != position - 2) {
+                        storyThemes.get(i).selected = false;
                     }
-                    isHomePage = false;
-                    request = true;
-                } else if (position == 1) {
-                    storyThemeName = "首页";
-                    isHomePage = true;
-                    request = true;
-                    selectedTheme.selected = false;
                 }
-                showOrCloseSideView();
+                isHomePage = false;
+                request = true;
+            } else if (position == 1) {
+                storyThemeName = "首页";
+                isHomePage = true;
+                request = true;
+                selectedTheme.selected = false;
             }
+            showOrCloseSideView();
         });
         mListView.getLayoutParams().width = (int) (App.screenWidth * 0.8);
     }
@@ -290,32 +282,21 @@ public class MainActivity extends ToolBarActivity {
     private void getSideList() {
         BenFactory.getStoryThemeApi()
                 .getDailyThemes()
-                .compose(this.<StoryThemeResult>bindToLifecycle())
-                .map(new Function<StoryThemeResult, List<StoryTheme>>() {
-                    @Override
-                    public List<StoryTheme> apply(@NonNull StoryThemeResult dailyThemeResult) {
-                        if (null != dailyThemeResult) {
-                            return dailyThemeResult.others;
-                        }
-                        return null;
+                .compose(this.bindToLifecycle())
+                .map(dailyThemeResult -> {
+                    if (null != dailyThemeResult) {
+                        return dailyThemeResult.others;
                     }
+                    return null;
                 })
-                .doOnNext(new Consumer<List<StoryTheme>>() {
-                    @Override
-                    public void accept(@NonNull List<StoryTheme> themes) {
-                        requestStoryThemes = themes;
-                        reorderAndSaveThemes(requestStoryThemes);
-                        mSideAdapter.isHomePage = true;
-                    }
+                .doOnNext(themes -> {
+                    requestStoryThemes = themes;
+                    reorderAndSaveThemes(requestStoryThemes);
+                    mSideAdapter.isHomePage = true;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<StoryTheme>>() {
-                    @Override
-                    public void accept(@NonNull List<StoryTheme> themes) {
-                        mSideAdapter.setDailyThemes(storyThemes, themes);
-                    }
-                });
+                .subscribe(themes -> mSideAdapter.setDailyThemes(storyThemes, themes));
     }
 
     private void reorderAndSaveThemes(List<StoryTheme> themes) {

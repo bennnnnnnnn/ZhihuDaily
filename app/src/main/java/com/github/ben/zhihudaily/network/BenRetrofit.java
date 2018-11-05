@@ -32,6 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created on 16/9/10.
+ *
  * @author Ben
  */
 
@@ -67,20 +68,18 @@ public class BenRetrofit {
 
         if (okHttpClient == null) {
             synchronized (BenRetrofit.class) {
-                if (okHttpClient == null) {
-                    // 指定缓存路径,缓存大小100Mb
-                    Cache cache = new Cache(new File(App.getInstance().getCacheDir(), "HttpCache"),
-                            1024 * 1024 * 100);
+                // 指定缓存路径,缓存大小100Mb
+                Cache cache = new Cache(new File(App.getInstance().getCacheDir(), "HttpCache"),
+                        1024 * 1024 * 100);
 
-                    okHttpClient = new OkHttpClient.Builder()
-                            .cache(cache)
-                            .addInterceptor(loggingInterceptor)  // 和下面的 logInterceptor 等价 logInterceptor 可以自定义; loggingInterceptor 默认
-                            .addInterceptor(networkInterceptor)
-                            .addNetworkInterceptor(networkInterceptor)
-                            .retryOnConnectionFailure(true)
-                            .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                            .build();
-                }
+                okHttpClient = new OkHttpClient.Builder()
+                        .cache(cache)
+                        .addInterceptor(loggingInterceptor)  // 和下面的 logInterceptor 等价 logInterceptor 可以自定义; loggingInterceptor 默认
+                        .addInterceptor(networkInterceptor)
+                        .addNetworkInterceptor(networkInterceptor)
+                        .retryOnConnectionFailure(true)
+                        .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                        .build();
             }
         }
     }

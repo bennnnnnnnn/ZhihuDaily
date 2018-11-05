@@ -84,9 +84,9 @@ android {
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
-    lintOptions {
-        // 忽略Lint错误
-        abortOnError false
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

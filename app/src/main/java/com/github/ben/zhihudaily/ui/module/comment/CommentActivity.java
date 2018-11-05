@@ -86,25 +86,17 @@ public class CommentActivity extends MVPBaseActivity<CommentContract.View, Comme
     }
 
     private OnCommentClickListener getOnCommentClickListener() {
-        return new OnCommentClickListener() {
-            @Override
-            public void onClick(Comment comment) {
-                showDialog(comment);
-            }
-        };
+        return comment -> showDialog(comment);
     }
 
     private OnCommentCountClickListener getOnCommentCountClickListener() {
-        return new OnCommentCountClickListener() {
-            @Override
-            public void onClick() {
-                if (!isShowShortComments) {
-                    mPresenter.requestShortCommentsList();
-                } else {
-                    clearShortComments();
-                }
-                isShowShortComments = !isShowShortComments;
+        return () -> {
+            if (!isShowShortComments) {
+                mPresenter.requestShortCommentsList();
+            } else {
+                clearShortComments();
             }
+            isShowShortComments = !isShowShortComments;
         };
     }
 
