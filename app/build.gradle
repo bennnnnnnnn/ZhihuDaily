@@ -77,7 +77,7 @@ android {
     productFlavors {
         // ./gradlew assembleRelease
         _test { dimension "default" }
-//        ceshi { dimension "default" }
+        ceshi { dimension "default" }
     }
 
     productFlavors.all { flavor ->
