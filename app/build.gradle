@@ -76,7 +76,7 @@ android {
     // 友盟多渠道打包
     productFlavors {
         // ./gradlew assembleRelease
-        _test_20200602 { dimension "default" }
+        _test_20200602_1 { dimension "default" }
         ceshi { dimension "default" }
     }
 
